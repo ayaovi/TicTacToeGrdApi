@@ -7,7 +7,7 @@ namespace tttGrd.Test
   public class GamerTests
   {
     [Test]
-    public void MakeMove_GivenNoHistoryGamerAndDefaultState_ExpectTupleZeroZero()
+    public void MakeMove_GivenNoGamerHistoryAndDefaultState_ExpectTupleZeroZero()
     {
       //Arrange
       var gamer = new Gamer
@@ -33,7 +33,7 @@ namespace tttGrd.Test
         GameState = new State(new[]{
           "x..|...|...", "...|...|...", "...|...|...",
           "...|...|...", "...|...|...", "...|...|...",
-          "...|...|...", "...|...|...", "...|...|...",
+          "...|...|...", "...|...|...", "...|...|..."
         }),
         Oponent = Field.X
       };
@@ -43,8 +43,8 @@ namespace tttGrd.Test
       var possibleCellIndices = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
 
       //Assert
-      Assert.True(move.Item1 == 0);
-      Assert.True(possibleCellIndices.Contains(move.Item2));
+      Assert.True(move.Grid == 0);
+      Assert.True(possibleCellIndices.Contains(move.Cell));
     }
 
     [Test]
@@ -69,12 +69,12 @@ namespace tttGrd.Test
       var possibleCellIndices = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
       //Assert
-      Assert.True(possibleGridIndices.Contains(move.Item1));
-      Assert.True(possibleCellIndices.Contains(move.Item2));
+      Assert.True(possibleGridIndices.Contains(move.Grid));
+      Assert.True(possibleCellIndices.Contains(move.Cell));
     }
 
     [Test]
-    public void MakeMove_GivenPreviousMoveToGridNineCellNineWithEveryButGridFourWon_ExpectMoveInGridFour()
+    public void MakeMove_GivenPreviousMoveToGridNineCellNineWithEveryButGridFiveWon_ExpectMoveInGridFive()
     {
       //MakeMove_GivenNextMoveInGridGamerIsAboutToWin_ExpectWinningOfGrid also passing by vertue.
       //Arrange
@@ -85,7 +85,7 @@ namespace tttGrd.Test
         GameState = new State(new[]{
           "xxx|o..|xoo", "xxx|o..|xoo", "xxx|o..|xoo",
           "xxx|o..|xoo", "x..|...|..o", "xxx|o..|xoo",
-          "xxx|o..|xoo", "xxx|o..|xoo", "xxx|o..|xoo",
+          "xxx|o..|xoo", "xxx|o..|xoo", "xxx|o..|xoo"
         }),
         Oponent = Field.X
       };
@@ -95,8 +95,57 @@ namespace tttGrd.Test
       var possibleCellIndices = new List<int> { 1, 2, 3, 4, 5, 6, 7 };
 
       //Assert
-      Assert.True(move.Item1 == 4);
-      Assert.True(possibleCellIndices.Contains(move.Item2));
+      Assert.True(move.Grid == 4);
+      Assert.True(possibleCellIndices.Contains(move.Cell));
+    }
+
+    [Test]
+    public void MakeMove_GivenPreviousMove_ShouldTryAvoidSendingOponentToAlreadyWonGridIfPossible()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.O,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|xox",
+          "xxx|o..|xoo", "x..|...|..o", "xxx|o..|xoo",
+          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|xoo"
+        }),
+        Oponent = Field.X
+      };
+
+      //Act
+      var move = gamer.MakeMove((2, 8));
+
+      //Assert
+      Assert.AreEqual(8, move.Grid);
+      Assert.AreEqual(4, move.Cell);
+    }
+
+    [Test]
+    public void MakeMove_GivenPreviousMove_ShouldSendOponentToAlreadyWonGridIfNoWayToAvoidIt()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.O,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|xox",
+          "xxx|o..|xoo", "xxx|o..|xoo", "xxx|o..|xoo",
+          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|xoo"
+        }),
+        Oponent = Field.X
+      };
+
+      //Act
+      var move = gamer.MakeMove((2, 8));
+      var possibleCellIndices = new List<int> { 4, 5 };
+
+      //Assert
+      Assert.AreEqual(8, move.Grid);
+      Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
     }
   }
 }

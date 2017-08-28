@@ -50,22 +50,14 @@ namespace tttGrd
       var winningPaths = new List<int[]>();
       var allWinningPaths = new[]
       {
-        //Backward Diagonal [(0,0) (1,1) (2,2)]
-        new[] { 0, 4, 8},
-        //Forward Diagonal [(0,2) (1,1) (2,0)]
-        new[] { 2, 4, 6 },
-        // First Horizontal [(0,0) (0,1) (0,2)]
-        new[] { 0, 1, 2 },
-        // Second Horizontal [(1,0) (1,1) (1,2)]
-        new[] { 3, 4, 5 },
-        // Third Horizontal [(2,0) (2,1) (2,2)]
-        new[] { 6, 7, 8 },
-        // First Vertical [(0,0) (1,0) (2,0)]
-        new[] { 0, 3, 6 },
-        // Second Vertical [(0,1) (1,1) (2,1)]
-        new[] { 1, 4, 7 },
-        // Third Vertical [(0,2) (1,2) (2,2)]
-        new[] { 2, 5, 8 }
+        new[] { 0, 4, 8},   // Backward Diagonal [(0,0) (1,1) (2,2)]
+        new[] { 2, 4, 6 },  // Forward Diagonal [(0,2) (1,1) (2,0)]
+        new[] { 0, 1, 2 },  // First Horizontal [(0,0) (0,1) (0,2)]
+        new[] { 3, 4, 5 },  // Second Horizontal [(1,0) (1,1) (1,2)]
+        new[] { 6, 7, 8 },  // Third Horizontal [(2,0) (2,1) (2,2)]
+        new[] { 0, 3, 6 },  // First Vertical [(0,0) (1,0) (2,0)]
+        new[] { 1, 4, 7 },  // Second Vertical [(0,1) (1,1) (2,1)]
+        new[] { 2, 5, 8 }   // Third Vertical [(0,2) (1,2) (2,2)]
       };
 
       var enumerable = grid as Field[] ?? grid.ToArray();

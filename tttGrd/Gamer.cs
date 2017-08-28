@@ -12,13 +12,13 @@ namespace tttGrd
     public Field Oponent { get; set; }
     public List<Play> History { get; set; } = new List<Play>();
 
-    private (int, int) SelectOptimalMove((int, int) oponentMove)
+    private (int Grid, int Cell) SelectOptimalMove((int Grid, int Cell) oponentMove)
     {
-      if (Program.IsWin(GameState.Fields[oponentMove.Item2]))
+      if (Program.IsWin(GameState.Fields[oponentMove.Cell]))
       {
         // play anywhere else.
         var possibleGridIndices = Enumerable.Range(0, 9)
-        .Where(x => x != oponentMove.Item2 && !Program.IsWin(GameState.Fields[x]))
+        .Where(x => x != oponentMove.Cell && !Program.IsWin(GameState.Fields[x]))
         .ToArray();
         var selectedGridIndex = possibleGridIndices[new Random().Next(possibleGridIndices.Length)];
         var possibleMoves = Program.GetPossibleMoves(GameState.Fields[selectedGridIndex])
@@ -27,16 +27,18 @@ namespace tttGrd
       }
       else
       {
-        // must play in mini-board oponentMove.Item2.
-        var possibleMoves = Program.GetPossibleMoves(GameState.Fields[oponentMove.Item2]).ToArray();
-        return (oponentMove.Item2, possibleMoves[new Random().Next(possibleMoves.Length)]);
+        // must play in mini-board oponentMove.Cell.
+        var possibleMoves = Program.GetPossibleMoves(GameState.Fields[oponentMove.Cell]).ToArray();
+        var optimalMoves = possibleMoves.Where(x => !Program.IsWin(GameState.Fields[x])).ToArray();
+        return optimalMoves.Any() ? (oponentMove.Cell, optimalMoves[new Random().Next(optimalMoves.Length)]) :
+          (oponentMove.Cell, possibleMoves[new Random().Next(possibleMoves.Length)]);
       }
-      var historicalMoves = History.Where(play => play.Outcome == 1 && play.Has(GameState)).ToList();
+      //var historicalMoves = History.Where(play => play.Outcome == 1 && play.Has(GameState)).ToList();
 
-      if (historicalMoves.Count > 0)
-      {
-        return historicalMoves[0].Turns.Find(turn => turn.GameState.Equals(GameState)).Move;
-      }
+      //if (historicalMoves.Any())
+      //{
+      //  return historicalMoves.FirstOrDefault().Turns.Find(turn => turn.GameState.Equals(GameState)).Move;
+      //}
 
       //var opponentWinningPaths = TicTacToe.GetWinningPaths(GameState, Oponent);
 
@@ -55,10 +57,10 @@ namespace tttGrd
       //}
       //var moves = TicTacToe.GetPossibleMoves(GameState).ToList();
       //return moves[new Random().Next(moves.Count)];
-      return (0, 0);
+      //return (0, 0);
     }
 
-    public (int, int) MakeMove((int, int) oponentMove) => SelectOptimalMove(oponentMove);
-    public (int, int) MakeMove() => (0, 0);
+    public (int Grid, int Cell) MakeMove((int Grid, int Cell) oponentMove) => SelectOptimalMove(oponentMove);
+    public (int Grid, int Cell) MakeMove() => (0, 0);
   }
 }
