@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace tttGrd
 {
@@ -8,20 +9,125 @@ namespace tttGrd
   {
     static void Main(string[] args)
     {
-      Console.WriteLine("Hello World!");
+      //var ai = new Gamer { Indicator = Field.X, Name = "AI 1", Oponent = Field.O };
+      //var player = new Gamer { Indicator = Field.O, Name = "PLAYER", Oponent = Field.X };
+
+      //var i = 0;
+
+      //while (i < 10)
+      //{
+      //  ai.History.Add(new Play());
+      //  var state = new State();
+      //  var currentPlayer = new Random().Next(2);
+        
+      //  while (!IsWin(state) && !IsFull(state))
+      //  {
+      //    Console.Clear();
+      //    DisplayBoard(state);
+      //    var name = currentPlayer == 0 ? player.Name : ai.Name;
+      //    var message = $"{name}'s turn: ";
+      //    Console.Write(message);
+
+      //    ai.GameState = state;
+      //    var move = currentPlayer == 0 ? MakeMove() : ai.MakeMove();
+
+      //    if (currentPlayer == 1)
+      //    {
+      //      Console.WriteLine(move);
+      //      Console.ReadLine();
+      //    }
+
+      //    var indicator = currentPlayer == 0 ? player.Indicator : ai.Indicator;
+
+      //    try
+      //    {
+      //      state = Play(state, move, indicator);
+      //      ai.History[ai.History.Count - 1].Turns.Add(new Turn { GameState = ai.GameState, Move = move });
+      //      currentPlayer = (currentPlayer + 1) % 2;
+      //    }
+      //    catch (Exception e)
+      //    {
+      //      if (e.Message == "Invalid Move")
+      //      {
+      //        message = "Invalid Move, Please try again: ";
+      //        continue;
+      //      }
+      //      if (e.Message == "Move Already Made")
+      //      {
+      //        message = $"Cell {move} is not empty, Please choose another: ";
+      //      }
+      //    }
+      //  }
+
+      //  Console.Clear();
+      //  DisplayBoard(state);
+
+      //  if (!IsFull(state))
+      //  {
+      //    if (currentPlayer == 0)
+      //    {
+      //    }
+      //    else
+      //    {
+      //      ai.History[ai.History.Count - 1].Outcome = 1;
+      //    }
+      //    Console.WriteLine(currentPlayer == 0 ? "PLAYER Won." : "AI Won.");
+      //  }
+      //  else
+      //  {
+      //    Console.WriteLine("It is a Tie");
+      //  }
+        
+      //  Console.ReadLine();
+      //}
+      //++i;
     }
 
-    public static State Play(State currentState, int move, Field tile)
+    private static (int Grid, int Cell) MakeMove()
     {
-      if (move < 0 || move > 8) throw new ArgumentException("Invalid Move");
+      var move = Console.ReadLine().Trim().Split(',').Select(int.Parse).ToArray();
+      return (Grid: move.First(), Cell: move.Last());
+    }
 
-      if (currentState.Fields[move / 3][move % 3] != Field.Empty) throw new ArgumentException("Move Already Made");
+    private static void DisplayBoard(State state)
+    {
+      var board = new StringBuilder();
+
+      board.AppendLine("+--- --- ---+--- --- ---+--- --- ---+");
+
+      var strState = state.ToString().Split('@').Select(str => string.Concat(str.Split('|')).ToCharArray()).ToArray();
+
+      for (var i = 0; i < strState.Length; i += 3)
+      {
+        var s = strState.Select((grid, k) => new { Index = k, Grid = grid })
+            .Where(elmt => elmt.Index >= i && elmt.Index < (i + 3))
+            .Select(elmt => elmt.Grid)
+            .ToArray();
+
+        for (var j = 0; j < 9; j += 3)
+        {
+          board.AppendLine("| " + string.Join(" | ", s.Select(grid => grid[j] + " | " + grid[j + 1] + " | " + grid[j + 2])) + " |");
+          if (j <= 3) board.AppendLine("|--- --- ---|--- --- ---|--- --- ---|");
+        }
+        board.Append("+--- --- ---+--- --- ---+--- --- ---+\n");
+      }
+
+      Console.WriteLine(board.ToString());
+    }
+
+    public static State Play(State currentState, (int Grid, int Cell) move, Field tile)
+    {
+      if (move.Grid < 0 || move.Grid > 8 || move.Cell < 0 || move.Cell > 8) throw new ArgumentException("Invalid Move");
+
+      if (currentState.Fields[move.Grid][move.Cell] != Field.Empty) throw new ArgumentException("Move Already Made");
 
       var nextState = new State(currentState);
-      nextState.Fields[move / 3][move % 3] = tile;
+      nextState.Fields[move.Grid][move.Cell] = tile;
 
       return nextState;
     }
+
+    public static bool IsWin(State state) => state.Fields.All(grid => IsWin(grid));
 
     public static bool IsWin(IEnumerable<Field> grid)
     {
@@ -81,7 +187,7 @@ namespace tttGrd
 
     public static IEnumerable<int> GetPossibleMoves(IEnumerable<Field> grid) =>
       grid.Select((cell, index) => new { cell, index })
-           .Where(tile => tile.cell == Field.Empty)
-           .Select(tile => tile.index);
+          .Where(tile => tile.cell == Field.Empty)
+          .Select(tile => tile.index);
   }
 }
