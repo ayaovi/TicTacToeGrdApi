@@ -9,78 +9,80 @@ namespace tttGrd
   {
     static void Main(string[] args)
     {
-      //var ai = new Gamer { Indicator = Field.X, Name = "AI 1", Oponent = Field.O };
-      //var player = new Gamer { Indicator = Field.O, Name = "PLAYER", Oponent = Field.X };
+      var ai = new Gamer { Indicator = Field.X, Name = "AI", Oponent = Field.O };
+      var player = new Gamer { Indicator = Field.O, Name = "PLAYER", Oponent = Field.X };
 
-      //var i = 0;
+      var i = 0;
 
-      //while (i < 10)
-      //{
-      //  ai.History.Add(new Play());
-      //  var state = new State();
-      //  var currentPlayer = new Random().Next(2);
-        
-      //  while (!IsWin(state) && !IsFull(state))
-      //  {
-      //    Console.Clear();
-      //    DisplayBoard(state);
-      //    var name = currentPlayer == 0 ? player.Name : ai.Name;
-      //    var message = $"{name}'s turn: ";
-      //    Console.Write(message);
+      while (i < 10)
+      {
+        ai.History.Add(new Play());
+        var state = new State();
+        var currentPlayer = new Random().Next(2);
 
-      //    ai.GameState = state;
-      //    var move = currentPlayer == 0 ? MakeMove() : ai.MakeMove();
+        var move = (0, 0);
 
-      //    if (currentPlayer == 1)
-      //    {
-      //      Console.WriteLine(move);
-      //      Console.ReadLine();
-      //    }
+        while (!IsWin(state) && !IsFull(state))
+        {
+          Console.Clear();
+          DisplayBoard(state);
+          var name = currentPlayer == 0 ? player.Name : ai.Name;
+          var message = $"{name}'s turn: ";
+          Console.Write(message);
 
-      //    var indicator = currentPlayer == 0 ? player.Indicator : ai.Indicator;
+          ai.GameState = state;
+          move = currentPlayer == 0 ? MakeMove() : ai.MakeMove(move);
 
-      //    try
-      //    {
-      //      state = Play(state, move, indicator);
-      //      ai.History[ai.History.Count - 1].Turns.Add(new Turn { GameState = ai.GameState, Move = move });
-      //      currentPlayer = (currentPlayer + 1) % 2;
-      //    }
-      //    catch (Exception e)
-      //    {
-      //      if (e.Message == "Invalid Move")
-      //      {
-      //        message = "Invalid Move, Please try again: ";
-      //        continue;
-      //      }
-      //      if (e.Message == "Move Already Made")
-      //      {
-      //        message = $"Cell {move} is not empty, Please choose another: ";
-      //      }
-      //    }
-      //  }
+          if (currentPlayer == 1)
+          {
+            Console.WriteLine(move);
+            Console.ReadLine();
+          }
 
-      //  Console.Clear();
-      //  DisplayBoard(state);
+          var indicator = currentPlayer == 0 ? player.Indicator : ai.Indicator;
 
-      //  if (!IsFull(state))
-      //  {
-      //    if (currentPlayer == 0)
-      //    {
-      //    }
-      //    else
-      //    {
-      //      ai.History[ai.History.Count - 1].Outcome = 1;
-      //    }
-      //    Console.WriteLine(currentPlayer == 0 ? "PLAYER Won." : "AI Won.");
-      //  }
-      //  else
-      //  {
-      //    Console.WriteLine("It is a Tie");
-      //  }
-        
-      //  Console.ReadLine();
-      //}
-      //++i;
+          try
+          {
+            state = Play(state, move, indicator);
+            ai.History[ai.History.Count - 1].Turns.Add(new Turn { GameState = ai.GameState, Move = move });
+            currentPlayer = (currentPlayer + 1) % 2;
+          }
+          catch (Exception e)
+          {
+            if (e.Message == "Invalid Move")
+            {
+              message = "Invalid Move, Please try again: ";
+              continue;
+            }
+            if (e.Message == "Move Already Made")
+            {
+              message = $"Cell {move} is not empty, Please choose another: ";
+            }
+          }
+        }
+
+        Console.Clear();
+        DisplayBoard(state);
+
+        if (!IsFull(state))
+        {
+          if (currentPlayer == 0)
+          {
+          }
+          else
+          {
+            ai.History[ai.History.Count - 1].Outcome = 1;
+          }
+          Console.WriteLine(currentPlayer == 0 ? "PLAYER Won." : "AI Won.");
+        }
+        else
+        {
+          Console.WriteLine("It is a Tie");
+        }
+
+        Console.ReadLine();
+      }
+      ++i;
     }
 
     private static (int Grid, int Cell) MakeMove()
@@ -95,7 +97,7 @@ namespace tttGrd
 
       board.AppendLine("+--- --- ---+--- --- ---+--- --- ---+");
 
-      var strState = state.ToString().Split('@').Select(str => string.Concat(str.Split('|')).ToCharArray()).ToArray();
+      var strState = state.ToString().ToUpper().Split('@').Select(str => string.Concat(str.Split('|')).ToCharArray()).ToArray();
 
       for (var i = 0; i < strState.Length; i += 3)
       {
