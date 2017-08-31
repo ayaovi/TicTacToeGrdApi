@@ -39,6 +39,8 @@ namespace tttGrd
 
         if (myEminentWinningPaths.Any()) return (oponentMove.Cell, myEminentWinningPaths.First().FirstOrDefault());
 
+        if (myWinningPaths.Any()) return (oponentMove.Cell, myWinningPaths.First().FirstOrDefault()); // is the first always best? or should be assigning scores here?
+
         var possibleMoves = Program.GetPossibleMoves(currentGrid).ToArray();
         var optimalMoves = possibleMoves.Where(x => !Program.IsWin(GameState.Fields[x]))  // strip away already won grid.
                                         .Where(x => Program.GetWinningPaths(GameState.Fields[x], Oponent).All(path => path.Length != 1))  // strip away grids where openent is about to win.

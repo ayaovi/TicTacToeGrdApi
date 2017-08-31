@@ -219,5 +219,30 @@ namespace tttGrd.Test
       Assert.AreEqual(0, move.Grid);
       Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
     }
+
+    [Test]
+    public void MakeMove_GivenOpportunity_ShouldMaximiseMyWinningChances()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.X,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          "...|.x.|...", "...|...|.o.", "...|x..|...",
+          "o..|.o.|...", ".x.|.o.|...", "..o|...|...",
+          "...|...|...", "...|x..|...", "...|...|..."
+        }),
+        Oponent = Field.O
+      };
+
+      //Act
+      var move = gamer.MakeMove((3, 4));
+      var possibleCellIndices = new List<int> { 0, 2 };
+
+      //Assert
+      Assert.AreEqual(4, move.Grid);
+      Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
+    }
   }
 }
