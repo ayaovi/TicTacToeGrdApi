@@ -76,7 +76,6 @@ namespace tttGrd.Test
     [Test]
     public void MakeMove_GivenPreviousMoveToGridNineCellNineWithEveryButGridFiveWon_ExpectMoveInGridFive()
     {
-      //MakeMove_GivenNextMoveInGridGamerIsAboutToWin_ExpectWinningOfGrid also passing by vertue.
       //Arrange
       var gamer = new Gamer
       {
@@ -110,7 +109,7 @@ namespace tttGrd.Test
         GameState = new State(new[]{
           "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|xox",
           "xxx|o..|xoo", "x..|...|..o", "xxx|o..|xoo",
-          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|xoo"
+          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|oox"
         }),
         Oponent = Field.X
       };
@@ -146,6 +145,54 @@ namespace tttGrd.Test
       //Assert
       Assert.AreEqual(8, move.Grid);
       Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
+    }
+
+    [Test]
+    public void MakeMove_GivenOportunityToWinGrid_ShouldWin()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.X,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          "x.x|...|..o", "...|...|..x", ".o.|...|...",
+          "...|...|x..", "...|..o|...", "...|...|x..",
+          "o..|o..|...", "...|...|...", "...|.x.|..."
+        }),
+        Oponent = Field.O
+      };
+
+      //Act
+      var move = gamer.MakeMove((8, 0));
+
+      //Assert
+      Assert.AreEqual(0, move.Grid);
+      Assert.AreEqual(1, move.Cell);
+    }
+
+    [Test]
+    public void MakeMove_GivenOportunityForOponentToWinGrid_ShouldStopOponent()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.O,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          "x.x|...|..o", "...|...|..x", ".o.|...|...",
+          "...|...|x..", "...|..o|...", "...|...|x..",
+          "o..|o..|...", "...|...|...", "...|.x.|..."
+        }),
+        Oponent = Field.X
+      };
+
+      //Act
+      var move = gamer.MakeMove((8, 0));
+
+      //Assert
+      Assert.AreEqual(0, move.Grid);
+      Assert.AreEqual(1, move.Cell);
     }
   }
 }

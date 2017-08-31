@@ -27,8 +27,19 @@ namespace tttGrd
       }
       else
       {
-        // must play in mini-board oponentMove.Cell.
-        var possibleMoves = Program.GetPossibleMoves(GameState.Fields[oponentMove.Cell]).ToArray();
+        // must play in grid corresponding to oponentMove.Cell.
+        var currentGrid = GameState.Fields[oponentMove.Cell]; 
+        var opponentWinningPaths = Program.GetWinningPaths(currentGrid, Oponent); // check for oponent's winning paths.
+        var oponentEminentWinningPaths = opponentWinningPaths.Where(path => path.Length == 1).ToList();  // check oponent's winning paths.
+
+        if (oponentEminentWinningPaths.Any()) return (oponentMove.Cell, oponentEminentWinningPaths.First().FirstOrDefault());
+
+        var myWinningPaths = Program.GetWinningPaths(currentGrid, Indicator);  // check for my winning paths.
+        var myEminentWinningPaths = myWinningPaths.Where(path => path.Length == 1).ToList();  // check eminent winning paths.
+
+        if (myEminentWinningPaths.Any()) return (oponentMove.Cell, myEminentWinningPaths.First().FirstOrDefault());
+
+        var possibleMoves = Program.GetPossibleMoves(currentGrid).ToArray();
         var optimalMoves = possibleMoves.Where(x => !Program.IsWin(GameState.Fields[x])).ToArray();
         return optimalMoves.Any() ? (oponentMove.Cell, optimalMoves[new Random().Next(optimalMoves.Length)]) :
           (oponentMove.Cell, possibleMoves[new Random().Next(possibleMoves.Length)]);

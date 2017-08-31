@@ -59,7 +59,6 @@
     <Compile Include="PlayTests.cs" />
     <Compile Include="StateTests.cs" />
     <Compile Include="TurnTests.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
