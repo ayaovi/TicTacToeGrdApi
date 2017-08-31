@@ -40,7 +40,9 @@ namespace tttGrd
         if (myEminentWinningPaths.Any()) return (oponentMove.Cell, myEminentWinningPaths.First().FirstOrDefault());
 
         var possibleMoves = Program.GetPossibleMoves(currentGrid).ToArray();
-        var optimalMoves = possibleMoves.Where(x => !Program.IsWin(GameState.Fields[x])).ToArray();
+        var optimalMoves = possibleMoves.Where(x => !Program.IsWin(GameState.Fields[x]))  // strip away already won grid.
+                                        .Where(x => Program.GetWinningPaths(GameState.Fields[x], Oponent).All(path => path.Length != 1))  // strip away grids where openent is about to win.
+                                        .ToArray();
         return optimalMoves.Any() ? (oponentMove.Cell, optimalMoves[new Random().Next(optimalMoves.Length)]) :
           (oponentMove.Cell, possibleMoves[new Random().Next(possibleMoves.Length)]);
       }

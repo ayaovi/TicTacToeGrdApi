@@ -172,7 +172,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenOportunityForOponentToWinGrid_ShouldStopOponent()
+    public void MakeMove_GivenOpportunityForOponentToWinGrid_ShouldStopOponent()
     {
       //Arrange
       var gamer = new Gamer
@@ -193,6 +193,31 @@ namespace tttGrd.Test
       //Assert
       Assert.AreEqual(0, move.Grid);
       Assert.AreEqual(1, move.Cell);
+    }
+
+    [Test]
+    public void MakeMove_GivenOpportunity_ShouldNotSendOponentWhereHeIsAboutToWin()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.X,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          ".x.|...|...", "..o|.o.|...", "...|.x.|...",
+          ".x.|...|...", "...|ox.|o..", "...|...|...",
+          "...|...|..x", "...|...|...", "o..|...|..."
+        }),
+        Oponent = Field.O
+      };
+
+      //Act
+      var move = gamer.MakeMove((8, 0));
+      var possibleCellIndices = new List<int> { 0, 2, 3, 5, 6, 7, 8 };
+
+      //Assert
+      Assert.AreEqual(0, move.Grid);
+      Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
     }
   }
 }
