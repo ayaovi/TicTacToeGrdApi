@@ -21,17 +21,23 @@ namespace tttGrd
         var currentPlayer = new Random().Next(2);
 
         var move = (0, 0);
+        var isOn = false;
 
         while (!IsWin(state) && !IsFull(state))
         {
           Console.Clear();
           DisplayBoard(state);
           var name = currentPlayer == 0 ? player.Name : ai.Name;
+
+          if (isOn) Console.WriteLine($"Openent's move was: {move}\n");
+
           var message = $"{name}'s turn: ";
           Console.Write(message);
 
           ai.GameState = state;
-          move = currentPlayer == 0 ? MakeMove() : ai.MakeMove(move);
+
+          if (!isOn) move = currentPlayer == 0 ? MakeMove() : ai.MakeMove();
+          else move = currentPlayer == 0 ? MakeMove() : ai.MakeMove(move);
 
           if (currentPlayer == 1)
           {
@@ -49,16 +55,10 @@ namespace tttGrd
           }
           catch (Exception e)
           {
-            if (e.Message == "Invalid Move")
-            {
-              message = "Invalid Move, Please try again: ";
-              continue;
-            }
-            if (e.Message == "Move Already Made")
-            {
-              message = $"Cell {move} is not empty, Please choose another: ";
-            }
+            continue;
           }
+
+          isOn = true;
         }
 
         Console.Clear();
@@ -81,13 +81,13 @@ namespace tttGrd
         }
 
         Console.ReadLine();
+        ++i;
       }
-      ++i;
     }
 
     private static (int Grid, int Cell) MakeMove()
     {
-      var move = Console.ReadLine().Trim().Split(',').Select(int.Parse).ToArray();
+      var move = Console.ReadLine()?.Trim().Split(',').Select(int.Parse).ToArray();
       return (Grid: move.First(), Cell: move.Last());
     }
 
