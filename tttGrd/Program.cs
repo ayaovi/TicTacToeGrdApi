@@ -21,7 +21,7 @@ namespace tttGrd
         var currentPlayer = new Random().Next(2);
 
         var move = (0, 0);
-        var isOn = false;
+        var pastFirstPlay = false;
 
         while (!IsWin(state) && !IsFull(state))
         {
@@ -29,14 +29,14 @@ namespace tttGrd
           DisplayBoard(state);
           var name = currentPlayer == 0 ? player.Name : ai.Name;
 
-          if (isOn) Console.WriteLine($"Openent's move was: {move}\n");
+          if (pastFirstPlay) Console.WriteLine($"Openent's move was: {move}\n");
 
           var message = $"{name}'s turn: ";
           Console.Write(message);
 
           ai.GameState = state;
 
-          if (!isOn) move = currentPlayer == 0 ? MakeMove() : ai.MakeMove();
+          if (!pastFirstPlay) move = currentPlayer == 0 ? MakeMove() : ai.MakeMove();
           else move = currentPlayer == 0 ? MakeMove() : ai.MakeMove(move);
 
           if (currentPlayer == 1)
@@ -58,7 +58,7 @@ namespace tttGrd
             continue;
           }
 
-          isOn = true;
+          pastFirstPlay = true;
         }
 
         Console.Clear();

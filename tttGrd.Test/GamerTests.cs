@@ -244,5 +244,55 @@ namespace tttGrd.Test
       Assert.AreEqual(4, move.Grid);
       Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
     }
+
+    [Test]
+    public void MakeMove_GivenOpportunity_ShouldAvoidSendingOponentWhereHeHasHigherChanceOfWinning()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.X,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          "x.o|.o.|...", "...|.o.|...", "...|...|...",
+          "...|...|...", "xx.|...|...", "...|...|...",
+          "...|...|...", "...|...|...", "...|...|..."
+        }),
+        Oponent = Field.O
+      };
+
+      //Act
+      var move = gamer.MakeMove((0, 2));
+      var possibleCellIndices = new List<int> { 2, 3, 4, 5, 6, 7, 8 };
+
+      //Assert
+      Assert.AreEqual(2, move.Grid);
+      Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
+    }
+
+    [Test]
+    public void MakeMove_GivenOpportunity_ShouldAvoidSendingOponentWhereMyWinIsEminent()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.X,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          "x.o|.o.|...", "...|.o.|...", "...|...|...",
+          "...|...|...", "xx.|...|...", "...|...|...",
+          "...|...|...", "...|...|...", "...|...|..."
+        }),
+        Oponent = Field.O
+      };
+
+      //Act
+      var move = gamer.MakeMove((0, 2));
+      var possibleCellIndices = new List<int> { 2, 3, 5, 6, 7, 8 };
+
+      //Assert
+      Assert.AreEqual(2, move.Grid);
+      Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
+    }
   }
 }

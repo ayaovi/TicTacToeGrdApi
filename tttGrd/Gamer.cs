@@ -28,7 +28,7 @@ namespace tttGrd
       else
       {
         // must play in grid corresponding to oponentMove.Cell.
-        var currentGrid = GameState.Fields[oponentMove.Cell]; 
+        var currentGrid = GameState.Fields[oponentMove.Cell];
         var opponentWinningPaths = Program.GetWinningPaths(currentGrid, Oponent); // check for oponent's winning paths.
         var oponentEminentWinningPaths = opponentWinningPaths.Where(path => path.Length == 1).ToList();  // check oponent's winning paths.
 
@@ -44,10 +44,19 @@ namespace tttGrd
         var possibleMoves = Program.GetPossibleMoves(currentGrid).ToArray();
         var optimalMoves = possibleMoves.Where(x => !Program.IsWin(GameState.Fields[x]))  // strip away already won grid.
                                         .Where(x => Program.GetWinningPaths(GameState.Fields[x], Oponent).All(path => path.Length != 1))  // strip away grids where openent is about to win.
+                                        .Where(x => IHaveWinningChance(x, (a, b) => a >= b)) // strip away grids where openent's winning chances are higher than mine.
+                                        .Where(x => !HasEminentWinning(GameState.Fields[x], Indicator)) // strip away grids wher my winning is eminent.
                                         .ToArray();
         return optimalMoves.Any() ? (oponentMove.Cell, optimalMoves[new Random().Next(optimalMoves.Length)]) :
           (oponentMove.Cell, possibleMoves[new Random().Next(possibleMoves.Length)]);
       }
+    }
+
+    private bool HasEminentWinning(IEnumerable<Field> grid, Field indicator) => Program.GetWinningPaths(grid, indicator).Where(path => path.Length == 1).Any();
+
+    private bool IHaveWinningChance(int gridIndex, Func<int, int, bool> comparator)
+    {
+      return comparator(Program.GetWinningPaths(GameState.Fields[gridIndex], Indicator).Count, Program.GetWinningPaths(GameState.Fields[gridIndex], Oponent).Count);
     }
 
     public (int Grid, int Cell) MakeMove((int Grid, int Cell) oponentMove) => SelectOptimalMove(oponentMove);
