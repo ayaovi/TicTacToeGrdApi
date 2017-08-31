@@ -40,8 +40,8 @@ namespace tttGrd
 
       if (myWinningPaths.Any())
       {
-        var optimalCell = GetOptimalCellIndices(myWinningPaths.SelectMany(x => x)).ToList();
-        return optimalCell.Any() ? (oponentMove.Cell, optimalCell.First()) : (oponentMove.Cell, myWinningPaths.First().FirstOrDefault());
+        var optimalCells = GetOptimalCellIndices(myWinningPaths.SelectMany(x => x)).ToList();
+        return optimalCells.Any() ? (oponentMove.Cell, optimalCells.First()) : (oponentMove.Cell, myWinningPaths.First().FirstOrDefault());
       }
 
       var possibleMoves = Program.GetPossibleMoves(currentGrid).ToArray();
@@ -66,6 +66,11 @@ namespace tttGrd
     }
 
     public (int Grid, int Cell) MakeMove((int Grid, int Cell) oponentMove) => SelectOptimalMove(oponentMove);
-    public (int Grid, int Cell) MakeMove() => (0, 0);
+
+    public (int Grid, int Cell) MakeMove()
+    {
+      var rand = new Random();
+      return (rand.Next(0, 9), rand.Next(0, 9));
+    }
   }
 }
