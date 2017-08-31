@@ -20,43 +20,47 @@ namespace tttGrd
         var possibleGridIndices = Enumerable.Range(0, 9)
           .Where(x => x != oponentMove.Cell && !Program.IsWin(GameState.Fields[x])).ToArray();
         var selectedGridIndex = possibleGridIndices[new Random().Next(possibleGridIndices.Length)];
-        var possibleCellIndices = GetOptimalCellIndices(Program.GetPossibleMoves(GameState.Fields[selectedGridIndex])).ToArray();
-        return (selectedGridIndex, possibleCellIndices[new Random().Next(possibleCellIndices.Length)]);
+        var cellIndices = Program.GetPossibleMoves(GameState.Fields[selectedGridIndex]).ToArray();
+        var optimalCellIndices = GetOptimalCellIndices(cellIndices).ToArray();
+        return optimalCellIndices.Any() ? (selectedGridIndex, optimalCellIndices[new Random().Next(optimalCellIndices.Length)]) :
+          (selectedGridIndex, cellIndices[new Random().Next(cellIndices.Length)]);
       }
-      else
+
+      // must play in grid corresponding to oponentMove.Cell.
+      var currentGrid = GameState.Fields[oponentMove.Cell];
+      var opponentWinningPaths = Program.GetWinningPaths(currentGrid, Oponent); // check for oponent's winning paths.
+      var oponentEminentWinningPaths = opponentWinningPaths.Where(path => path.Length == 1).ToList();  // check oponent's winning paths.
+
+      if (oponentEminentWinningPaths.Any()) return (oponentMove.Cell, oponentEminentWinningPaths.First().FirstOrDefault());
+
+      var myWinningPaths = Program.GetWinningPaths(currentGrid, Indicator);  // check for my winning paths.
+      var myEminentWinningPaths = myWinningPaths.Where(path => path.Length == 1).ToList();  // check eminent winning paths.
+
+      if (myEminentWinningPaths.Any()) return (oponentMove.Cell, myEminentWinningPaths.First().FirstOrDefault());
+
+      if (myWinningPaths.Any())
       {
-        // must play in grid corresponding to oponentMove.Cell.
-        var currentGrid = GameState.Fields[oponentMove.Cell];
-        var opponentWinningPaths = Program.GetWinningPaths(currentGrid, Oponent); // check for oponent's winning paths.
-        var oponentEminentWinningPaths = opponentWinningPaths.Where(path => path.Length == 1).ToList();  // check oponent's winning paths.
-
-        if (oponentEminentWinningPaths.Any()) return (oponentMove.Cell, oponentEminentWinningPaths.First().FirstOrDefault());
-
-        var myWinningPaths = Program.GetWinningPaths(currentGrid, Indicator);  // check for my winning paths.
-        var myEminentWinningPaths = myWinningPaths.Where(path => path.Length == 1).ToList();  // check eminent winning paths.
-
-        if (myEminentWinningPaths.Any()) return (oponentMove.Cell, myEminentWinningPaths.First().FirstOrDefault());
-
-        if (myWinningPaths.Any()) return (oponentMove.Cell, myWinningPaths.First().FirstOrDefault()); // is the first always best? or should be assigning scores here?
-
-        var possibleMoves = Program.GetPossibleMoves(currentGrid).ToArray();
-        var optimalMoves = GetOptimalCellIndices(possibleMoves).ToArray();
-        return optimalMoves.Any() ? (oponentMove.Cell, optimalMoves[new Random().Next(optimalMoves.Length)]) :
-          (oponentMove.Cell, possibleMoves[new Random().Next(possibleMoves.Length)]);
+        var optimalCell = GetOptimalCellIndices(myWinningPaths.SelectMany(x => x)).ToList();
+        return optimalCell.Any() ? (oponentMove.Cell, optimalCell.First()) : (oponentMove.Cell, myWinningPaths.First().FirstOrDefault());
       }
+
+      var possibleMoves = Program.GetPossibleMoves(currentGrid).ToArray();
+      var optimalMoves = GetOptimalCellIndices(possibleMoves).ToArray();
+      return optimalMoves.Any() ? (oponentMove.Cell, optimalMoves[new Random().Next(optimalMoves.Length)]) :
+        (oponentMove.Cell, possibleMoves[new Random().Next(possibleMoves.Length)]);
     }
 
     private IEnumerable<int> GetOptimalCellIndices(IEnumerable<int> cellIndices)
     {
       return cellIndices.Where(x => !Program.IsWin(GameState.Fields[x]))  // strip away already won grid.
                         .Where(x => Program.GetWinningPaths(GameState.Fields[x], Oponent).All(path => path.Length != 1))  // strip away grids where openent is about to win.
-                        .Where(x => IHaveWinningChance(x, (a, b) => a >= b)) // strip away grids where openent's winning chances are higher than mine.
+                        .Where(x => HaveWinningChance(x, (a, b) => a >= b)) // strip away grids where openent's winning chances are higher than mine.
                         .Where(x => !HasEminentWinning(GameState.Fields[x], Indicator)); // strip away grids wher my winning is eminent.
     }
 
-    private bool HasEminentWinning(IEnumerable<Field> grid, Field indicator) => Program.GetWinningPaths(grid, indicator).Where(path => path.Length == 1).Any();
+    private bool HasEminentWinning(IEnumerable<Field> grid, Field indicator) => Program.GetWinningPaths(grid, indicator).Any(path => path.Length == 1);
 
-    private bool IHaveWinningChance(int gridIndex, Func<int, int, bool> comparator)
+    private bool HaveWinningChance(int gridIndex, Func<int, int, bool> comparator)
     {
       return comparator(Program.GetWinningPaths(GameState.Fields[gridIndex], Indicator).Count, Program.GetWinningPaths(GameState.Fields[gridIndex], Oponent).Count);
     }

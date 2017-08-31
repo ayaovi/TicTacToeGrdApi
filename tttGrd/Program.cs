@@ -9,16 +9,21 @@ namespace tttGrd
   {
     static void Main(string[] args)
     {
-      var ai = new Gamer { Indicator = Field.X, Name = "AI", Oponent = Field.O };
-      var player = new Gamer { Indicator = Field.O, Name = "PLAYER", Oponent = Field.X };
+      var ais = new[]
+      {
+        new Gamer { Indicator = Field.X, Name = "AI 1", Oponent = Field.O },
+        new Gamer { Indicator = Field.O, Name = "AI 2", Oponent = Field.X }
+
+      };
+      //var player = new Gamer { Indicator = Field.O, Name = "PLAYER", Oponent = Field.X };
 
       var i = 0;
 
       while (i < 10)
       {
-        ai.History.Add(new Play());
+        //ai.History.Add(new Play());
         var state = new State();
-        var currentPlayer = new Random().Next(2);
+        var currentGamer = new Random().Next(2);
 
         var move = (0, 0);
         var pastFirstPlay = false;
@@ -27,31 +32,26 @@ namespace tttGrd
         {
           Console.Clear();
           DisplayBoard(state);
-          var name = currentPlayer == 0 ? player.Name : ai.Name;
+          var name = ais[currentGamer].Name;
 
           if (pastFirstPlay) Console.WriteLine($"Openent's move was: {move}\n");
 
           var message = $"{name}'s turn: ";
           Console.Write(message);
 
-          ai.GameState = state;
+          ais[currentGamer].GameState = state;
 
-          if (!pastFirstPlay) move = currentPlayer == 0 ? MakeMove() : ai.MakeMove();
-          else move = currentPlayer == 0 ? MakeMove() : ai.MakeMove(move);
+          move = !pastFirstPlay ? ais[currentGamer].MakeMove() : ais[currentGamer].MakeMove(move);
 
-          if (currentPlayer == 1)
-          {
-            Console.WriteLine(move);
-            Console.ReadLine();
-          }
+          Console.WriteLine(move);
+          Console.ReadLine();
 
-          var indicator = currentPlayer == 0 ? player.Indicator : ai.Indicator;
+          var indicator = ais[currentGamer].Indicator;
 
           try
           {
             state = Play(state, move, indicator);
-            ai.History[ai.History.Count - 1].Turns.Add(new Turn { GameState = ai.GameState, Move = move });
-            currentPlayer = (currentPlayer + 1) % 2;
+            currentGamer = (currentGamer + 1) % 2;
           }
           catch (Exception e)
           {
@@ -66,14 +66,7 @@ namespace tttGrd
 
         if (!IsFull(state))
         {
-          if (currentPlayer == 0)
-          {
-          }
-          else
-          {
-            ai.History[ai.History.Count - 1].Outcome = 1;
-          }
-          Console.WriteLine(currentPlayer == 0 ? "PLAYER Won." : "AI Won.");
+          Console.WriteLine(currentGamer == 0 ? "PLAYER Won." : "AI Won.");
         }
         else
         {

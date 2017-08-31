@@ -320,5 +320,30 @@ namespace tttGrd.Test
       Assert.IsTrue(possibleGridIndices.Contains(move.Grid));
       Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
     }
+
+    [Test]
+    public void MakeMove_GivenPlay_ShouldNotDirectOponentToGridZero()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.X,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          "x.o|oox|...", "x..|...|o..", "...|...|..x",
+          "oo.|...|x..", "x..|x.o|...", "...|xox|..o",
+          ".x.|..o|...", "...|.o.|...", "...|.x.|o.."
+        }),
+        Oponent = Field.O
+      };
+
+      //Act
+      var move = gamer.MakeMove((1, 6));
+      var possibleCellIndices = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+      //Assert
+      Assert.AreEqual(6, move.Grid);
+      Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
+    }
   }
 }
