@@ -123,7 +123,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenPreviousMove_ShouldSendOponentToAlreadyWonGridIfNoWayToAvoidIt()
+    public void MakeMove_GivenPreviousMove_ShouldOnlySendOponentToAlreadyWonGridIfNoWayToAvoidIt()
     {
       //Arrange
       var gamer = new Gamer
@@ -292,6 +292,32 @@ namespace tttGrd.Test
 
       //Assert
       Assert.AreEqual(2, move.Grid);
+      Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
+    }
+
+    [Test]
+    public void MakeMove_GivenPlay_ShouldNotDirectOponentToGridFour()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.X,
+        Name = "Gamer_2",
+        GameState = new State(new[]{
+          "...|...|...", "...|...|...", "...|...|...",
+          "...|.o.|...", "...|...|xxx", "...|...|...",
+          "...|.o.|...", "...|.o.|...", "...|.o.|..."
+        }),
+        Oponent = Field.O
+      };
+
+      //Act
+      var move = gamer.MakeMove((8, 4));
+      var possibleGridIndices = new List<int> { 0, 1, 2, 3, 5, 6, 7, 8 };
+      var possibleCellIndices = new List<int> { 0, 1, 2, 3, 5, 6, 7, 8 };
+
+      //Assert
+      Assert.IsTrue(possibleGridIndices.Contains(move.Grid));
       Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
     }
   }
