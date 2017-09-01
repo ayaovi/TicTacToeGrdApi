@@ -380,8 +380,8 @@ namespace tttGrd.Test
     {
       //Arrange
       var gamer = new Gamer();
-      var prob = Enumerable.Repeat(new[] { 0, 0, 0, 0, 1, 0, 0, 0, 0 }, 9).ToArray();
-      
+      var prob = Enumerable.Repeat(new[] { 1f / 9f, 1f / 9f, 1f / 9f, 1f / 9f, 1, 1f / 9f, 1f / 9f, 1f / 9f, 1f / 9f }, 9).ToArray();
+
       //Act && Assert
       gamer.CellProbabilities.ShouldBeEquivalentTo(prob);
     }
