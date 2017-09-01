@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace tttGrd.Test
 {
@@ -7,7 +8,7 @@ namespace tttGrd.Test
   public class GamerTests
   {
     [Test]
-    public void MakeMove_GivenNoGamerHistoryAndDefaultState_ExpectTupleZeroZero()
+    public void MakeMove_GivenNoGamerHistoryAndDefaultState_ExpectRandomMoveWithingConstraint()
     {
       //Arrange
       var gamer = new Gamer
@@ -18,8 +19,14 @@ namespace tttGrd.Test
         Oponent = Field.O
       };
 
-      //Act && Assert
-      Assert.True(gamer.MakeMove().Equals((0, 0)));
+      var indices = Enumerable.Range(0, 9).ToList();
+
+      //Act 
+      var move = gamer.MakeMove();
+      
+      //Assert
+      Assert.True(indices.Contains(move.Grid));
+      Assert.True(indices.Contains(move.Cell));
     }
 
     [Test]
