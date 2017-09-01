@@ -106,7 +106,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenPreviousMove_ShouldTryAvoidSendingOponentToAlreadyWonGridIfPossible()
+    public void MakeMove_GivenPreviousMove_ShouldTryAvoidSendingOpponentToAlreadyWonGridIfPossible()
     {
       //Arrange
       var gamer = new Gamer
@@ -130,7 +130,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenPreviousMove_ShouldOnlySendOponentToAlreadyWonGridIfNoWayToAvoidIt()
+    public void MakeMove_GivenPreviousMove_ShouldOnlySendOpponentToAlreadyWonGridIfNoWayToAvoidIt()
     {
       //Arrange
       var gamer = new Gamer
@@ -179,7 +179,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenOpportunityForOponentToWinGrid_ShouldStopOponent()
+    public void MakeMove_GivenOpportunityForOpponentToWinGrid_ShouldStopOpponent()
     {
       //Arrange
       var gamer = new Gamer
@@ -203,7 +203,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenOpportunity_ShouldNotSendOponentWhereHeIsAboutToWin()
+    public void MakeMove_GivenOpportunity_ShouldNotSendOpponentWhereHeIsAboutToWin()
     {
       //Arrange
       var gamer = new Gamer
@@ -253,7 +253,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenOpportunity_ShouldAvoidSendingOponentWhereHeHasHigherChanceOfWinning()
+    public void MakeMove_GivenOpportunity_ShouldAvoidSendingOpponentWhereHeHasHigherChanceOfWinning()
     {
       //Arrange
       var gamer = new Gamer
@@ -278,7 +278,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenOpportunity_ShouldAvoidSendingOponentWhereMyWinIsEminent()
+    public void MakeMove_GivenOpportunity_ShouldAvoidSendingOpponentWhereMyWinIsEminent()
     {
       //Arrange
       var gamer = new Gamer
@@ -303,7 +303,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenPlay_ShouldNotDirectOponentToGridFour()
+    public void MakeMove_GivenPlay_ShouldNotDirectOpponentToGridFour()
     {
       //Arrange
       var gamer = new Gamer
@@ -329,7 +329,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenPlay_ShouldNotDirectOponentToGridZero()
+    public void MakeMove_GivenPlay_ShouldNotDirectOpponentToGridZero()
     {
       //Arrange
       var gamer = new Gamer
@@ -371,7 +371,7 @@ namespace tttGrd.Test
 
       //Assert
       Assert.IsTrue(possibleGridIndices.Contains(move.Grid));
-      Assert.AreEqual(5, move.Cell);
+      Assert.AreEqual(4, move.Cell);
     }
   }
 }
