@@ -186,7 +186,7 @@ namespace tttGrd
           .Where(tile => tile.cell == Field.Empty)
           .Select(tile => tile.index);
 
-    public static float[][] UpdateCellsProbabilities(float[][] probs, State state, (int Grid, int Cell) move, Field gamer1Indicator)
+    public static float[][] UpdateCellsProbabilities(float[][] probs, State state, (int Grid, int Cell) move, Field indicator)
     {
       var copy = probs.Select(x => x.Select(x1 => x1).ToArray()).ToArray(); /* make a duplicate of cells probabilities. */
       copy[move.Grid][move.Cell] = 0.0f;  /* cell you just played cannot be played again. */
@@ -200,6 +200,15 @@ namespace tttGrd
               .ForEach(x => copy[move.Grid][x] += 2f / 9f);
 
       eminentWinIndices.ForEach(x => copy[move.Grid][x] = 1.0f); /* eminent win index should have 100% probability. */
+
+      if (state.Fields[move.Grid][move.Cell] != indicator)
+      {
+        var i = eminentWinIndices.Any() ? 2f / 9f : 1f / 9f;
+        Enumerable.Range(0, 9)
+          .Where(x => x != move.Grid)
+          .ToList()
+          .ForEach(x => copy[x][0] -= i);
+      }
 
       return copy;
     }
