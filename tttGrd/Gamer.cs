@@ -11,12 +11,13 @@ namespace tttGrd
     public State GameState { get; set; }
     public Field Oponent { get; set; }
     public List<Play> History { get; set; } = new List<Play>();
+    public int[][] CellProbabilities { get; set; } = Enumerable.Repeat(new[] { 0, 0, 0, 0, 1, 0, 0, 0, 0 }, 9).ToArray();
 
     private (int Grid, int Cell) SelectOptimalMove((int Grid, int Cell) oponentMove)
     {
       if (Program.IsWin(GameState.Fields[oponentMove.Cell]))
       {
-        // play anywhere else.
+        /* play anywhere else. */
         var possibleGridIndices = Enumerable.Range(0, 9)
           .Where(x => x != oponentMove.Cell && !Program.IsWin(GameState.Fields[x])).ToArray();
         var selectedGridIndex = possibleGridIndices[new Random().Next(possibleGridIndices.Length)];

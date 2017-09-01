@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 
 namespace tttGrd.Test
 {
@@ -23,7 +24,7 @@ namespace tttGrd.Test
 
       //Act 
       var move = gamer.MakeMove();
-      
+
       //Assert
       Assert.True(indices.Contains(move.Grid));
       Assert.True(indices.Contains(move.Cell));
@@ -372,6 +373,17 @@ namespace tttGrd.Test
       //Assert
       Assert.IsTrue(possibleGridIndices.Contains(move.Grid));
       Assert.AreEqual(4, move.Cell);
+    }
+
+    [Test]
+    public void Test_DefaultCellProbabilities()
+    {
+      //Arrange
+      var gamer = new Gamer();
+      var prob = Enumerable.Repeat(new[] { 0, 0, 0, 0, 1, 0, 0, 0, 0 }, 9).ToArray();
+      
+      //Act && Assert
+      gamer.CellProbabilities.ShouldBeEquivalentTo(prob);
     }
   }
 }
