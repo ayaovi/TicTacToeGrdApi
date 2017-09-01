@@ -8,7 +8,7 @@ namespace tttGrd
   {
     public Field Indicator { get; set; }
     public string Name { get; set; }
-    public State GameState { get; set; }
+    public State GameState { get; set; } = new State();
     public Field Oponent { get; set; }
     public List<Play> History { get; set; } = new List<Play>();
     public float[][] CellProbabilities { get; set; } = Enumerable.Repeat(new[] { 1f / 9f, 1f / 9f, 1f / 9f, 1f / 9f, 1, 1f / 9f, 1f / 9f, 1f / 9f, 1f / 9f }, 9).ToArray();

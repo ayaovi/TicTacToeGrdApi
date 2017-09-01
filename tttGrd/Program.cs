@@ -5,7 +5,7 @@ using System.Text;
 
 namespace tttGrd
 {
-  class Program
+  public class Program
   {
     static void Main(string[] args)
     {
@@ -152,7 +152,7 @@ namespace tttGrd
       var winningPaths = new List<int[]>();
       var allWinningPaths = new[]
       {
-        new[] { 0, 4, 8},   // Backward Diagonal [(0,0) (1,1) (2,2)]
+        new[] { 0, 4, 8 },   // Backward Diagonal [(0,0) (1,1) (2,2)]
         new[] { 2, 4, 6 },  // Forward Diagonal [(0,2) (1,1) (2,0)]
         new[] { 0, 1, 2 },  // First Horizontal [(0,0) (0,1) (0,2)]
         new[] { 3, 4, 5 },  // Second Horizontal [(1,0) (1,1) (1,2)]
@@ -185,5 +185,23 @@ namespace tttGrd
       grid.Select((cell, index) => new { cell, index })
           .Where(tile => tile.cell == Field.Empty)
           .Select(tile => tile.index);
+
+    public static float[][] UpdateCellsProbabilities(float[][] probs, State state, (int Grid, int Cell) move, Field gamer1Indicator)
+    {
+      var copy = probs.Select(x => x.Select(x1 => x1).ToArray()).ToArray(); /* make a duplicate of cells probabilities. */
+      copy[move.Grid][move.Cell] = 0.0f;  /* cell you just played cannot be played again. */
+      var winPaths = GetWinningPaths(state.Fields[move.Grid], state.Fields[move.Grid][move.Cell]);
+      var eminentWinIndices = winPaths.Where(path => path.Length == 1)
+                                      .SelectMany(x => x) /* flatten it out. */
+                                      .ToList();
+      winPaths.SelectMany(x => x) /* flatten it out. */
+              .Where(x => !eminentWinIndices.Contains(x)) /* remove all eniment win indices (because they will be handled seperately). */
+              .ToList()
+              .ForEach(x => copy[move.Grid][x] += 2f / 9f);
+
+      eminentWinIndices.ForEach(x => copy[move.Grid][x] = 1.0f); /* eminent win index should have 100% probability. */
+
+      return copy;
+    }
   }
 }
