@@ -352,5 +352,26 @@ namespace tttGrd.Test
       Assert.AreEqual(6, move.Grid);
       Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
     }
+
+    [Test]
+    public void MakeMove_GivenOpportunityToPlayInEmptyGrid_ShouldPreferablyGoCenter()
+    {
+      //Arrange
+      var gamer = new Gamer
+      {
+        Indicator = Field.X,
+        Name = "Gamer_2",
+        GameState = new State(),
+        Oponent = Field.O
+      };
+
+      //Act
+      var move = gamer.MakeMove();
+      var possibleGridIndices = Enumerable.Range(0, 9).ToList();
+
+      //Assert
+      Assert.IsTrue(possibleGridIndices.Contains(move.Grid));
+      Assert.AreEqual(5, move.Cell);
+    }
   }
 }

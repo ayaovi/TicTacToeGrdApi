@@ -28,6 +28,9 @@ namespace tttGrd
 
       // must play in grid corresponding to oponentMove.Cell.
       var currentGrid = GameState.Fields[oponentMove.Cell];
+
+      if (Program.IsEmpty(currentGrid)) return (oponentMove.Cell, 5); // preferably play center in an empty grid.
+
       var opponentWinningPaths = Program.GetWinningPaths(currentGrid, Oponent); // check for oponent's winning paths.
       var oponentEminentWinningPaths = opponentWinningPaths.Where(path => path.Length == 1).ToList();  // check oponent's winning paths.
 
@@ -70,7 +73,7 @@ namespace tttGrd
     public (int Grid, int Cell) MakeMove()
     {
       var rand = new Random();
-      return (rand.Next(0, 9), rand.Next(0, 9));
+      return (rand.Next(0, 9), 5);
     }
   }
 }

@@ -143,6 +143,7 @@ namespace tttGrd
     }
 
     public static bool IsEmpty(State state) => state.Fields.SelectMany(grid => grid).All(cell => cell == Field.Empty);
+    public static bool IsEmpty(IEnumerable<Field> grid) => grid.All(cell => cell == Field.Empty);
 
     public static bool IsFull(State state) => state.Fields.SelectMany(grid => grid).All(cell => cell != Field.Empty);
 
