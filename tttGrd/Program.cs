@@ -205,9 +205,9 @@ namespace tttGrd
       {
         var i = eminentWinIndices.Any() ? 2f / 9f : 1f / 9f;
         Enumerable.Range(0, 9)
-          .Where(x => x != move.Grid)
-          .ToList()
-          .ForEach(x => copy[x][0] -= i);
+                  .Where(x => x != move.Grid)
+                  .ToList()
+                  .ForEach(x => copy[x][0] -= i);
       }
 
       return copy;
