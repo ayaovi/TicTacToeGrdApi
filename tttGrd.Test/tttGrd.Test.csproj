@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Compile Include="ProgramTests.UpdateCellsProbabilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\tttGrd\tttGrd.csproj">
