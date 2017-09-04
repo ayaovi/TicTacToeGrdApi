@@ -78,11 +78,11 @@ namespace tttGrd
       }
     }
 
-    private static (int Grid, int Cell) MakeMove()
-    {
-      var move = Console.ReadLine()?.Trim().Split(',').Select(int.Parse).ToArray();
-      return (Grid: move.First(), Cell: move.Last());
-    }
+    //private static (int Grid, int Cell) MakeMove()
+    //{
+    //  var move = Console.ReadLine()?.Trim().Split(',').Select(int.Parse).ToArray();
+    //  return (Grid: (move ?? throw new InvalidOperationException()).First(), Cell: move.Last());
+    //}
 
     private static void DisplayBoard(State state)
     {
@@ -101,7 +101,8 @@ namespace tttGrd
 
         for (var j = 0; j < 9; j += 3)
         {
-          board.AppendLine("| " + string.Join(" | ", s.Select(grid => grid[j] + " | " + grid[j + 1] + " | " + grid[j + 2])) + " |");
+          var j1 = j;
+          board.AppendLine("| " + string.Join(" | ", s.Select(grid => grid[j1] + " | " + grid[j1 + 1] + " | " + grid[j1 + 2])) + " |");
           if (j <= 3) board.AppendLine("|--- --- ---|--- --- ---|--- --- ---|");
         }
         board.Append("+--- --- ---+--- --- ---+--- --- ---+\n");
@@ -122,7 +123,7 @@ namespace tttGrd
       return nextState;
     }
 
-    public static bool IsWin(State state) => state.Fields.All(grid => IsWin(grid));
+    public static bool IsWin(State state) => state.Fields.All(IsWin);
 
     public static bool IsWin(IEnumerable<Field> grid)
     {
@@ -143,6 +144,7 @@ namespace tttGrd
     }
 
     public static bool IsEmpty(State state) => state.Fields.SelectMany(grid => grid).All(cell => cell == Field.Empty);
+
     public static bool IsEmpty(IEnumerable<Field> grid) => grid.All(cell => cell == Field.Empty);
 
     public static bool IsFull(State state) => state.Fields.SelectMany(grid => grid).All(cell => cell != Field.Empty);

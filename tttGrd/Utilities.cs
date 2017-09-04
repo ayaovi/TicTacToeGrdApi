@@ -6,9 +6,6 @@ namespace tttGrd
 {
   public static class Utilities
   {
-    public static IEnumerable<T> Copy<T>(this IEnumerable<T> input, Func<T, T> duplicator)
-    {
-      return input.Select(duplicator);
-    }
+    public static IEnumerable<T> Copy<T>(this IEnumerable<T> input, Func<T, T> duplicator) => input.Select(duplicator);
   }
 }
