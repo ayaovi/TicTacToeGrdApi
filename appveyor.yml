@@ -1,1 +1,29 @@
+version: '1.0.{build}'
+configuration: Release
 
+image: Visual Studio 2017
+
+pull_requests:
+  do_not_increment_build_number: true
+
+nuget:
+  disable_publish_on_pr: true
+
+branches:
+  only:
+  - master
+  
+dotnet_csproj:
+  patch: true
+  file: '.tttGrd/tttGrd.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  
+before_build:
+  - dotnet --version
+  - dotnet restore tttGrd.sln --verbosity m
+  #- choco install opencover.portable
+  #- choco install codecov
+  
+build_script:
+  - dotnet publish ./tttGrd/tttGrd.csproj
