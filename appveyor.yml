@@ -28,7 +28,7 @@ dotnet_csproj:
   
 before_build:
   - dotnet --version
-  - dnu restore tttGrd.sln --verbosity m
+  - dotnet restore tttGrd.sln --verbosity m
   #- choco install opencover.portable
   #- choco install codecov
   
