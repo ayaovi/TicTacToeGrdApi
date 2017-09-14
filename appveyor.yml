@@ -20,11 +20,11 @@ clone_folder: c:\projects\tictactoe
 
 shallow_clone: true
   
-#dotnet_csproj:
+dotnet_csproj:
   #patch: true
-  #file: '.tttGrd/tttGrd.csproj'
-  #version: '{version}'
-  #package_version: '{version}'
+  file: '.tttGrd/tttGrd.csproj'
+  version: '{version}'
+  package_version: '{version}'
   
 before_build:
   - dotnet --version
