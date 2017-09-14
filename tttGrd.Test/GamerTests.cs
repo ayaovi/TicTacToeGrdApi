@@ -386,7 +386,5 @@ namespace tttGrd.Test
       //Act && Assert
       gamer.CellProbabilities.ShouldBeEquivalentTo(prob);
     }
-
-    
   }
 }
