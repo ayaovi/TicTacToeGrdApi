@@ -15,13 +15,13 @@ branches:
   
 dotnet_csproj:
   patch: true
-  file: './tttGrd/tttGrd.csproj'
+  file: '.tttGrd/tttGrd.csproj'
   version: '{version}'
   package_version: '{version}'
   
 before_build:
   - dotnet --version
-  - dotnet restore tttGrd.sln --verbosity m
+  - dotnet restore .tttGrd.sln --verbosity m
   #- choco install opencover.portable
   #- choco install codecov
   
