@@ -27,10 +27,15 @@ dotnet_csproj:
   package_version: '{version}'
   
 before_build:
-  - dotnet --version
-  - dotnet restore tttGrd.sln --verbosity m
+  #- dotnet --version
+  #- dotnet restore tttGrd.sln --verbosity m
   #- choco install opencover.portable
   #- choco install codecov
+  - nuget restore
   
-build_script:
-  - dotnet publish ./tttGrd/tttGrd.csproj
+#build_script:
+  #- dotnet publish ./tttGrd/tttGrd.csproj
+
+build:
+  verbosity: minimal
+  publish_wap: true
