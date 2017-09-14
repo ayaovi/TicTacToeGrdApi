@@ -28,7 +28,7 @@ shallow_clone: true
   
 before_build:
   - dotnet --version
-  - dotnet restore .tttGrd.sln --verbosity m
+  - dotnet restore tttGrd.sln --verbosity m
   #- choco install opencover.portable
   #- choco install codecov
   
