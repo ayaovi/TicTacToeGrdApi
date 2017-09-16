@@ -34,7 +34,7 @@ before_build:
   - nuget restore
   
 build_script:
-  - dotnet publish ./tttGrd/tttGrd.csproj
+  #- dotnet publish ./tttGrd/tttGrd.csproj
   - msbuild /verbosity:quiet "tttGrd/tttGrd.csproj"
   
 #test_script:
