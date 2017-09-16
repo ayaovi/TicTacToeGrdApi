@@ -33,7 +33,8 @@ test_script:
   - OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:".\tttGrd.Test\bin\Release\tttGrd.Test.dll -noshadow" -filter:"+[ttGrd.Test*]* -[*.Tests*]*" -output:"ttGrd_coverage.xml"
 
 after_test:
-  - codecov -f "ttGrd_coverage.xml"
+  - more ttGrd_coverage.xml
+  - codecov -f ttGrd_coverage.xml
     
 artifacts:
   - path: ttGrd_coverage.xml
