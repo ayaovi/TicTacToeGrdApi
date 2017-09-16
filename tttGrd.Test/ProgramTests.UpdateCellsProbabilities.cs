@@ -62,7 +62,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void UpdateCellsProbabilities_GivenPreviousZeroZero_ExpectUpdate()
+    public void UpdateCellsProbabilities_GivenPreviousStateAndOpenentMove_ExpectUpdate()
     {
       //Arrange
       /**
@@ -70,7 +70,6 @@ namespace tttGrd.Test
        * - gamer1 made move (0,4)
        * - gamer2 replied with move (4,4)
        **/
-      (var prob1, var prob2) = GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.X } });
 
       var gameState = new State(new[]
       {
@@ -78,7 +77,8 @@ namespace tttGrd.Test
         "...|...|...", "...|.o.|...", "...|...|...",
         "...|...|...", "...|...|...", "...|...|..."
       });
-
+      (var prob1, var prob2) = GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.X } }, gameState);
+      
       var gamer1 = new Gamer
       {
         Indicator = Field.X,
@@ -121,15 +121,79 @@ namespace tttGrd.Test
       cells2.ShouldAllBeEquivalentTo(expected2);
     }
 
-    private static (float[][], float[][]) GetCellsProbabilities(IEnumerable<Move> moves)
+    [Test]
+    public void UpdateCellsProbabilities_GivenPreviousStateAndOpenentMove1_ExpectUpdate()
+    {
+      //Arrange
+      /**
+       * the play goes as follow:
+       * - gamer1 moves (0,4)
+       * - gamer2 moves (4,4)
+       * - gamer1 moves (4,8)
+       **/
+      var gameState = new State(new[]
+      {
+        "...|.x.|...", "...|...|...", "...|...|...",
+        "...|...|...", "...|.o.|..x", "...|...|...",
+        "...|...|...", "...|...|...", "...|...|..."
+      });
+
+      (var prob1, var prob2) = GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.X }, new Move { Value = (4, 4), Indicator = Field.O } }, gameState);
+      
+      var gamer1 = new Gamer
+      {
+        Indicator = Field.X,
+        Name = "Gamer_1",
+        CellProbabilities = prob1,
+        Oponent = Field.O
+      };
+
+      var gamer2 = new Gamer
+      {
+        Indicator = Field.O,
+        Name = "Gamer_2",
+        CellProbabilities = prob2,
+        Oponent = Field.X
+      };
+
+      var move = (4, 8);
+
+      var expected1 = gamer1.CellProbabilities.Copy(x => x.Select(x1 => x1).ToArray()).ToArray();
+      expected1[4][3] += 2f / 9f; /* for me and the oponent. */
+      expected1[4][5] += 2f / 9f; /* for me and the oponent. */
+      expected1[4][6] += 2f / 9f; /* for me and the oponent. */
+      expected1[4][7] += 2f / 9f; /* for me and the oponent. */
+      expected1[4][8] = 0.0f; /* middle one should not be taken again. */
+
+      var expected2 = gamer2.CellProbabilities.Copy(x => x.Select(x1 => x1).ToArray()).ToArray();
+      Enumerable.Range(0, 9)
+                .Where(x => expected2[x][4] > 0)
+                .ToList()
+                .ForEach(x => expected2[x][4] -= 1f / 9f);
+      expected2[4][3] += 2f / 9f; /* for me and the oponent. */
+      expected2[4][5] += 2f / 9f; /* for me and the oponent. */
+      expected2[4][6] += 2f / 9f; /* for me and the oponent. */
+      expected2[4][7] += 2f / 9f; /* for me and the oponent. */
+      expected2[4][8] = 0.0f; /* middle one should not be taken again. */
+
+      //Act
+      var cells1 = Program.UpdateCellsProbabilities(gamer1.CellProbabilities, gameState, move, gamer1.Indicator);
+      var cells2 = Program.UpdateCellsProbabilities(gamer2.CellProbabilities, gameState, move, gamer2.Indicator);
+
+      //Assert
+      cells1.ShouldAllBeEquivalentTo(expected1);
+      cells2.ShouldAllBeEquivalentTo(expected2);
+    }
+
+    private static (float[][], float[][]) GetCellsProbabilities(IEnumerable<Move> moves, State state)
     {
       var prob1 = GetDefaultCellsProbabilitiesForTest();
       var prob2 = GetDefaultCellsProbabilitiesForTest();
-      var state = new State();
+      //var state = new State();
 
       moves.ToList().ForEach(move => 
       {
-        state.Fields[move.Value.Grid][move.Value.Cell] = move.Indicator;
+        //state.Fields[move.Value.Grid][move.Value.Cell] = move.Indicator;
         var oponent = move.Indicator == Field.O ? Field.X : Field.O;
         prob1 = Program.UpdateCellsProbabilities(prob1, state, move.Value, move.Indicator);
         prob2 = Program.UpdateCellsProbabilities(prob2, state, move.Value, oponent);
