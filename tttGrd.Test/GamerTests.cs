@@ -375,16 +375,5 @@ namespace tttGrd.Test
       Assert.IsTrue(possibleGridIndices.Contains(move.Grid));
       Assert.AreEqual(4, move.Cell);
     }
-
-    [Test]
-    public void Test_DefaultCellProbabilities()
-    {
-      //Arrange
-      var gamer = new Gamer();
-      var prob = Enumerable.Repeat(new[] { 1f / 9f, 1f / 9f, 1f / 9f, 1f / 9f, 1, 1f / 9f, 1f / 9f, 1f / 9f, 1f / 9f }, 9).ToArray();
-
-      //Act && Assert
-      gamer.CellProbabilities.ShouldBeEquivalentTo(prob);
-    }
   }
 }
