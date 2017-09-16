@@ -202,14 +202,14 @@ namespace tttGrd
               .ForEach(x => copy[move.Grid][x] += 2f / 9f);
 
       eminentWinIndices.ForEach(x => copy[move.Grid][x] = 1.0f); /* eminent win index should have 100% probability. */
-
-      if (state.Fields[move.Grid][move.Cell] != indicator)
+      
+      if (state.Fields[move.Grid][move.Cell] == indicator) return copy;
       {
         var i = eminentWinIndices.Any() ? 2f / 9f : 1f / 9f;
         Enumerable.Range(0, 9)
-                  .Where(x => x != move.Grid)
+                  .Where(x => x != move.Grid && copy[x][move.Grid] > 0.0f)
                   .ToList()
-                  .ForEach(x => copy[x][0] -= i);
+                  .ForEach(x => copy[x][move.Grid] -= i);
       }
 
       return copy;
