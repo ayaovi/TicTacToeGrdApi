@@ -37,7 +37,8 @@ build_script:
   #- dotnet publish ./tttGrd/tttGrd.csproj
   - msbuild /verbosity:quiet "tttGrd/tttGrd.csproj"
   
-#test_script:
+test_script:
+  nunit-console.exe /xml:results.xml ./ttGrd.Test/bin/Debug/tttGrd.dll
   #- .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"C:\Program Files (x86)\Microsoft Visual Studio 15.0\Common7\IDE\MSTest.exe" -targetargs:"YourTestDll -noshadow" -output:"coverage.xml" -filter:"+[YourSUTNamepace*]* -[YourTestNamespace*]*"
 
 build:
