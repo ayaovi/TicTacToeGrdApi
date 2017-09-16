@@ -21,6 +21,8 @@ dotnet_csproj:
   
 before_build:
   - nuget restore
+  - choco install opencover.portable
+  - choco install codecov
   
 build_script:
   - msbuild /verbosity:quiet "tttGrd/tttGrd.csproj"
@@ -28,3 +30,10 @@ build_script:
 test_script:
   - msbuild /verbosity:quiet "tttGrd.Test/tttGrd.Test.csproj"
   - nunit3-console "c:\projects\tictactoe\tttGrd.Test\bin\Release\tttGrd.Test.dll"
+  - OpenCover.Console.exe -register:user -target:"nunit.console.exe" -targetargs:".\tttGrd.Test\bin\Release\tttGrd.Test.dll -noshadow" -filter:"+[ttGrd.Test*]* -[*.Tests*]*" -output:"ttGrd_coverage.xml"
+
+after_test:
+  - codecov -f "ttGrd_coverage.xml"
+    
+artifacts:
+  - path: ttGrd_coverage.xml
