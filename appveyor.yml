@@ -31,9 +31,9 @@ test_script:
   - msbuild /verbosity:quiet "tttGrd.Test/tttGrd.Test.csproj"
   - nunit3-console "c:\projects\tictactoe\tttGrd.Test\bin\Release\tttGrd.Test.dll"
   - OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:".\tttGrd.Test\bin\Release\tttGrd.Test.dll -noshadow" -filter:"+[ttGrd.Test*]* -[*.Tests*]*" -output:"ttGrd_coverage.xml"
+  - type ttGrd_coverage.xml
 
 after_test:
-  - more ttGrd_coverage.xml
   - codecov -f ttGrd_coverage.xml
     
 artifacts:
