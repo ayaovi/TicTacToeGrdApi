@@ -77,7 +77,7 @@ namespace tttGrd.Test
         "...|...|...", "...|.o.|...", "...|...|...",
         "...|...|...", "...|...|...", "...|...|..."
       });
-      (var prob1, var prob2) = GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.X } }, gameState);
+      (var prob1, var prob2) = Utilities.GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.X } }, gameState);
       
       var gamer1 = new Gamer
       {
@@ -138,7 +138,10 @@ namespace tttGrd.Test
         "...|...|...", "...|...|...", "...|...|..."
       });
 
-      (var prob1, var prob2) = GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.X }, new Move { Value = (4, 4), Indicator = Field.O } }, gameState);
+      (var prob1, var prob2) = Utilities.GetCellsProbabilities(new[]
+      {
+        new Move { Value = (0, 4), Indicator = Field.X }, new Move { Value = (4, 4), Indicator = Field.O }
+      }, gameState);
       
       var gamer1 = new Gamer
       {
@@ -203,7 +206,7 @@ namespace tttGrd.Test
         "...|...|...", "...|...|...", ".o.|...|..."
       });
 
-      (var prob1, var prob2) = GetCellsProbabilities(new[]
+      (var prob1, var prob2) = Utilities.GetCellsProbabilities(new[]
                                 {
                                   new Move { Value = (0, 4), Indicator = Field.X },
                                   new Move { Value = (4, 4), Indicator = Field.O },
@@ -269,25 +272,5 @@ namespace tttGrd.Test
     }
 
     private static string Flatten(IEnumerable<float[]> f) => string.Join("\n", f.Select(f1 => string.Join(", ", f1)));
-
-    private static (float[][], float[][]) GetCellsProbabilities(IEnumerable<Move> moves, State state)
-    {
-      var prob1 = Utilities.GetDefaultCellsProbabilities();
-      var prob2 = Utilities.GetDefaultCellsProbabilities();
-
-      moves.ToList().ForEach(move => 
-      {
-        var oponent = move.Indicator == Field.O ? Field.X : Field.O;
-        prob1 = Program.UpdateCellsProbabilities(prob1, state, move.Value, move.Indicator);
-        prob2 = Program.UpdateCellsProbabilities(prob2, state, move.Value, oponent);
-      });
-      return (prob1, prob2);
-    }
-  }
-
-  public class Move
-  {
-    public (int Grid, int Cell) Value { get; set; }
-    public Field Indicator { get; set; }
   }
 }

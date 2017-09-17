@@ -48,7 +48,7 @@ namespace tttGrd
 
       var possibleMoves = Program.GetPossibleMoves(currentGrid).ToArray();
       var optimalMoves = GetOptimalCellIndices(possibleMoves).ToArray();
-      
+
       if (Program.IsEmpty(currentGrid) && optimalMoves.Contains(4)) return (oponentMove.Cell, 4); /* preferably play center in an empty grid if it does not get you into trouble. */
 
       return optimalMoves.Any() ? (oponentMove.Cell, optimalMoves[new Random().Next(optimalMoves.Length)]) :
@@ -72,10 +72,32 @@ namespace tttGrd
 
     public (int Grid, int Cell) MakeMove((int Grid, int Cell) oponentMove) => SelectOptimalMove(oponentMove);
 
+    public (int Grid, int Cell) MakeProbabilityBasedMove((int Grid, int Cell) oponentMove) => SelectProbabilityBasedOptimalMove(oponentMove);
+
+    private (int Grid, int Cell) SelectProbabilityBasedOptimalMove((int Grid, int Cell) oponentMove)
+    {
+      //if (!Program.IsWin(GameState.Fields[oponentMove.Cell]))
+      //{
+      var highestProbCell = CellProbabilities[oponentMove.Cell].Select((x, i) => new Cell{Index = i, Probability = x}).Max().Index;
+      return (oponentMove.Cell, highestProbCell);
+      //}
+    }
+
     public (int Grid, int Cell) MakeMove()
     {
       var rand = new Random();
       return (rand.Next(0, 9), 4);
+    }
+  }
+
+  public class Cell : IComparable<Cell>
+  {
+    public int Index { get; set; }
+    public float Probability { get; set; }
+    public int CompareTo(Cell obj)
+    {
+      if (Probability > obj.Probability) return 1;
+      return Probability.Equals(obj.Probability) ? 0 : -1;
     }
   }
 }

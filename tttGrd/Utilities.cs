@@ -22,5 +22,19 @@ namespace tttGrd
         new[] {1f / 9f, 1f / 9f, 1f / 9f, 1f / 9f, 1f, 1f / 9f, 1f / 9f, 1f / 9f, 1f / 9f}
       };
     }
+
+    public static (float[][], float[][]) GetCellsProbabilities(IEnumerable<Move> moves, State state)
+    {
+      var prob1 = GetDefaultCellsProbabilities();
+      var prob2 = GetDefaultCellsProbabilities();
+
+      moves.ToList().ForEach(move =>
+      {
+        var oponent = move.Indicator == Field.O ? Field.X : Field.O;
+        prob1 = Program.UpdateCellsProbabilities(prob1, state, move.Value, move.Indicator);
+        prob2 = Program.UpdateCellsProbabilities(prob2, state, move.Value, oponent);
+      });
+      return (prob1, prob2);
+    }
   }
 }

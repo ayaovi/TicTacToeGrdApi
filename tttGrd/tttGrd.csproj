@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Field.cs" />
     <Compile Include="Gamer.cs" />
+    <Compile Include="Move.cs" />
     <Compile Include="Play.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

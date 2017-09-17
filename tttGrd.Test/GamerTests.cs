@@ -1,8 +1,6 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 
 namespace tttGrd.Test
 {
@@ -334,24 +332,28 @@ namespace tttGrd.Test
     public void MakeMove_GivenPlay_ShouldNotDirectOpponentToGridZero()
     {
       //Arrange
+      var gameState = new State(new[]
+      {
+        "...|.o.|...", "...|...|...", "...|...|...",
+        "...|...|...", "...|...|...", "...|...|...",
+        "...|...|...", "...|...|...", "...|...|..."
+      });
+      (_, var prob) = Utilities.GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.O } }, gameState);
       var gamer = new Gamer
       {
         Indicator = Field.X,
         Name = "Gamer_2",
-        GameState = new State(new[]{
-          "x.o|oox|...", "x..|...|o..", "...|...|..x",
-          "oo.|...|x..", "x..|x.o|...", "...|xox|..o",
-          ".x.|..o|...", "...|.o.|...", "...|.x.|o.."
-        }),
+        GameState = gameState,
+        CellProbabilities = prob,
         Oponent = Field.O
       };
 
       //Act
-      var move = gamer.MakeMove((1, 6));
-      var possibleCellIndices = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
+      var move = gamer.MakeProbabilityBasedMove((0, 4));
+      var possibleCellIndices = new List<int> { 1, 2, 3, 5, 6, 7, 8 };
 
       //Assert
-      Assert.AreEqual(6, move.Grid);
+      Assert.AreEqual(4, move.Grid);
       Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
     }
 
