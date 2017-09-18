@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
+using NUnit.Framework;
 
 namespace tttGrd.Test
 {
@@ -29,6 +30,21 @@ namespace tttGrd.Test
       
       //Act && Assert
       Assert.True(visual == state.ToString());
+    }
+
+    [Test]
+    public void CopyCobstructorTest()
+    {
+      //Arrange
+      var state1 = new State(new[]{
+        ".x.|...|...", ".x.|...|...", ".x.|...|...",
+        ".x.|...|...", ".x.|...|...", ".x.|...|...",
+        ".x.|...|...", ".x.|...|...", ".x.|...|..."
+      });
+      var state2 = new State(state1);
+      
+      //Act && Assert
+      state2.ShouldBeEquivalentTo(state1);
     }
   }
 }
