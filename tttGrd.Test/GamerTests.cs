@@ -306,30 +306,38 @@ namespace tttGrd.Test
     public void MakeMove_GivenPlay_ShouldNotDirectOpponentToGridFour()
     {
       //Arrange
+      var gameState = new State(new[]
+      {
+        "...|...|...", "...|...|...", "...|...|...",
+        "...|...|...", "...|...|...", "...|...|...",
+        "...|...|...", "...|...|...", "...|...|..."
+      });
+      (_, var prob) = Utilities.GetCellsProbabilities(new[]
+      {
+        new Move { Value = (4, 6), Indicator = Field.X },
+        new Move { Value = (4, 7), Indicator = Field.X },
+        new Move { Value = (4, 8), Indicator = Field.X }
+      }, gameState);
       var gamer = new Gamer
       {
-        Indicator = Field.X,
+        Indicator = Field.O,
         Name = "Gamer_2",
-        GameState = new State(new[]{
-          "...|...|...", "...|...|...", "...|...|...",
-          "...|.o.|...", "...|...|xxx", "...|...|...",
-          "...|.o.|...", "...|.o.|...", "...|.o.|..."
-        }),
-        Oponent = Field.O
+        CellProbabilities = prob,
+        GameState = gameState,
+        Oponent = Field.X
       };
 
       //Act
-      var move = gamer.MakeMove((8, 4));
-      var possibleGridIndices = new List<int> { 0, 1, 2, 3, 5, 6, 7, 8 };
+      var move = gamer.MakeProbabilityBasedMove((4, 8));
       var possibleCellIndices = new List<int> { 0, 1, 2, 3, 5, 6, 7, 8 };
 
       //Assert
-      Assert.IsTrue(possibleGridIndices.Contains(move.Grid));
+      Assert.IsTrue(move.Grid == 8);
       Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
     }
 
     [Test]
-    public void MakeMove_GivenPlay_ShouldNotDirectOpponentToGridZero()
+    public void MakeMove_GivenPlay_ShouldNotDirectOpponentToGridZero_Prob()
     {
       //Arrange
       var gameState = new State(new[]

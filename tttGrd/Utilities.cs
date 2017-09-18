@@ -30,6 +30,8 @@ namespace tttGrd
 
       moves.ToList().ForEach(move =>
       {
+        if (state.Fields[move.Value.Grid][move.Value.Cell] == Field.Empty)
+          state.Fields[move.Value.Grid][move.Value.Cell] = move.Indicator;
         var oponent = move.Indicator == Field.O ? Field.X : Field.O;
         prob1 = Program.UpdateCellsProbabilities(prob1, state, move.Value, move.Indicator);
         prob2 = Program.UpdateCellsProbabilities(prob2, state, move.Value, oponent);

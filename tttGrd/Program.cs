@@ -205,11 +205,21 @@ namespace tttGrd
       
       if (state.Fields[move.Grid][move.Cell] == indicator) return copy;
       {
-        var i = eminentWinIndices.Any() ? 2f / 9f : 1f / 9f;
-        Enumerable.Range(0, 9)
-                  .Where(x => x != move.Grid && copy[x][move.Grid] > 0.0f)
-                  .ToList()
-                  .ForEach(x => copy[x][move.Grid] -= i);
+        if (IsWin(state.Fields[move.Grid]))
+        {
+          Enumerable.Range(0, 9)
+                    .Where(x => x != move.Grid && copy[x][move.Grid] > 0.0f)
+                    .ToList()
+                    .ForEach(x => copy[x][move.Grid] = 0f);
+        }
+        else
+        {
+          var i = eminentWinIndices.Any() ? 2f / 9f : 1f / 9f;
+          Enumerable.Range(0, 9)
+                    .Where(x => x != move.Grid && copy[x][move.Grid] > 0.0f)
+                    .ToList()
+                    .ForEach(x => copy[x][move.Grid] -= i);
+        }
       }
 
       return copy;
