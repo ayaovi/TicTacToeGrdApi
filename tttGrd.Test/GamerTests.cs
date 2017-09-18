@@ -182,20 +182,31 @@ namespace tttGrd.Test
     public void MakeMove_GivenOpportunityForOpponentToWinGrid_ShouldStopOpponent()
     {
       //Arrange
+      var gameState = new State();
+      var prob = Utilities.GetCellsProbabilities(new[]
+      {
+        new Move { Value = (0, 0), Indicator = Field.X },
+        new Move { Value = (0, 8), Indicator = Field.O },
+        new Move { Value = (8, 4), Indicator = Field.X },
+        new Move { Value = (4, 5), Indicator = Field.O },
+        new Move { Value = (5, 6), Indicator = Field.X },
+        new Move { Value = (6, 0), Indicator = Field.O },
+        new Move { Value = (0, 2), Indicator = Field.X },
+        new Move { Value = (2, 1), Indicator = Field.O },
+        new Move { Value = (1, 8), Indicator = Field.X },
+        new Move { Value = (8, 0), Indicator = Field.O },
+      }, gameState);
       var gamer = new Gamer
       {
         Indicator = Field.O,
         Name = "Gamer_2",
-        GameState = new State(new[]{
-          "x.x|...|..o", "...|...|..x", ".o.|...|...",
-          "...|...|x..", "...|..o|...", "...|...|x..",
-          "o..|o..|...", "...|...|...", "...|.x.|..."
-        }),
+        GameState = gameState,
+        CellProbabilities = prob,
         Oponent = Field.X
       };
 
       //Act
-      var move = gamer.MakeMove((8, 0));
+      var move = gamer.MakeProbabilityBasedMove((8, 0));
 
       //Assert
       Assert.AreEqual(0, move.Grid);
@@ -203,7 +214,7 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenOpportunity_ShouldNotSendOpponentWhereHeIsAboutToWin()
+    public void MakeMove_GivenOpportunity_ShouldNotSendOpponentWhereHeIsAboutToWin_Prob()
     {
       //Arrange
       var gameState = new State();

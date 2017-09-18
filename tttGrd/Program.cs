@@ -201,7 +201,7 @@ namespace tttGrd
               .ToList()
               .ForEach(x => copy[move.Grid][x] += 2f / 9f);
 
-      eminentWinIndices.ForEach(x => copy[move.Grid][x] = 1.0f); /* eminent win index should have 100% probability. */
+      eminentWinIndices.ForEach(x => copy[move.Grid][x] = 2.0f); /* eminent win index should have 100% probability. */
       
       if (IsWin(state.Fields[move.Grid]) || eminentWinIndices.Any())
       {
