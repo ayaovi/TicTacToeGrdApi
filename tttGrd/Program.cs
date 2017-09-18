@@ -188,7 +188,7 @@ namespace tttGrd
           .Where(tile => tile.cell == Field.Empty)
           .Select(tile => tile.index);
 
-    public static float[][] UpdateCellsProbabilities(float[][] probs, State state, (int Grid, int Cell) move, Field indicator)
+    public static float[][] UpdateCellsProbabilities(float[][] probs, State state, (int Grid, int Cell) move, Field indicator = Field.Empty)
     {
       var copy = probs.Select(x => x.Select(x1 => x1).ToArray()).ToArray(); /* make a duplicate of cells probabilities. */
       copy[move.Grid][move.Cell] = 0.0f;  /* cell you just played cannot be played again. */

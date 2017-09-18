@@ -14,51 +14,31 @@ namespace tttGrd.Test
       //Arrange
       /** 
        * the goes as follow:
-       * - gamer1 makes move (0,4)
+       * - x makes move (0,4)
        * - What would be their respective cell probabilities.
        **/
-      var gameState = new State(new[]
-      {
-        "...|.x.|...", "...|...|...", "...|...|...",
-        "...|...|...", "...|...|...", "...|...|...",
-        "...|...|...", "...|...|...", "...|...|..."
-      });
-
-      var gamer1 = new Gamer
-      {
-        Indicator = Field.X,
-        Name = "Gamer_1",
-        Oponent = Field.O
-      };
-
-      var gamer2 = new Gamer
-      {
-        Indicator = Field.O,
-        Name = "Gamer_2",
-        Oponent = Field.X
-      };
+      var gameState = new State();
+      var probs = Utilities.GetDefaultCellsProbabilities();
 
       var move = (0, 4);
+      gameState.Fields[0][4] = Field.X;
 
-      var expected1 = Utilities.GetDefaultCellsProbabilities();
+      var expected = Utilities.GetDefaultCellsProbabilities();
       Enumerable.Range(0, 9)
                 .ToList()
-                .ForEach(x => expected1[0][x] = 1f / 3f);
+                .ForEach(x =>
+                {
+                  if (x != 0) expected[x][0] -= 1f / 9f;
+                  expected[0][x] = 1f / 3f;
+                });
 
-      expected1[0][4] = 0.0f; /* cell 4 in grid 0 cannot be played again. */
-
-      var expected2 = expected1.Copy(x => x.Select(x1 => x1).ToArray()).ToArray();
-      Enumerable.Range(1, 8)
-                .ToList()
-                .ForEach(x => expected2[x][0] -= 1f / 9f);  /* if you can help it, avoid sending the opponent back in grid 0 until you have played there yourself. */
-
+      expected[0][4] = 0.0f; /* cell 4 in grid 0 cannot be played again. */
+      
       //Act
-      var cells1 = Program.UpdateCellsProbabilities(gamer1.CellProbabilities, gameState, move, gamer1.Indicator);
-      var cells2 = Program.UpdateCellsProbabilities(gamer2.CellProbabilities, gameState, move, gamer2.Indicator);
+      var cells = Program.UpdateCellsProbabilities(probs, gameState, move);
 
       //Assert
-      cells1.ShouldAllBeEquivalentTo(expected1);
-      cells2.ShouldAllBeEquivalentTo(expected2);
+      cells.ShouldAllBeEquivalentTo(expected);
     }
 
     [Test]
@@ -78,7 +58,7 @@ namespace tttGrd.Test
         "...|...|...", "...|...|...", "...|...|..."
       });
       (var prob1, var prob2) = Utilities.GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.X } }, gameState);
-      
+
       var gamer1 = new Gamer
       {
         Indicator = Field.X,
@@ -142,7 +122,7 @@ namespace tttGrd.Test
       {
         new Move { Value = (0, 4), Indicator = Field.X }, new Move { Value = (4, 4), Indicator = Field.O }
       }, gameState);
-      
+
       var gamer1 = new Gamer
       {
         Indicator = Field.X,
