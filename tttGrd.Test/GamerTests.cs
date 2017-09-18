@@ -228,23 +228,30 @@ namespace tttGrd.Test
     }
 
     [Test]
-    public void MakeMove_GivenOpportunity_ShouldMaximiseMyWinningChances()
+    public void MakeMove_GivenOpportunity_ShouldMaximiseMyWinningChances_Prob()
     {
       //Arrange
+      var gameState = new State();
+      var prob = Utilities.GetCellsProbabilities(new[]
+      {
+        new Move { Value = (0, 4), Indicator = Field.X },
+        new Move { Value = (4, 4), Indicator = Field.O },
+        new Move { Value = (4, 1), Indicator = Field.X },
+        new Move { Value = (1, 7), Indicator = Field.O },
+        new Move { Value = (7, 3), Indicator = Field.X },
+        new Move { Value = (3, 4), Indicator = Field.O }
+      }, gameState);
       var gamer = new Gamer
       {
         Indicator = Field.X,
         Name = "Gamer_2",
-        GameState = new State(new[]{
-          "...|.x.|...", "...|...|.o.", "...|x..|...",
-          "o..|.o.|...", ".x.|.o.|...", "..o|...|...",
-          "...|...|...", "...|x..|...", "...|...|..."
-        }),
+        GameState = gameState,
+        CellProbabilities = prob,
         Oponent = Field.O
       };
 
       //Act
-      var move = gamer.MakeMove((3, 4));
+      var move = gamer.MakeProbabilityBasedMove((3, 4));
       var possibleCellIndices = new List<int> { 0, 2 };
 
       //Assert
