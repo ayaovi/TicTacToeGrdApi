@@ -57,7 +57,7 @@ namespace tttGrd.Test
         "...|...|...", "...|.o.|...", "...|...|...",
         "...|...|...", "...|...|...", "...|...|..."
       });
-      (var prob, _) = Utilities.GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.X } }, gameState);
+      var prob = Utilities.GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.X } }, gameState);
       
       var move = (4, 4);
 
@@ -95,7 +95,7 @@ namespace tttGrd.Test
         "...|...|...", "...|...|...", "...|...|..."
       });
 
-      (var prob, _) = Utilities.GetCellsProbabilities(new[]
+      var prob = Utilities.GetCellsProbabilities(new[]
       {
         new Move { Value = (0, 4), Indicator = Field.X }, new Move { Value = (4, 4), Indicator = Field.O }
       }, gameState);
@@ -138,7 +138,7 @@ namespace tttGrd.Test
         "...|...|...", "...|...|...", ".o.|...|..."
       });
 
-      (var prob, _) = Utilities.GetCellsProbabilities(new[]
+      var prob = Utilities.GetCellsProbabilities(new[]
                                 {
                                   new Move { Value = (0, 4), Indicator = Field.X },
                                   new Move { Value = (4, 4), Indicator = Field.O },

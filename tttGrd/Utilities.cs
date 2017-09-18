@@ -42,20 +42,17 @@ namespace tttGrd
       };
     }
 
-    public static (float[][], float[][]) GetCellsProbabilities(IEnumerable<Move> moves, State state)
+    public static float[][] GetCellsProbabilities(IEnumerable<Move> moves, State state)
     {
-      var prob1 = GetDefaultCellsProbabilities();
-      var prob2 = GetDefaultCellsProbabilities();
+      var prob = GetDefaultCellsProbabilities();
 
       moves.ToList().ForEach(move =>
       {
         if (state.Fields[move.Value.Grid][move.Value.Cell] == Field.Empty)
           state.Fields[move.Value.Grid][move.Value.Cell] = move.Indicator;
-        var oponent = move.Indicator == Field.O ? Field.X : Field.O;
-        prob1 = Program.UpdateCellsProbabilities(prob1, state, move.Value, move.Indicator);
-        prob2 = Program.UpdateCellsProbabilities(prob2, state, move.Value, oponent);
+        prob = Program.UpdateCellsProbabilities(prob, state, move.Value);
       });
-      return (prob1, prob2);
+      return prob;
     }
   }
 }
