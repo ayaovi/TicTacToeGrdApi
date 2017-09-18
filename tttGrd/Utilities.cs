@@ -7,6 +7,23 @@ namespace tttGrd
   public static class Utilities
   {
     public static IEnumerable<T> Copy<T>(this IEnumerable<T> input, Func<T, T> duplicator) => input.Select(duplicator);
+
+    public static IEnumerable<T> Maxs<T>(this IEnumerable<T> input, Func<T, T, bool> comparator)
+    {
+      var enumerable = input as IList<T> ?? input.ToList();
+      var max = enumerable.Max();
+      return enumerable.Where(x => comparator(x, max));
+    }
+
+    public static T Random<T>(this IEnumerable<T> input)
+    {
+      var enumerable = input as IList<T> ?? input.ToList();
+      if (!enumerable.Any()) return default(T);
+      if (enumerable.Count == 1) return enumerable.FirstOrDefault();
+      var index = new Random().Next(enumerable.Count);
+      return enumerable[index];
+    }
+
     public static float[][] GetDefaultCellsProbabilities()
     {
       return new[]

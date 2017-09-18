@@ -282,12 +282,6 @@ namespace tttGrd.Test
     {
       //Arrange
       var gameState = new State();
-      //var gameState = new State(new[]
-      //{
-      //  "x.o|.o.|...", "...|.o.|...", "...|...|...",
-      //  "...|...|...", "xx.|...|...", "...|...|...",
-      //  "...|...|...", "...|...|...", "...|...|..."
-      //});
       (var prob, _) = Utilities.GetCellsProbabilities(new[]
       {
         new Move { Value = (4, 0), Indicator = Field.X },

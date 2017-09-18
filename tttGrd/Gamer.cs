@@ -78,7 +78,10 @@ namespace tttGrd
     {
       //if (!Program.IsWin(GameState.Fields[oponentMove.Cell]))
       //{
-      var highestProbCell = CellProbabilities[oponentMove.Cell].Select((x, i) => new Cell{Index = i, Probability = x}).Max().Index;
+      var highestProbCell = CellProbabilities[oponentMove.Cell].Select((x, i) => new Cell{Index = i, Probability = x})
+        .Maxs((x, y) => x.Probability.Equals(y.Probability))
+        .Random()
+        .Index;
       return (oponentMove.Cell, highestProbCell);
       //}
     }
