@@ -68,6 +68,7 @@
     <Compile Include="StateTests.cs" />
     <Compile Include="TurnTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilitiesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

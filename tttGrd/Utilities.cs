@@ -11,6 +11,8 @@ namespace tttGrd
     public static IEnumerable<T> Maxs<T>(this IEnumerable<T> input, Func<T, T, bool> comparator)
     {
       var enumerable = input as IList<T> ?? input.ToList();
+      if (!enumerable.Any()) return Enumerable.Empty<T>();
+      if (enumerable.Count == 1) return enumerable;
       var max = enumerable.Max();
       return enumerable.Where(x => comparator(x, max));
     }
