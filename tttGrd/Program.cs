@@ -154,7 +154,7 @@ namespace tttGrd
       var winningPaths = new List<int[]>();
       var allWinningPaths = new[]
       {
-        new[] { 0, 4, 8 },   // Backward Diagonal [(0,0) (1,1) (2,2)]
+        new[] { 0, 4, 8 },  // Backward Diagonal [(0,0) (1,1) (2,2)]
         new[] { 2, 4, 6 },  // Forward Diagonal [(0,2) (1,1) (2,0)]
         new[] { 0, 1, 2 },  // First Horizontal [(0,0) (0,1) (0,2)]
         new[] { 3, 4, 5 },  // Second Horizontal [(1,0) (1,1) (1,2)]
@@ -202,9 +202,7 @@ namespace tttGrd
               .ForEach(x => copy[move.Grid][x] += 2f / 9f);
 
       eminentWinIndices.ForEach(x => copy[move.Grid][x] = 1.0f); /* eminent win index should have 100% probability. */
-
-      //if (state.Fields[move.Grid][move.Cell] == indicator) return copy;
-      //{
+      
       if (IsWin(state.Fields[move.Grid]) || eminentWinIndices.Any())
       {
         Enumerable.Range(0, 9)
@@ -214,13 +212,11 @@ namespace tttGrd
       }
       else
       {
-        //var i = eminentWinIndices.Any() ? 2f / 9f : 1f / 9f;
         Enumerable.Range(0, 9)
                   .Where(x => x != move.Grid && copy[x][move.Grid] > 0.0f)
                   .ToList()
                   .ForEach(x => copy[x][move.Grid] -= 1f / 9f);
       }
-      //}
 
       return copy;
     }
