@@ -76,21 +76,20 @@ namespace tttGrd
 
     private (int Grid, int Cell) SelectProbabilityBasedOptimalMove((int Grid, int Cell) oponentMove)
     {
-      var highestProbCell = CellProbabilities[oponentMove.Cell].Select((x, i) => new Cell{Index = i, Probability = x})
-        .Maxs((x, y) => x.Probability.Equals(y.Probability))
-        .Random()
-        .Index;
+      var highestProbCell = GetHighestProbabilityCellIndex(oponentMove.Cell);
       return (oponentMove.Cell, highestProbCell);
     }
+
+    private int GetHighestProbabilityCellIndex(int gridIndex) => CellProbabilities[gridIndex].Select((x, i) => new Cell { Index = i, Probability = x })
+                                                                                             .Maxs((x, y) => x.Probability.Equals(y.Probability))
+                                                                                             .Random()
+                                                                                             .Index;
 
     public (int Grid, int Cell) MakeMove()
     {
       var gridIndex = new Random().Next(0, 9);
-      var highestProbCell = CellProbabilities[gridIndex].Select((x, i) => new Cell { Index = i, Probability = x })
-        .Maxs((x, y) => x.Probability.Equals(y.Probability))
-        .Random()
-        .Index;
-      return (gridIndex, highestProbCell);
+      var cellIndex = GetHighestProbabilityCellIndex(gridIndex);
+      return (gridIndex, cellIndex);
     }
   }
 
