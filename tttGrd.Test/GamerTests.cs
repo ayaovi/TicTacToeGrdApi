@@ -8,152 +8,32 @@ namespace tttGrd.Test
   public class GamerTests
   {
     [Test]
-    public void MakeMove_GivenNoGamerHistoryAndDefaultState_ExpectRandomMoveWithingConstraint()
+    public void MakeMove_GivenPreviousMoveToGridZeroCellZero_ExpectMoveInGridZeroAnywhereButCellZero_Prob()
     {
       //Arrange
-      var gamer = new Gamer
+      var gameState = new State();
+      var prob = Utilities.GetCellsProbabilities(new[]
       {
-        Indicator = Field.X,
-        Name = "Gamer_1",
-        GameState = new State(),
-        Oponent = Field.O
-      };
-
-      var indices = Enumerable.Range(0, 9).ToList();
-
-      //Act 
-      var move = gamer.MakeMove();
-
-      //Assert
-      Assert.True(indices.Contains(move.Grid));
-      Assert.True(indices.Contains(move.Cell));
-    }
-
-    [Test]
-    public void MakeMove_GivenPreviousMoveToGridZeroCellZero_ExpectMoveInGridZeroAnywhereButCellZero()
-    {
-      //Arrange
+        new Move {Value = (0, 0), Indicator = Field.X},
+      }, gameState);
       var gamer = new Gamer
       {
         Indicator = Field.O,
         Name = "Gamer_2",
-        GameState = new State(new[]{
-          "x..|...|...", "...|...|...", "...|...|...",
-          "...|...|...", "...|...|...", "...|...|...",
-          "...|...|...", "...|...|...", "...|...|..."
-        }),
+        GameState = gameState,
+        CellProbabilities = prob,
         Oponent = Field.X
       };
 
       //Act
-      var move = gamer.MakeMove((0, 0));
+      var move = gamer.MakeProbabilityBasedMove((0, 0));
       var possibleCellIndices = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
 
       //Assert
       Assert.True(move.Grid == 0);
       Assert.True(possibleCellIndices.Contains(move.Cell));
     }
-
-    [Test]
-    public void MakeMove_GivenPreviousMoveToGridZeroCellZeroWithGridWon_ExpectMoveAnywhereElseButGridZero()
-    {
-      //Arrange
-      var gamer = new Gamer
-      {
-        Indicator = Field.O,
-        Name = "Gamer_2",
-        GameState = new State(new[]{
-          "x.o|x..|xo.", "...|...|...", "...|...|...",
-          "...|...|...", "...|...|...", "...|...|...",
-          "...|...|...", "...|...|...", "...|...|...",
-        }),
-        Oponent = Field.X
-      };
-
-      //Act
-      var move = gamer.MakeMove((0, 0));
-      var possibleGridIndices = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
-      var possibleCellIndices = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-
-      //Assert
-      Assert.True(possibleGridIndices.Contains(move.Grid));
-      Assert.True(possibleCellIndices.Contains(move.Cell));
-    }
-
-    [Test]
-    public void MakeMove_GivenPreviousMoveToGridNineCellNineWithEveryButGridFiveWon_ExpectMoveInGridFive()
-    {
-      //Arrange
-      var gamer = new Gamer
-      {
-        Indicator = Field.O,
-        Name = "Gamer_2",
-        GameState = new State(new[]{
-          "xxx|o..|xoo", "xxx|o..|xoo", "xxx|o..|xoo",
-          "xxx|o..|xoo", "x..|...|..o", "xxx|o..|xoo",
-          "xxx|o..|xoo", "xxx|o..|xoo", "xxx|o..|xoo"
-        }),
-        Oponent = Field.X
-      };
-
-      //Act
-      var move = gamer.MakeMove((8, 8));
-      var possibleCellIndices = new List<int> { 1, 2, 3, 4, 5, 6, 7 };
-
-      //Assert
-      Assert.True(move.Grid == 4);
-      Assert.True(possibleCellIndices.Contains(move.Cell));
-    }
-
-    [Test]
-    public void MakeMove_GivenPreviousMove_ShouldTryAvoidSendingOpponentToAlreadyWonGridIfPossible()
-    {
-      //Arrange
-      var gamer = new Gamer
-      {
-        Indicator = Field.O,
-        Name = "Gamer_2",
-        GameState = new State(new[]{
-          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|xox",
-          "xxx|o..|xoo", "x..|...|..o", "xxx|o..|xoo",
-          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|oox"
-        }),
-        Oponent = Field.X
-      };
-
-      //Act
-      var move = gamer.MakeMove((2, 8));
-
-      //Assert
-      Assert.AreEqual(8, move.Grid);
-      Assert.AreEqual(4, move.Cell);
-    }
-
-    [Test]
-    public void MakeMove_GivenPreviousMove_ShouldOnlySendOpponentToAlreadyWonGridIfNoWayToAvoidIt()
-    {
-      //Arrange
-      var gamer = new Gamer
-      {
-        Indicator = Field.O,
-        Name = "Gamer_2",
-        GameState = new State(new[]{
-          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|xox",
-          "xxx|o..|xoo", "xxx|o..|xoo", "xxx|o..|xoo",
-          "xxx|o..|xoo", "xxx|o..|xoo", "xxo|o..|xoo"
-        }),
-        Oponent = Field.X
-      };
-
-      //Act
-      var move = gamer.MakeMove((2, 8));
-      var possibleCellIndices = new List<int> { 4, 5 };
-
-      //Assert
-      Assert.AreEqual(8, move.Grid);
-      Assert.IsTrue(possibleCellIndices.Contains(move.Cell));
-    }
-
+    
     [Test]
     public void MakeMove_GivenOportunityToWinGrid_ShouldWin_Prob()
     {
