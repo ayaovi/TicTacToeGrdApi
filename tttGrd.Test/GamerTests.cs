@@ -309,7 +309,10 @@ namespace tttGrd.Test
 
       //Assert
       Assert.IsTrue(possibleGridIndices.Contains(move.Grid));
-      Assert.AreEqual(4, move.Cell);
+      if (move.Grid != 4)
+        Assert.AreEqual(4, move.Cell);
+      else
+        Assert.IsTrue(possibleGridIndices.Contains(move.Cell));
     }
   }
 }

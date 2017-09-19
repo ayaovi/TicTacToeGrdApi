@@ -85,8 +85,12 @@ namespace tttGrd
 
     public (int Grid, int Cell) MakeMove()
     {
-      var rand = new Random();
-      return (rand.Next(0, 9), 4);
+      var gridIndex = new Random().Next(0, 9);
+      var highestProbCell = CellProbabilities[gridIndex].Select((x, i) => new Cell { Index = i, Probability = x })
+        .Maxs((x, y) => x.Probability.Equals(y.Probability))
+        .Random()
+        .Index;
+      return (gridIndex, highestProbCell);
     }
   }
 
