@@ -226,7 +226,7 @@ namespace tttGrd.Test
 
       //Act
       var move = gamer.MakeProbabilityBasedMove((0, 2));
-      var possibleCellIndices = new List<int> { 2, 3, 5, 6, 7, 8 };
+      var possibleCellIndices = new List<int> { 1, 2, 3, 5, 6, 7, 8 };
 
       //Assert
       Assert.AreEqual(2, move.Grid);

@@ -7,7 +7,7 @@ namespace tttGrd
 {
   public class Program
   {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
       var ais = new[]
       {
@@ -15,14 +15,13 @@ namespace tttGrd
         new Gamer { Indicator = Field.O, Name = "AI 2", Oponent = Field.X }
 
       };
-      //var player = new Gamer { Indicator = Field.O, Name = "PLAYER", Oponent = Field.X };
 
       var i = 0;
 
       while (i < 10)
       {
-        //ai.History.Add(new Play());
         var state = new State();
+        var probabilities = Utilities.GetDefaultCellsProbabilities();
         var currentGamer = new Random().Next(2);
 
         var move = (0, 0);
@@ -41,7 +40,7 @@ namespace tttGrd
 
           ais[currentGamer].GameState = state;
 
-          move = !pastFirstPlay ? ais[currentGamer].MakeMove() : ais[currentGamer].MakeMove(move);
+          move = !pastFirstPlay ? ais[currentGamer].MakeMove() : ais[currentGamer].MakeProbabilityBasedMove(move);
 
           Console.WriteLine(move);
           Console.ReadLine();
@@ -52,8 +51,11 @@ namespace tttGrd
           {
             state = Play(state, move, indicator);
             currentGamer = (currentGamer + 1) % 2;
+            probabilities = UpdateCellsProbabilities(probabilities, state, move);
+            ais[0].CellProbabilities = probabilities;
+            ais[1].CellProbabilities = probabilities;
           }
-          catch (Exception e)
+          catch (Exception)
           {
             continue;
           }
@@ -77,12 +79,6 @@ namespace tttGrd
         ++i;
       }
     }
-
-    //private static (int Grid, int Cell) MakeMove()
-    //{
-    //  var move = Console.ReadLine()?.Trim().Split(',').Select(int.Parse).ToArray();
-    //  return (Grid: (move ?? throw new InvalidOperationException()).First(), Cell: move.Last());
-    //}
 
     private static void DisplayBoard(State state)
     {
