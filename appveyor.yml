@@ -15,12 +15,13 @@ clone_folder: c:\projects\tictactoe
 shallow_clone: true
   
 dotnet_csproj:
-  file: '.tttGrd/tttGrd.csproj'
+  file: './src/tttGrd.Api/tttGrd.Api.csproj'
   version: '{version}'
   package_version: '{version}'
   
 before_build:
-  - nuget restore
+  - cmd: cd src
+  - nuget restore 
   - choco install opencover.portable
   - choco install codecov
   
@@ -30,7 +31,6 @@ build_script:
 test_script:
   - msbuild /verbosity:quiet "src/tttGrd.Api.Tests/tttGrd.Api.Tests.csproj"
   - OpenCover.Console.exe -register:user -hideskipped:filter -target:"nunit3-console.exe" -targetargs:"c:\projects\tictactoe\src\tttGrd.Api.Tests\bin\Release\tttGrd.Api.Tests.dll" -filter:"+[*]* -[*.Tests]*" -output:"ttGrd_coverage.xml"
-  # type ttGrd_coverage.xml
 
 after_test:
   - codecov -f ttGrd_coverage.xml
