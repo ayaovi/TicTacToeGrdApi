@@ -25,11 +25,11 @@ before_build:
   - choco install codecov
   
 build_script:
-  - msbuild /verbosity:quiet "tttGrd/tttGrd.csproj"
+  - msbuild /verbosity:quiet "src/tttGrd.Api/tttGrd.Api.csproj"
   
 test_script:
-  - msbuild /verbosity:quiet "tttGrd.Test/tttGrd.Test.csproj"
-  - OpenCover.Console.exe -register:user -hideskipped:filter -target:"nunit3-console.exe" -targetargs:"c:\projects\tictactoe\tttGrd.Test\bin\Release\tttGrd.Test.dll" -filter:"+[*]* -[*.Test]*" -output:"ttGrd_coverage.xml"
+  - msbuild /verbosity:quiet "src/tttGrd.Api.Tests/tttGrd.Api.Tests.csproj"
+  - OpenCover.Console.exe -register:user -hideskipped:filter -target:"nunit3-console.exe" -targetargs:"c:\projects\tictactoe\src\tttGrd.Api.Tests\bin\Release\tttGrd.Api.Tests.dll" -filter:"+[*]* -[*.Tests]*" -output:"ttGrd_coverage.xml"
   # type ttGrd_coverage.xml
 
 after_test:

@@ -8,7 +8,7 @@ function setup() {
 	for (var i = 0; i < 9; i++) {
 		var grid = [];
 		for (var j = 0; j < 9; j++) {
-			grid.push(new btn(createVector((i % 3) * 100 + (j % 3) * 35, floor(i / 3) * 100 + floor(j / 3) * 35), side, side, i, j));
+			grid.push(new btn(createVector((i % 3) * 100 + (j % 3) * side, floor(i / 3) * 100 + floor(j / 3) * side), side, side, i, j));
 		}
 		btns.push(grid);
 	}
