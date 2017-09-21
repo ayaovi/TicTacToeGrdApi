@@ -1,113 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using tttGrd.Api.Persistence;
 
 namespace tttGrd.Api.Models
 {
   public class Program
   {
-    private static void Main(string[] args)
-    {
-      var ais = new[]
-      {
-        new Gamer { Indicator = Field.X, Name = "AI 1", Oponent = Field.O },
-        new Gamer { Indicator = Field.O, Name = "AI 2", Oponent = Field.X }
-
-      };
-
-      var i = 0;
-
-      while (i < 10)
-      {
-        var state = new State();
-        var probabilities = Utilities.GetDefaultCellsProbabilities();
-        var currentGamer = new Random().Next(2);
-
-        var move = (0, 0);
-        var pastFirstPlay = false;
-
-        while (!IsWin(state) && !IsFull(state))
-        {
-          Console.Clear();
-          DisplayBoard(state);
-          var name = ais[currentGamer].Name;
-
-          if (pastFirstPlay) Console.WriteLine($"Openent's move was: {move}\n");
-
-          var message = $"{name}'s turn: ";
-          Console.Write(message);
-
-          ais[currentGamer].GameState = state;
-
-          move = !pastFirstPlay ? ais[currentGamer].MakeMove() : ais[currentGamer].MakeProbabilityBasedMove(move);
-
-          Console.WriteLine(move);
-          Console.ReadLine();
-
-          var indicator = ais[currentGamer].Indicator;
-
-          try
-          {
-            state = Play(state, move, indicator);
-            currentGamer = (currentGamer + 1) % 2;
-            probabilities = UpdateCellsProbabilities(probabilities, state, move);
-            ais[0].CellProbabilities = probabilities;
-            ais[1].CellProbabilities = probabilities;
-          }
-          catch (Exception)
-          {
-            continue;
-          }
-
-          pastFirstPlay = true;
-        }
-
-        Console.Clear();
-        DisplayBoard(state);
-
-        if (!IsFull(state))
-        {
-          Console.WriteLine(currentGamer == 0 ? "PLAYER Won." : "AI Won.");
-        }
-        else
-        {
-          Console.WriteLine("It is a Tie");
-        }
-
-        Console.ReadLine();
-        ++i;
-      }
-    }
-
-    private static void DisplayBoard(State state)
-    {
-      var board = new StringBuilder();
-
-      board.AppendLine("+--- --- ---+--- --- ---+--- --- ---+");
-
-      var strState = state.ToString().ToUpper().Split('@').Select(str => string.Concat(str.Split('|')).ToCharArray()).ToArray();
-
-      for (var i = 0; i < strState.Length; i += 3)
-      {
-        var s = strState.Select((grid, k) => new { Index = k, Grid = grid })
-            .Where(elmt => elmt.Index >= i && elmt.Index < (i + 3))
-            .Select(elmt => elmt.Grid)
-            .ToArray();
-
-        for (var j = 0; j < 9; j += 3)
-        {
-          var j1 = j;
-          board.AppendLine("| " + string.Join(" | ", s.Select(grid => grid[j1] + " | " + grid[j1 + 1] + " | " + grid[j1 + 2])) + " |");
-          if (j <= 3) board.AppendLine("|--- --- ---|--- --- ---|--- --- ---|");
-        }
-        board.Append("+--- --- ---+--- --- ---+--- --- ---+\n");
-      }
-
-      Console.WriteLine(board.ToString());
-    }
-
     public static State Play(State currentState, (int Grid, int Cell) move, Field tile)
     {
       if (move.Grid < 0 || move.Grid > 8 || move.Cell < 0 || move.Cell > 8) throw new ArgumentException("Invalid Move");
