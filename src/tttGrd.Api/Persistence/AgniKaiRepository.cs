@@ -19,7 +19,7 @@ namespace tttGrd.Api.Persistence
     {
       var ticket = await _keyGenerator.GenerateKey();
       await _vault.AddAgniKaiTicket(ticket);
-      await _database.AddAgniKaiAsync(new AgniKai{Ticket = ticket});
+      await _database.AddAgniKaiAsync(new AgniKai { Ticket = ticket });
       return ticket;
     }
   }

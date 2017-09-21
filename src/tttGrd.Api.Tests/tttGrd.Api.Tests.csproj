@@ -71,6 +71,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AgniKaiTests.cs" />
     <Compile Include="Models\GamerTests.cs" />
     <Compile Include="Models\PlayTests.cs" />
     <Compile Include="Models\ProgramTests.UpdateCellsProbabilities.cs" />
