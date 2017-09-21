@@ -106,7 +106,6 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\GamerController.cs" />
-    <Compile Include="Controllers\ProbabilityController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -125,10 +124,8 @@
     <Compile Include="Persistence\IDatabaseRepository.cs" />
     <Compile Include="Persistence\IGamerRepository.cs" />
     <Compile Include="Persistence\IKeyGenerator.cs" />
-    <Compile Include="Persistence\IProbabilitiesRepository.cs" />
     <Compile Include="Persistence\IVault.cs" />
     <Compile Include="Persistence\KeyGenerator.cs" />
-    <Compile Include="Persistence\ProbabilitiesRepository.cs" />
     <Compile Include="Persistence\Utilities.cs" />
     <Compile Include="Persistence\Vault.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

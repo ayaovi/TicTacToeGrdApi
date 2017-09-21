@@ -21,7 +21,7 @@ namespace tttGrd.Api
       container.RegisterType<IKeyGenerator, KeyGenerator>();
       container.RegisterType<IGamerRepository, GamerRepository>();
       container.RegisterType<IVault, Vault>();
-      container.RegisterType<IProbabilitiesRepository, ProbabilitiesRepository>();
+      container.RegisterType<IAgniKaiRepository, AgniKaiRepository>();
     }
   }
 }
