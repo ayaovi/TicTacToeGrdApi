@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using tttGrd.Api.Persistence;
 
 namespace tttGrd.Api.Controllers
@@ -16,6 +17,7 @@ namespace tttGrd.Api.Controllers
 
     [HttpGet]
     [Route("initiate")]
+    [ResponseType(typeof(string))]
     public async Task<IHttpActionResult> Initiate()
     {
       var ticket = await _agniKaiRepository.InitiateAgniKaiAsync();
