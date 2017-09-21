@@ -13,7 +13,7 @@ namespace tttGrd.Api.Models
     public Field Oponent { get; set; }
     public List<Play> History { get; set; } = new List<Play>();
     public float[][] CellProbabilities { get; set; } = Utilities.GetDefaultCellsProbabilities();
-    public string Token { get; set; }
+    public string AgniKaiTicket { get; set; }
 
     public (int Grid, int Cell) MakeProbabilityBasedMove((int Grid, int Cell) oponentMove) => SelectProbabilityBasedOptimalMove(oponentMove);
 

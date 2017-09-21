@@ -7,26 +7,25 @@ using tttGrd.Api.Persistence;
 namespace tttGrd.Api.Tests.Persistence
 {
   [TestFixture]
-  class GamerRepositoryTests
+  class AgniKaiRepositoryTests
   {
     [Test]
-    public async Task CreateGamerTest()
+    public async Task InitiateAgniKaiAsync_Test()
     {
       //Arrange
       var mockKeyGenerator = Substitute.For<IKeyGenerator>();
       mockKeyGenerator.GenerateKey().Returns(string.Empty);
       var mockVault = Substitute.For<IVault>();
       var mockDatabase = Substitute.For<IDatabaseRepository>();
-      mockDatabase.GetAgniKaiByTicket(Arg.Any<string>()).Returns(new AgniKai {Ticket = string.Empty});
-      var gamerRepo = new GamerRepository(mockDatabase);
+      var agniKaiRepo = new AgniKaiRepository(mockVault, mockKeyGenerator, mockDatabase);
 
       //Act
-      await gamerRepo.CreateGamerAsync(string.Empty);
+      await agniKaiRepo.InitiateAgniKaiAsync();
 
       //Assert
-      //await mockKeyGenerator.Received(1).GenerateKey();
-      //await mockVault.Received(1).AddAgniKaiTicket(string.Empty);
-      await mockDatabase.Received(1).GetAgniKaiByTicket(string.Empty);
-    }
+      await mockKeyGenerator.Received(1).GenerateKey();
+      await mockVault.Received(1).AddAgniKaiTicket(Arg.Any<string>());
+      await mockDatabase.Received(1).AddAgniKaiAsync(Arg.Any<AgniKai>());
+    } 
   }
 }

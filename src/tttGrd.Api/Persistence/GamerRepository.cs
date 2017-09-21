@@ -1,28 +1,35 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using tttGrd.Api.Models;
 
 namespace tttGrd.Api.Persistence
 {
   public class GamerRepository : IGamerRepository
   {
-    private readonly IKeyGenerator _keyGenerator;
-    private readonly IVault _vault;
     private readonly IDatabaseRepository _databaseRepository;
 
-    public GamerRepository(IKeyGenerator keyGenerator, IVault vault, IDatabaseRepository databaseRepository)
+    public GamerRepository(IDatabaseRepository databaseRepository)
     {
-      _keyGenerator = keyGenerator;
-      _vault = vault;
       _databaseRepository = databaseRepository;
     }
 
-    public async Task<string> CreateGamerAsync()
+    public async Task<string> CreateGamerAsync(string agniKaiTicket)
     {
-      var key = await _keyGenerator.GenerateKey();
-      await _vault.AddGamerKey(key);
-      var gamer = new Gamer();
-      await _databaseRepository.AddGamerAsync(gamer);
-      return key;
+      //var key = await _keyGenerator.GenerateKey();
+      //await _vault.AddAgniKaiTicket(key);
+      var agniKai = await _databaseRepository.GetAgniKaiByTicket(agniKaiTicket);
+      if (!agniKai.CanAccommodateGamer()) throw new Exception($"AgniKai with ticket {agniKaiTicket} is full.");
+      var gamer = new Gamer { Name = $"Gamer_{agniKai.GetNextGamerId()}" };
+      agniKai.AddGamer(gamer);
+      return gamer.Name;
+    }
+
+    public async Task CreateGamerWithNameAsync(string agniKaiTicket, string name)
+    {
+      var agniKai = await _databaseRepository.GetAgniKaiByTicket(agniKaiTicket);
+      if (!agniKai.CanAccommodateGamer()) throw new Exception($"AgniKai with ticket {agniKaiTicket} is full.");
+      var gamer = new Gamer { Name = name };
+      agniKai.AddGamer(gamer);
     }
   }
 }

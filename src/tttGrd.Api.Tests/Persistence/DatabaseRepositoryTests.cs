@@ -10,18 +10,18 @@ namespace tttGrd.Api.Tests.Persistence
   class DatabaseRepositoryTests
   {
     [Test]
-    public async Task AddGamer_GivenGamer_ExpectGamerBeAdded()
+    public async Task AddAgniKaiAsync_GivenAgniKai_ExpectAgniKaiBeAdded()
     {
       //Arrange
-      var gamer = new Gamer { Token = "12345" };
+      var agniKai = new AgniKai { Ticket = "12345" };
       var database = new DatabaseRepository();
 
       //Act
-      await database.AddGamerAsync(gamer);
-      var result = await database.GetGamerByTokenAsync("12345");
+      await database.AddAgniKaiAsync(agniKai);
+      var result = await database.GetAgniKaiByTicket("12345");
 
       //Assert
-      result.ShouldBeEquivalentTo(gamer);
+      result.ShouldBeEquivalentTo(agniKai);
     }
   }
 }

@@ -16,9 +16,9 @@ namespace tttGrd.Api.Controllers
 
     [HttpGet]
     [Route("create")]
-    public async Task<IHttpActionResult> Create()
+    public async Task<IHttpActionResult> Create(string agniKaiTicket)
     {
-      var result = await _gamerRepository.CreateGamerAsync();
+      var result = await _gamerRepository.CreateGamerAsync(agniKaiTicket);
       return Ok(result);
     }
   }

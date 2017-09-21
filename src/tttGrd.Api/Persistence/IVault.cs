@@ -4,6 +4,6 @@ namespace tttGrd.Api.Persistence
 {
   public interface IVault
   {
-    Task AddGamerKey(string key);
+    Task AddAgniKaiTicket(string key);
   }
 }

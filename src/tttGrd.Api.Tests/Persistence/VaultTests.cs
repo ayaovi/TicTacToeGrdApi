@@ -19,7 +19,7 @@ namespace tttGrd.Api.Tests.Persistence
       var expected = new List<string> { key };
 
       //Act
-      await vault.AddGamerKey(key);
+      await vault.AddAgniKaiTicket(key);
 
       //Assert
       vault.GamerKeys.ShouldAllBeEquivalentTo(expected);

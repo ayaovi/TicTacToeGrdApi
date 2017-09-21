@@ -7,17 +7,17 @@ namespace tttGrd.Api.Persistence
 {
   public class DatabaseRepository : IDatabaseRepository
   {
-    private readonly List<Gamer> _gamers = new List<Gamer>();
-
-    public Task AddGamerAsync(Gamer gamer)
+    private readonly List<AgniKai> _agniKais = new List<AgniKai>();
+    
+    public Task AddAgniKaiAsync(AgniKai agniKai)
     {
-      _gamers.Add(gamer);
+      _agniKais.Add(agniKai);
       return Task.CompletedTask;
     }
 
-    public Task<Gamer> GetGamerByTokenAsync(string gamerToken)
+    public Task<AgniKai> GetAgniKaiByTicket(string ticket)
     {
-      return Task.FromResult(_gamers.Single(gamer => gamer.Token == gamerToken));
+      return Task.FromResult(_agniKais.Single(agniKai => agniKai.Ticket == ticket));
     }
   }
 }
