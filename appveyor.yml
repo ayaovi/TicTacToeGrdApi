@@ -31,8 +31,10 @@ build_script:
 test_script:
   - msbuild /verbosity:quiet "tttGrd.Api.Tests/tttGrd.Api.Tests.csproj"
   - OpenCover.Console.exe -register:user -hideskipped:filter -target:"nunit3-console.exe" -targetargs:"c:\projects\tictactoe\src\tttGrd.Api.Tests\bin\Release\tttGrd.Api.Tests.dll" -filter:"+[*]* -[*.Tests]*" -output:"ttGrd_coverage.xml"
+  - cmd: pwd & ls -a
 
 after_test:
+  - cmd: pwd
   - codecov -f ttGrd_coverage.xml
     
 artifacts:
