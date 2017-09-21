@@ -29,7 +29,7 @@ build_script:
   - msbuild /verbosity:quiet "tttGrd.Api/tttGrd.Api.csproj"
   
 test_script:
-  - msbuild /verbosity:quiet "src/tttGrd.Api.Tests/tttGrd.Api.Tests.csproj"
+  - msbuild /verbosity:quiet "tttGrd.Api.Tests/tttGrd.Api.Tests.csproj"
   - OpenCover.Console.exe -register:user -hideskipped:filter -target:"nunit3-console.exe" -targetargs:"c:\projects\tictactoe\src\tttGrd.Api.Tests\bin\Release\tttGrd.Api.Tests.dll" -filter:"+[*]* -[*.Tests]*" -output:"ttGrd_coverage.xml"
 
 after_test:
