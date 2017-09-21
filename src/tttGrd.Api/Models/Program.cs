@@ -6,19 +6,19 @@ namespace tttGrd.Api.Models
 {
   public class Program
   {
-    public static State Play(State currentState, (int Grid, int Cell) move, Field tile)
-    {
-      if (move.Grid < 0 || move.Grid > 8 || move.Cell < 0 || move.Cell > 8) throw new ArgumentException("Invalid Move");
+    //public static State Play(State currentState, (int Grid, int Cell) move, Field tile)
+    //{
+    //  if (move.Grid < 0 || move.Grid > 8 || move.Cell < 0 || move.Cell > 8) throw new ArgumentException("Invalid Move");
 
-      if (currentState.Fields[move.Grid][move.Cell] != Field.Empty) throw new ArgumentException("Move Already Made");
+    //  if (currentState.Fields[move.Grid][move.Cell] != Field.Empty) throw new ArgumentException("Move Already Made");
 
-      var nextState = new State(currentState);
-      nextState.Fields[move.Grid][move.Cell] = tile;
+    //  var nextState = new State(currentState);
+    //  nextState.Fields[move.Grid][move.Cell] = tile;
 
-      return nextState;
-    }
+    //  return nextState;
+    //}
 
-    public static bool IsWin(State state) => state.Fields.All(IsWin);
+    //public static bool IsWin(State state) => state.Fields.All(IsWin);
 
     public static bool IsWin(IEnumerable<Field> grid)
     {
@@ -38,25 +38,25 @@ namespace tttGrd.Api.Models
         firstVertical || secondVertical || thirdVertical;
     }
 
-    public static bool IsEmpty(State state) => state.Fields.SelectMany(grid => grid).All(cell => cell == Field.Empty);
+    //public static bool IsEmpty(State state) => state.Fields.SelectMany(grid => grid).All(cell => cell == Field.Empty);
 
-    public static bool IsEmpty(IEnumerable<Field> grid) => grid.All(cell => cell == Field.Empty);
+    //public static bool IsEmpty(IEnumerable<Field> grid) => grid.All(cell => cell == Field.Empty);
 
-    public static bool IsFull(State state) => state.Fields.SelectMany(grid => grid).All(cell => cell != Field.Empty);
+    //public static bool IsFull(State state) => state.Fields.SelectMany(grid => grid).All(cell => cell != Field.Empty);
 
     public static List<int[]> GetWinningPaths(IEnumerable<Field> grid, Field tile)
     {
       var winningPaths = new List<int[]>();
       var allWinningPaths = new[]
       {
-        new[] { 0, 4, 8 },  // Backward Diagonal [(0,0) (1,1) (2,2)]
-        new[] { 2, 4, 6 },  // Forward Diagonal [(0,2) (1,1) (2,0)]
-        new[] { 0, 1, 2 },  // First Horizontal [(0,0) (0,1) (0,2)]
-        new[] { 3, 4, 5 },  // Second Horizontal [(1,0) (1,1) (1,2)]
-        new[] { 6, 7, 8 },  // Third Horizontal [(2,0) (2,1) (2,2)]
-        new[] { 0, 3, 6 },  // First Vertical [(0,0) (1,0) (2,0)]
-        new[] { 1, 4, 7 },  // Second Vertical [(0,1) (1,1) (2,1)]
-        new[] { 2, 5, 8 }   // Third Vertical [(0,2) (1,2) (2,2)]
+        new[] { 0, 4, 8 },  // Backward Diagonal
+        new[] { 2, 4, 6 },  // Forward Diagonal
+        new[] { 0, 1, 2 },  // First Horizontal 
+        new[] { 3, 4, 5 },  // Second Horizontal
+        new[] { 6, 7, 8 },  // Third Horizontal
+        new[] { 0, 3, 6 },  // First Vertical 
+        new[] { 1, 4, 7 },  // Second Vertical
+        new[] { 2, 5, 8 }   // Third Vertical
       };
 
       var enumerable = grid as Field[] ?? grid.ToArray();
@@ -78,10 +78,10 @@ namespace tttGrd.Api.Models
       return winningPaths;
     }
 
-    public static IEnumerable<int> GetPossibleMoves(IEnumerable<Field> grid) =>
-      grid.Select((cell, index) => new { cell, index })
-          .Where(tile => tile.cell == Field.Empty)
-          .Select(tile => tile.index);
+    //public static IEnumerable<int> GetPossibleMoves(IEnumerable<Field> grid) =>
+    //  grid.Select((cell, index) => new { cell, index })
+    //      .Where(tile => tile.cell == Field.Empty)
+    //      .Select(tile => tile.index);
 
     public static float[][] UpdateCellsProbabilities(float[][] probs, State state, (int Grid, int Cell) move, Field indicator = Field.Empty)
     {
