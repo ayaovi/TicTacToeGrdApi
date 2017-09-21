@@ -77,6 +77,7 @@
     <Compile Include="Models\StateTests.cs" />
     <Compile Include="Models\TurnTests.cs" />
     <Compile Include="Models\UtilitiesTests.cs" />
+    <Compile Include="Persistence\DatabaseRepositoryTests.cs" />
     <Compile Include="Persistence\GamerRepositoryTests.cs" />
     <Compile Include="Persistence\VaultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -4,7 +4,7 @@ using tttGrd.Api.Persistence;
 
 namespace tttGrd.Api.Controllers
 {
-  [RoutePrefix("gamer/")]
+  [RoutePrefix("gamer")]
   public class GamerController : ApiController
   {
     private readonly IGamerRepository _gamerRepository;
@@ -15,7 +15,7 @@ namespace tttGrd.Api.Controllers
     }
 
     [HttpGet]
-    [Route("/create")]
+    [Route("create")]
     public async Task<IHttpActionResult> Create()
     {
       var result = await _gamerRepository.CreateGamerAsync();
