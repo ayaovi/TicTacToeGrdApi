@@ -35,7 +35,7 @@ test_script:
 
 after_test:
   - cmd: pwd
-  - codecov -f ttGrd_coverage.xml
-    
+  - codecov -f "c:\projects\tictactoe\src\ttGrd_coverage.xml"
+
 artifacts:
   - path: ttGrd_coverage.xml
