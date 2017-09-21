@@ -36,4 +36,4 @@ after_test:
   - codecov -f "c:\projects\tictactoe\src\ttGrd_coverage.xml"
 
 artifacts:
-  - path: 'c:\projects\tictactoe\src\ttGrd_coverage.xml'
+  - path: '.\src\ttGrd_coverage.xml'
