@@ -20,7 +20,6 @@ dotnet_csproj:
   package_version: '{version}'
   
 before_build:
-  - cmd: pwd & ls -a & ls src/
   - nuget restore src/tttGrd.Api.sln
   - choco install opencover.portable
   - choco install codecov
