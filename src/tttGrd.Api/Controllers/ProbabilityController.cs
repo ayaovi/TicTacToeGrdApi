@@ -10,7 +10,7 @@ namespace tttGrd.Api.Controllers
     {
       
     }
-    // GET: api/Probability
+
     public async Task<IHttpActionResult> Get()
     {
       return Ok();

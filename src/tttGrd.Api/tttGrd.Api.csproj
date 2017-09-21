@@ -117,7 +117,9 @@
     <Compile Include="Models\Program.cs" />
     <Compile Include="Models\State.cs" />
     <Compile Include="Models\Turn.cs" />
+    <Compile Include="Persistence\DatabaseRepository.cs" />
     <Compile Include="Persistence\GamerRepository.cs" />
+    <Compile Include="Persistence\IDatabaseRepository.cs" />
     <Compile Include="Persistence\IGamerRepository.cs" />
     <Compile Include="Persistence\IKeyGenerator.cs" />
     <Compile Include="Persistence\IProbabilitiesRepository.cs" />
