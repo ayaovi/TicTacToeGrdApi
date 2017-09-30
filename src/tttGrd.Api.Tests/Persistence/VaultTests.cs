@@ -7,7 +7,7 @@ using tttGrd.Api.Persistence;
 namespace tttGrd.Api.Tests.Persistence
 {
   [TestFixture]
-  class VaultTests
+  internal class VaultTests
   {
     [Test]
     public async Task AddGamerKey_GivenKey_ShouldAddKey()

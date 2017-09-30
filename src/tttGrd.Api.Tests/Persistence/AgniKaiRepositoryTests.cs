@@ -7,7 +7,7 @@ using tttGrd.Api.Persistence;
 namespace tttGrd.Api.Tests.Persistence
 {
   [TestFixture]
-  class AgniKaiRepositoryTests
+  internal class AgniKaiRepositoryTests
   {
     [Test]
     public async Task InitiateAgniKaiAsync_Test()
