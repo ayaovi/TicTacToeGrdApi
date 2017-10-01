@@ -1,12 +1,25 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using tttGrd.Api.Persistence;
 
 namespace tttGrd.Api.Hubs
 {
-  [HubName("gameHub")]
+  //[HubName("gameHub")]
   public class GameHub : Hub
   {
+    private readonly IDatabaseRepository _database;
+
+    public GameHub(IDatabaseRepository database)
+    {
+      _database = database;
+    }
+
+    public void Announce(object username)
+    {
+      _database.AddUserAsync(username.ToString());
+    }
+
     public async Task JoinAgniKai(string agniKaiTicket)
     {
       await Groups.Add(Context.ConnectionId, agniKaiTicket);

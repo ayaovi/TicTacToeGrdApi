@@ -1,7 +1,7 @@
 using Microsoft.Practices.Unity;
 using System.Web.Http;
-using tttGrd.Api.Persistence;
 using Unity.WebApi;
+using tttGrd.Api.Persistence;
 
 namespace tttGrd.Api
 {

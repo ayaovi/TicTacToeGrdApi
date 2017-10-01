@@ -6,7 +6,7 @@
   var errorMessage = function (data, status) {
     return "Error: " + status + (data.Message !== undefined ? (" " + data.Message) : "");
   };
-  var hub = $.connection.gameHub; // create a proxy to signalr hub on web server
+  var gameHubProxy = $.connection.gameHub; // create a proxy to signalr hub on web server
 
   app.controller("myCtrl", ["$http", "$scope", function ($http, $scope) {
     $scope.cellIds = [];
@@ -25,7 +25,8 @@
         });
     };
 
-    $scope.getActivePlayers = function() {
+    $scope.getActivePlayers = function () {
+      gameHubProxy.server.announce($("#gamerName").val());
       $http.get(usersUri + "/all")
         .success(function(data, status) {
           if (data.length > 0) {
@@ -80,5 +81,7 @@
     }
 
     $.connection.hub.start(); // connect to signalr hub
+    //hub.server.register($("#gamerName").val());
+    //gameHubProxy.server.announce($("#gamerName").val());
   }]);
 })();
