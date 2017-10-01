@@ -28,6 +28,7 @@
       var encodeMove = $("<div />").text(move).html();
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       document.getElementById(cellId).disabled = true;
+      document.getElementById(cellId).style.background = "#778899";
     };
 
     $scope.extractMove = function (cellId) {
@@ -48,6 +49,14 @@
     };
     
     //$("#gamerName").val(prompt("Enter your name:", ""));
+
+    // print welcome message.
+    var divMsg = document.getElementById("welcomeMsg");
+    var h1Msg = document.createElement("H1");
+    var msg = document.createTextNode("Welcome to the game " + $("#gamerName").val()); 
+    h1Msg.appendChild(msg);
+    divMsg.appendChild(h1Msg);
+    
     for (var i = 0; i < 81; i++) {
       $scope.cellIds.push(i);
     }
