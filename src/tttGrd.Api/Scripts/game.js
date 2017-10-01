@@ -27,10 +27,11 @@
       var move = $scope.extractMove(cellId);
       var encodeMove = $("<div />").text(move).html();
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
+      document.getElementById(cellId).disabled = true;
     };
 
     $scope.extractMove = function (cellId) {
-      var classify = function(index) {
+      var classify = function (index) {
         if (index < 3) return 1;
         if (index < 6) return 2;
         if (index < 9) return 3;
@@ -43,10 +44,10 @@
       var c = classify(t);
       var grid = (n * 3) - 1 + c;
       var cell = (s * 3) + (t % 3);
-      return  cellId + ": " + "(" + grid + ", " + cell + ")";
+      return cellId + ": " + "(" + grid + ", " + cell + ")";
     };
-
-    $("#gamerName").val(prompt("Enter your name:", ""));
+    
+    //$("#gamerName").val(prompt("Enter your name:", ""));
     for (var i = 0; i < 81; i++) {
       $scope.cellIds.push(i);
     }
