@@ -30,11 +30,19 @@
     };
 
     $scope.extractMove = function (cellId) {
+      var classify = function(index) {
+        if (index < 3) return 1;
+        if (index < 6) return 2;
+        if (index < 9) return 3;
+        return 0;
+      };
       var n = Math.floor(cellId / 27);
       var r = cellId % 27;
-      var x = r % 3;
-      var grid = (n * 3) + 3 - x % 3;
-      var cell = r % 3;
+      var s = Math.floor(r / 9);
+      var t = r % 9;
+      var c = classify(t);
+      var grid = (n * 3) - 1 + c;
+      var cell = (s * 3) + (t % 3);
       return  cellId + ": " + "(" + grid + ", " + cell + ")";
     };
 
