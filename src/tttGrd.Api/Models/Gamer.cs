@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using tttGrd.Api.Persistence;
 
@@ -11,7 +10,6 @@ namespace tttGrd.Api.Models
     public string Name { get; set; }
     public State GameState { get; set; } = new State();
     public Field Oponent { get; set; }
-    public List<Play> History { get; set; } = new List<Play>();
     public float[][] CellProbabilities { get; set; } = Utilities.GetDefaultCellsProbabilities();
     public string AgniKaiTicket { get; set; }
 

@@ -2,6 +2,7 @@
   var app = angular.module("myApp", []);
   var agniKaiUri = "agnikai";
   var gameUri = "game";
+  var usersUri = "users";
   var errorMessage = function (data, status) {
     return "Error: " + status + (data.Message !== undefined ? (" " + data.Message) : "");
   };
@@ -9,6 +10,7 @@
 
   app.controller("myCtrl", ["$http", "$scope", function ($http, $scope) {
     $scope.cellIds = [];
+    //$scope.activePlayers = [];
     $scope.getAgniKaiTicket = function () {
       $http.get(agniKaiUri + "/initiate")
         .success(function (data, status) {
@@ -16,6 +18,22 @@
           var encodedName = $("<div />").text($("#gamerName").val()).html();
           var encodedTicket = $("<div />").text(data).html();
           $("#playerOnline").append("<li><strong>" + encodedName + "</strong>:&nbsp;&nbsp;" + encodedTicket + "</li>");
+        })
+        .error(function (data, status) {
+          $scope.agnikaiTicket = "";
+          $scope.errorToSearch = errorMessage(data, status);
+        });
+    };
+
+    $scope.getActivePlayers = function() {
+      $http.get(usersUri + "/all")
+        .success(function(data, status) {
+          if (data.length > 0) {
+            data.forEach(user => {
+              var encodedUser = $("<div />").text(user).html();
+              $("#activeplayerlist").append("<li><strong>" + encodedUser + "</strong>:&nbsp;&nbsp;</li>");
+            });
+          }
         })
         .error(function (data, status) {
           $scope.agnikaiTicket = "";

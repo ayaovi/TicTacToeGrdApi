@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using tttGrd.Api.Models;
 
 namespace tttGrd.Api.Persistence
@@ -7,5 +8,8 @@ namespace tttGrd.Api.Persistence
   {
     Task AddAgniKaiAsync(AgniKai agniKai);
     Task<AgniKai> GetAgniKaiByTicket(string ticket);
+    Task AddUserAsync(string username);
+    Task<User> GetUserByNameAsync(string username);
+    Task<List<User>> GetUsersAsync();
   }
 }

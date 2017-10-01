@@ -3,36 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <title>TicTacToe Grand</title>
-  <style type="text/css">
-    .container {
-      background-color: #99CCFF;
-      border: thick solid #808080;
-      padding: 20px;
-      margin: 20px;
-    }
-
-    .button-container {
-      width: 320px;
-      height: 320px;
-      background: gray;
-      overflow-y: auto;
-    }
-
-      .button-container > button {
-        width: 30px;
-        height: 30px;
-        float: left;
-        background: lightgray;
-        margin-left: 5px;
-        margin-right: 0;
-        margin-top: 5px;
-        line-height: 20px;
-        text-align: center;
-      }
-  </style>
+  <link rel="stylesheet" href="Styles/style.css">
 </head>
 <body ng-app="myApp" ng-controller="myCtrl" ng-cloak>
-<div id="welcomeMsg"></div>
+  <div id="welcomeMsg"></div>
+
+  <div class="active-player-container">
+    <input type="button" value="See Active Players" ng-click="getActivePlayers();" />
+    <ul id="activeplayers"></ul>
+  </div>
 
   <div class="container">
     <input type="hidden" id="gamerName" value="Djayes" />
@@ -41,7 +20,7 @@
     <ul id="playerOnline"></ul>
   </div>
 
-  <div class="button-container" id="grid">
+  <div class="grid-container" id="grid">
     <button ng-repeat="cellId in cellIds" ng-click="recordMove(cellId)" id={{cellId}}>.</button>
   </div>
 
