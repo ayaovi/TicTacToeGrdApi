@@ -10,7 +10,6 @@
 
   app.controller("myCtrl", ["$http", "$scope", function ($http, $scope) {
     $scope.cellIds = [];
-    //$scope.activePlayers = [];
     $scope.getAgniKaiTicket = function () {
       $http.get(agniKaiUri + "/initiate")
         .success(function (data, status) {
@@ -28,11 +27,12 @@
     $scope.getActivePlayers = function () {
       gameHubProxy.server.announce($("#gamerName").val());
       $http.get(usersUri + "/all")
-        .success(function(data, status) {
+        .success(function (data, status) {
+          $scope.playersOnline = data;
           if (data.length > 0) {
             data.forEach(user => {
-              var encodedUser = $("<div />").text(user).html();
-              $("#activeplayerlist").append("<li><strong>" + encodedUser + "</strong>:&nbsp;&nbsp;</li>");
+              var encodedUser = $("<div />").text(user.Username).html();
+              $("#activeplayers").append("<li><strong>" + encodedUser + "</strong></li>");
             });
           }
         })
@@ -81,7 +81,6 @@
     }
 
     $.connection.hub.start(); // connect to signalr hub
-    //hub.server.register($("#gamerName").val());
     //gameHubProxy.server.announce($("#gamerName").val());
   }]);
 })();

@@ -5,7 +5,7 @@ using tttGrd.Api.Persistence;
 
 namespace tttGrd.Api.Hubs
 {
-  //[HubName("gameHub")]
+  [HubName("gameHub")]
   public class GameHub : Hub
   {
     private readonly IDatabaseRepository _database;
@@ -15,9 +15,9 @@ namespace tttGrd.Api.Hubs
       _database = database;
     }
 
-    public void Announce(object username)
+    public void Announce(string username)
     {
-      _database.AddUserAsync(username.ToString());
+      _database.AddUserAsync(username);
     }
 
     public async Task JoinAgniKai(string agniKaiTicket)
