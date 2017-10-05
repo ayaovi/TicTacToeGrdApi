@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using tttGrd.Api.Models;
 using tttGrd.Api.Persistence;
 
 namespace tttGrd.Api.Hubs
@@ -31,12 +32,27 @@ namespace tttGrd.Api.Hubs
       return Groups.Remove(Context.ConnectionId, agniKaiTicket);
     }
 
-    public void SendMove(string agniKaiTicket, (int Grid, int Cell) move)
+    public void SendMove(string agniKaiTicket, int grid, int cell, char tile)
     {
+      Field IndicatorFromTile(char t)
+      {
+        switch (t)
+        {
+          case 'x':
+            return Field.X;
+          case 'o':
+            return Field.O;
+          default:
+            return Field.Empty;
+        }
+      }
       //TODO perform some computation, then broadcast the state back to all clients in the group.
       //Clients.All.broadcastMessage(agniKaiTicket, move);
+      var indicator = IndicatorFromTile(tile);
+      _database.RecordMove(agniKaiTicket, (grid, cell), indicator);
+      var state = _database.GetStateAsync(agniKaiTicket);
       //We might want to encrypt the state being published a save it with a time stamp.
-      Clients.Group(agniKaiTicket).broadcastState(agniKaiTicket, move);
+      Clients.Group(agniKaiTicket).broadcastState(state);
     }
   }
 }

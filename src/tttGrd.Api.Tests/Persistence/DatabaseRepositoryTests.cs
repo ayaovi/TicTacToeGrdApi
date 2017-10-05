@@ -8,7 +8,7 @@ using tttGrd.Api.Persistence;
 namespace tttGrd.Api.Tests.Persistence
 {
   [TestFixture]
-  class DatabaseRepositoryTests
+  internal class DatabaseRepositoryTests
   {
     [Test]
     public async Task AddAgniKaiAsync_GivenAgniKai_ExpectAgniKaiBeAdded()
@@ -20,9 +20,31 @@ namespace tttGrd.Api.Tests.Persistence
       //Act
       await database.AddAgniKaiAsync(agniKai);
       var result = await database.GetAgniKaiByTicket("12345");
+      var state = await database.GetStateAsync(agniKai.Ticket);
 
       //Assert
       result.ShouldBeEquivalentTo(agniKai);
+      state.ShouldBeEquivalentTo(new State());
+    }
+
+    [Test]
+    public async Task RecordMove_GivenTicketAndMove_ExpectMoveBeRecorded()
+    {
+      //Arrange
+      var agniKai = new AgniKai { Ticket = "12345" };
+      var database = new DatabaseRepository();
+      var move = (2, 3);
+      var expectedState = new State();
+      const Field indicator = Field.X;
+      expectedState.Fields[2][3] = indicator;
+
+      //Act
+      await database.AddAgniKaiAsync(agniKai);
+      await database.RecordMove(agniKai.Ticket, move, indicator);
+      var state = await database.GetStateAsync(agniKai.Ticket);
+
+      //Assert
+      state.ShouldBeEquivalentTo(expectedState);
     }
 
     [Test]

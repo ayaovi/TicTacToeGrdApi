@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.SignalR;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
 [assembly: OwinStartup(typeof(tttGrd.Api.Startup))]
 
