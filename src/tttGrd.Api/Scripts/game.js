@@ -10,9 +10,10 @@
 
   app.controller("myCtrl", ["$http", "$scope", function ($http, $scope) {
     $scope.cellIds = [];
+
     $scope.getAgniKaiTicket = function () {
       $http.get(agniKaiUri + "/initiate")
-        .success(function (data, status) {
+        .success(function (data, _) {
           $scope.agnikaiTicket = data; // retrieve agnikai ticket.
           var encodedName = $("<div />").text($("#gamerName").val()).html();
           var encodedTicket = $("<div />").text(data).html();
@@ -27,7 +28,7 @@
     $scope.getActivePlayers = function () {
       gameHubProxy.server.announce($("#gamerName").val());
       $http.get(usersUri + "/all")
-        .success(function (data, status) {
+        .success(function (data, _) {
           $scope.playersOnline = data;
           if (data.length > 0) {
             data.forEach(user => {
@@ -66,16 +67,24 @@
       var cell = (s * 3) + (t % 3);
       return cellId + ": " + "(" + grid + ", " + cell + ")";
     };
-    
+
+    $scope.challengeAI = function () {
+      //Create the AI
+    }
+
+    gameHubProxy.client.broadcastState = function (state) {
+
+    }
+
     //$("#gamerName").val(prompt("Enter your name:", ""));
 
     // print welcome message.
     var divMsg = document.getElementById("welcomeMsg");
     var h1Msg = document.createElement("H1");
-    var msg = document.createTextNode("Welcome to the game " + $("#gamerName").val()); 
+    var msg = document.createTextNode("Welcome to the game " + $("#gamerName").val());
     h1Msg.appendChild(msg);
     divMsg.appendChild(h1Msg);
-    
+
     for (var i = 0; i < 81; i++) {
       $scope.cellIds.push(i);
     }
