@@ -45,10 +45,11 @@
 
     $scope.recordMove = function (cellId) {
       var move = $scope.extractMove(cellId);
-      var encodeMove = $("<div />").text(move).html();
+      var encodeMove = $("<div />").text(move[0] + ": (" + move[1] + "," + move[2] + ")").html();
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       document.getElementById(cellId).disabled = true;
       document.getElementById(cellId).style.background = "#778899";
+      gameHubProxy.server.sendMove($("#agnikaiTicket").val(), move[1], move[2], "x");
     };
 
     $scope.extractMove = function (cellId) {
@@ -65,7 +66,7 @@
       var c = classify(t);
       var grid = (n * 3) - 1 + c;
       var cell = (s * 3) + (t % 3);
-      return cellId + ": " + "(" + grid + ", " + cell + ")";
+      return [cellId, grid, cell];
     };
 
     $scope.challengeAI = function () {
@@ -73,7 +74,7 @@
     }
 
     gameHubProxy.client.broadcastState = function (state) {
-
+      console.log(state.length);
     }
 
     //$("#gamerName").val(prompt("Enter your name:", ""));
