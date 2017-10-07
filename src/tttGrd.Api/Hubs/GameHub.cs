@@ -51,7 +51,7 @@ namespace tttGrd.Api.Hubs
       var indicator = IndicatorFromTile(tile);
       _database.RecordMove(agniKaiTicket, (grid, cell), indicator);
       var state = _database.GetStateAsync(agniKaiTicket);
-      //We might want to encrypt the state being published a save it with a time stamp.
+      //We might want to encrypt the state being published and save it with a time stamp.
       Clients.Group(agniKaiTicket).broadcastState(state);
     }
   }

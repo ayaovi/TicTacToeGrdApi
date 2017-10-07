@@ -1,7 +1,7 @@
 ﻿(function () {
   var app = angular.module("myApp", []);
   var agniKaiUri = "agnikai";
-  var gameUri = "game";
+  var gamerUri = "gamer";
   var usersUri = "users";
   var errorMessage = function (data, status) {
     return "Error: " + status + (data.Message !== undefined ? (" " + data.Message) : "");
@@ -11,17 +11,20 @@
   app.controller("myCtrl", ["$http", "$scope", function ($http, $scope) {
     $scope.cellIds = [];
 
-    $scope.getAgniKaiTicket = function () {
+    $scope.getAgniKaiTicket = function (callback1, callback2) {
       $http.get(agniKaiUri + "/initiate")
         .success(function (data, _) {
-          $scope.agnikaiTicket = data; // retrieve agnikai ticket.
+          document.getElementById("agnikaiTicket").value = data; // retrieve agnikai ticket.
+          $scope.agnikaiTicket = data;
+          callback1(callback2);
+          //console.log($scope.agnikaiTicket);
+          //$("#agnikaiTicket").value = data;
           var encodedName = $("<div />").text($("#gamerName").val()).html();
           var encodedTicket = $("<div />").text(data).html();
           $("#playerOnline").append("<li><strong>" + encodedName + "</strong>:&nbsp;&nbsp;" + encodedTicket + "</li>");
           document.getElementById("agnikai-btn").disabled = true;
         })
         .error(function (data, status) {
-          $scope.agnikaiTicket = "";
           $scope.errorToSearch = errorMessage(data, status);
         });
     };
@@ -39,7 +42,6 @@
           }
         })
         .error(function (data, status) {
-          $scope.agnikaiTicket = "";
           $scope.errorToSearch = errorMessage(data, status);
         });
     };
@@ -50,7 +52,7 @@
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       document.getElementById(cellId).disabled = true;
       document.getElementById(cellId).style.background = "#778899";
-      gameHubProxy.server.sendMove($("#agnikaiTicket").val(), move[1], move[2], "x");
+      gameHubProxy.server.sendMove($scope.agnikaiTicket, move[1], move[2], "x");
     };
 
     $scope.extractMove = function (cellId) {
@@ -70,9 +72,41 @@
       return [cellId, grid, cell];
     };
 
+    //var retrieveAgnikaiTicket = new Promise((resolve, reject) => {
+    //  $scope.getAgniKaiTicket();
+    //  resolve();
+    //});
+
+    var createAi = function(callback) {
+      $http.get(gamerUri + "/create?agnikaiTicket=" + $scope.agnikaiTicket)
+        .success(function (data, _) {
+          //TODO don't know yet.
+        })
+        .error(function (data, status) {
+          //TODO don't know yet.
+        });
+      callback();
+    }
+
+    //var challengeAiRoutine = function (callback) {
+    //  retrieveAgnikaiTicket.then(callback());
+    //}
+    //challengeAiRoutine(createAi(() => { gameHubProxy.server.joinAgniKai($scope.agnikaiTicket); }));
+
     $scope.challengeAI = function () {
-      $scope.getAgniKaiTicket();  /* initiate agnikai */
+      $scope.getAgniKaiTicket(createAi, () => { gameHubProxy.server.joinAgniKai($scope.agnikaiTicket); });  /* initiate agnikai */
+      //challengeAiRoutine(createAi);
       /* Create the AI */
+      //$http.get(gamerUri + "/create?agnikaiTicket=" + $scope.agnikaiTicket)
+      //  .success(function (data, _) {
+      //    //TODO don't know yet.
+      //  })
+      //  .error(function (data, status) {
+      //    //TODO don't know yet.
+      //  });
+      //console.log("AgniKai ticket is: " + document.getElementById("agnikaiTicket").value);
+      //gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);  /* join the agnikai. */
+      document.getElementById("challenge-ai-btn").disabled = true;
     }
 
     gameHubProxy.client.broadcastState = function (state) {
@@ -81,7 +115,7 @@
 
     //$("#gamerName").val(prompt("Enter your name:", ""));
 
-    // print welcome message.
+    /* print welcome message. */
     var divMsg = document.getElementById("welcomeMsg");
     var h1Msg = document.createElement("H1");
     var msg = document.createTextNode("Welcome to the game " + $("#gamerName").val());
@@ -92,7 +126,7 @@
       $scope.cellIds.push(i);
     }
 
-    $.connection.hub.start(); // connect to signalr hub
+    $.connection.hub.start(); /* connect to signalr hub */
     //gameHubProxy.server.announce($("#gamerName").val());
   }]);
 })();
