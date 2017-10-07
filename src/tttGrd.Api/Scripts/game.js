@@ -18,6 +18,7 @@
           var encodedName = $("<div />").text($("#gamerName").val()).html();
           var encodedTicket = $("<div />").text(data).html();
           $("#playerOnline").append("<li><strong>" + encodedName + "</strong>:&nbsp;&nbsp;" + encodedTicket + "</li>");
+          document.getElementById("agnikai-btn").disabled = true;
         })
         .error(function (data, status) {
           $scope.agnikaiTicket = "";
@@ -71,7 +72,7 @@
 
     $scope.challengeAI = function () {
       $scope.getAgniKaiTicket();  /* initiate agnikai */
-      //Create the AI
+      /* Create the AI */
     }
 
     gameHubProxy.client.broadcastState = function (state) {
