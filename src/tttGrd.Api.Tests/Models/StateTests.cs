@@ -5,7 +5,7 @@ using tttGrd.Api.Models;
 namespace tttGrd.Api.Tests.Models
 {
   [TestFixture]
-  class StateTests
+  internal class StateTests
   {
     [Test]
     public void DefaultConstructorTest()

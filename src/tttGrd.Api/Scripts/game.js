@@ -10,33 +10,14 @@
 
   app.controller("myCtrl", ["$http", "$scope", function ($http, $scope) {
     $scope.cellIds = [];
-
-    $scope.getAgniKaiTicket = function (callback1, callback2) {
-      $http.get(agniKaiUri + "/initiate")
-        .success(function (data, _) {
-          document.getElementById("agnikaiTicket").value = data; // retrieve agnikai ticket.
-          $scope.agnikaiTicket = data;
-          callback1(callback2);
-          //console.log($scope.agnikaiTicket);
-          //$("#agnikaiTicket").value = data;
-          var encodedName = $("<div />").text($("#gamerName").val()).html();
-          var encodedTicket = $("<div />").text(data).html();
-          $("#playerOnline").append("<li><strong>" + encodedName + "</strong>:&nbsp;&nbsp;" + encodedTicket + "</li>");
-          document.getElementById("agnikai-btn").disabled = true;
-        })
-        .error(function (data, status) {
-          $scope.errorToSearch = errorMessage(data, status);
-        });
-    };
-
+    
     $scope.getActivePlayers = function () {
-      gameHubProxy.server.announce($("#gamerName").val());
       $http.get(usersUri + "/all")
         .success(function (data, _) {
           $scope.playersOnline = data;
           if (data.length > 0) {
             data.forEach(user => {
-              var encodedUser = $("<div />").text(user.Username).html();
+              var encodedUser = $("<div />").text(user.Name).html();
               $("#activeplayers").append("<li><strong>" + encodedUser + "</strong></li>");
             });
           }
@@ -71,48 +52,27 @@
       var cell = (s * 3) + (t % 3);
       return [cellId, grid, cell];
     };
-
-    //var retrieveAgnikaiTicket = new Promise((resolve, reject) => {
-    //  $scope.getAgniKaiTicket();
-    //  resolve();
-    //});
-
-    var createAi = function(callback) {
-      $http.get(gamerUri + "/create?agnikaiTicket=" + $scope.agnikaiTicket)
-        .success(function (data, _) {
-          //TODO don't know yet.
-        })
-        .error(function (data, status) {
-          //TODO don't know yet.
+    
+    var setupPvA = function () {
+      $http.get(agniKaiUri + "/initiate").then(response => {
+        $scope.agnikaiTicket = response.data;
+        $http.get(gamerUri + "/create?agnikaiTicket=" + $scope.agnikaiTicket).then((_) => {
+          //TODO I don't know yet.
+          /* one possibility would be getting the game name. */
         });
-      callback();
+        gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
+      });
     }
 
-    //var challengeAiRoutine = function (callback) {
-    //  retrieveAgnikaiTicket.then(callback());
-    //}
-    //challengeAiRoutine(createAi(() => { gameHubProxy.server.joinAgniKai($scope.agnikaiTicket); }));
-
     $scope.challengeAI = function () {
-      $scope.getAgniKaiTicket(createAi, () => { gameHubProxy.server.joinAgniKai($scope.agnikaiTicket); });  /* initiate agnikai */
-      //challengeAiRoutine(createAi);
-      /* Create the AI */
-      //$http.get(gamerUri + "/create?agnikaiTicket=" + $scope.agnikaiTicket)
-      //  .success(function (data, _) {
-      //    //TODO don't know yet.
-      //  })
-      //  .error(function (data, status) {
-      //    //TODO don't know yet.
-      //  });
-      //console.log("AgniKai ticket is: " + document.getElementById("agnikaiTicket").value);
-      //gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);  /* join the agnikai. */
+      setupPvA();
       document.getElementById("challenge-ai-btn").disabled = true;
     }
 
     gameHubProxy.client.broadcastState = function (state) {
-      console.log(state.length);
+      console.log(state.Result.Fields.length);
     }
-
+    
     //$("#gamerName").val(prompt("Enter your name:", ""));
 
     /* print welcome message. */
@@ -126,7 +86,6 @@
       $scope.cellIds.push(i);
     }
 
-    $.connection.hub.start(); /* connect to signalr hub */
-    //gameHubProxy.server.announce($("#gamerName").val());
+    $.connection.hub.start().done(() => { gameHubProxy.server.announce($("#gamerName").val()); }); /* connect to signalr hub */
   }]);
 })();
