@@ -18,13 +18,13 @@ namespace tttGrd.Api.Hubs
 
     public void Announce(string username)
     {
-      _database.AddUserAsync(username);
+      _database.AddPlayerAsync(username);
     }
 
     public async Task JoinAgniKai(string agniKaiTicket)
     {
       await Groups.Add(Context.ConnectionId, agniKaiTicket);
-      //Clients.Group(agniKaiTicket).addChatMessage(Context.User.Identity.Name + " joined.");
+      //Clients.Group(agniKaiTicket).addChatMessage(Context.Player.Identity.Name + " joined.");
     }
 
     public Task LeaveAgniKai(string agniKaiTicket)

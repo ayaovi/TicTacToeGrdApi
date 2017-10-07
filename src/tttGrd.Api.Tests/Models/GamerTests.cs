@@ -18,7 +18,7 @@ namespace tttGrd.Api.Tests.Models
       {
         new Move {Value = (0, 0), Indicator = Field.X}
       }, gameState);
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.O,
         Name = "Gamer_2",
@@ -54,7 +54,7 @@ namespace tttGrd.Api.Tests.Models
         new Move { Value = (1, 8), Indicator = Field.X },
         new Move { Value = (8, 0), Indicator = Field.O },
       }, gameState);
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.X,
         Name = "Gamer_2",
@@ -89,7 +89,7 @@ namespace tttGrd.Api.Tests.Models
         new Move { Value = (1, 8), Indicator = Field.X },
         new Move { Value = (8, 0), Indicator = Field.X },
       }, gameState);
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.O,
         Name = "Gamer_2",
@@ -124,7 +124,7 @@ namespace tttGrd.Api.Tests.Models
         new Move { Value = (6, 8), Indicator = Field.X },
         new Move { Value = (8, 0), Indicator = Field.O },
       }, gameState);
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.X,
         Name = "Gamer_2",
@@ -156,7 +156,7 @@ namespace tttGrd.Api.Tests.Models
         new Move { Value = (7, 3), Indicator = Field.X },
         new Move { Value = (3, 4), Indicator = Field.O }
       }, gameState);
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.X,
         Name = "Gamer_2",
@@ -188,7 +188,7 @@ namespace tttGrd.Api.Tests.Models
         new Move { Value = (4, 0), Indicator = Field.X },
         new Move { Value = (0, 2), Indicator = Field.O }
       }, gameState);
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.X,
         Name = "Gamer_2",
@@ -217,7 +217,7 @@ namespace tttGrd.Api.Tests.Models
         new Move { Value = (4, 1), Indicator = Field.X },
         new Move { Value = (0, 2), Indicator = Field.O }
       }, gameState);
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.X,
         Name = "Gamer_2",
@@ -246,7 +246,7 @@ namespace tttGrd.Api.Tests.Models
         new Move { Value = (4, 7), Indicator = Field.X },
         new Move { Value = (4, 8), Indicator = Field.X }
       }, gameState);
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.O,
         Name = "Gamer_2",
@@ -275,7 +275,7 @@ namespace tttGrd.Api.Tests.Models
         "...|...|...", "...|...|...", "...|...|..."
       });
       var prob = Utilities.GetCellsProbabilities(new[] { new Move { Value = (0, 4), Indicator = Field.O } }, gameState);
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.X,
         Name = "Gamer_2",
@@ -297,7 +297,7 @@ namespace tttGrd.Api.Tests.Models
     public void MakeMove_GivenOpportunityToPlayInEmptyGrid_ShouldPreferablyGoCenter()
     {
       //Arrange
-      var gamer = new Gamer
+      var gamer = new AI
       {
         Indicator = Field.X,
         Name = "Gamer_2",

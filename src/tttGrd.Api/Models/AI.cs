@@ -8,10 +8,19 @@ namespace tttGrd.Api.Models
   {
     public Field Indicator { get; set; }
     public string Name { get; set; }
+    public string AgniKaiTicket { get; set; }
+  }
+
+  public class Player : Gamer
+  {
+    public PlayerStatus Status { get; set; }
+  }
+
+  public class AI : Gamer
+  {
     public State GameState { get; set; } = new State();
     public Field Oponent { get; set; }
     public float[][] CellProbabilities { get; set; } = Utilities.GetDefaultCellsProbabilities();
-    public string AgniKaiTicket { get; set; }
 
     public (int Grid, int Cell) MakeProbabilityBasedMove((int Grid, int Cell) oponentMove) => SelectProbabilityBasedOptimalMove(oponentMove);
 

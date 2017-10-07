@@ -12,7 +12,7 @@ namespace tttGrd.Api.Tests.Models
     {
       //Arrange
       var agniKai = new AgniKai { Ticket = string.Empty };
-      var gamer = new Gamer { AgniKaiTicket = string.Empty, Name = "gamer_1" };
+      var gamer = new AI { AgniKaiTicket = string.Empty, Name = "gamer_1" };
 
       //Act
       agniKai.AddGamer(gamer);
@@ -49,7 +49,7 @@ namespace tttGrd.Api.Tests.Models
       var agniKai = new AgniKai { Ticket = string.Empty };
 
       //Act 
-      agniKai.AddGamer(new Gamer { AgniKaiTicket = string.Empty, Name = "gamer_1" });
+      agniKai.AddGamer(new AI { AgniKaiTicket = string.Empty, Name = "gamer_1" });
 
       //Assert
       Assert.AreEqual(2, agniKai.GetNextGamerId());

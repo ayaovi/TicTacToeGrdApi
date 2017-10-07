@@ -70,6 +70,7 @@
     };
 
     $scope.challengeAI = function () {
+      $scope.getAgniKaiTicket();  /* initiate agnikai */
       //Create the AI
     }
 

@@ -5,12 +5,17 @@ using tttGrd.Api.Models;
 
 namespace tttGrd.Api.Persistence
 {
+  public enum PlayerStatus
+  {
+    Online, Offline, Playing
+  }
+
   public class DatabaseRepository : IDatabaseRepository
   {
     private readonly List<AgniKai> _agniKais = new List<AgniKai>();
-    private readonly List<User> _users = new List<User>();
+    private readonly List<Player> _players = new List<Player>();
     private readonly IDictionary<string, State> _ongoingGameStates = new Dictionary<string, State>();
-    
+
     public Task AddAgniKaiAsync(AgniKai agniKai)
     {
       _agniKais.Add(agniKai);
@@ -23,20 +28,20 @@ namespace tttGrd.Api.Persistence
       return Task.FromResult(_agniKais.Single(agniKai => agniKai.Ticket == ticket));
     }
 
-    public Task AddUserAsync(string username)
+    public Task AddPlayerAsync(string username)
     {
-      _users.Add(new User {Username = username});
+      _players.Add(new Models.Player { Name = username, Status = PlayerStatus.Online });
       return Task.CompletedTask;
     }
 
-    public Task<User> GetUserByNameAsync(string username)
+    public Task<Player> GetPlayerByNameAsync(string playerName)
     {
-      return Task.FromResult(_users.Single(user => user.Username == username));
+      return Task.FromResult(_players.Single(player => player.Name == playerName));
     }
 
-    public Task<List<User>> GetUsersAsync()
+    public Task<List<Player>> GetUsersAsync()
     {
-      return Task.FromResult(_users);
+      return Task.FromResult(_players);
     }
 
     public Task<State> GetStateAsync(string agniKaiTicket)
@@ -49,10 +54,5 @@ namespace tttGrd.Api.Persistence
       _ongoingGameStates[agniKaiTicket].Fields[move.Grid][move.Cell] = indicator;
       return Task.CompletedTask;
     }
-  }
-
-  public class User
-  {
-    public string Username { get; set; }
   }
 }

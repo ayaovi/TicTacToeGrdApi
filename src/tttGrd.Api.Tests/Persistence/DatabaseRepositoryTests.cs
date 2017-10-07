@@ -51,12 +51,12 @@ namespace tttGrd.Api.Tests.Persistence
     public async Task AddUserAsync_GivenUsername_ExpectUserBeAdded()
     {
       //Arrange
-      var expected = new User { Username = "User-1" };
+      var expected = new Player { Name = "Player-1" };
       var database = new DatabaseRepository();
 
       //Act
-      await database.AddUserAsync("User-1");
-      var result = await database.GetUserByNameAsync("User-1");
+      await database.AddPlayerAsync("Player-1");
+      var result = await database.GetPlayerByNameAsync("Player-1");
 
       //Assert
       result.ShouldBeEquivalentTo(expected);
@@ -66,7 +66,7 @@ namespace tttGrd.Api.Tests.Persistence
     public async Task GetUsersAsync_GivenNoUsers_ExpectEmptyCollection()
     {
       //Arrange
-      var expected = new List<User>();
+      var expected = new List<Player>();
       var database = new DatabaseRepository();
 
       //Act
@@ -80,14 +80,14 @@ namespace tttGrd.Api.Tests.Persistence
     public async Task GetUsersAsync_GivenOneUser_ExpectCollectionWithOneUser()
     {
       //Arrange
-      var expected = new List<User>
+      var expected = new List<Player>
       {
-        new User{Username = "User-1"}
+        new Player{Name = "Player-1"}
       };
       var database = new DatabaseRepository();
 
       //Act
-      await database.AddUserAsync("User-1");
+      await database.AddPlayerAsync("Player-1");
       var result = await database.GetUsersAsync();
 
       //Assert

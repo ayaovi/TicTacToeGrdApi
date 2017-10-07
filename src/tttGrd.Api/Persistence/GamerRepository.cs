@@ -15,11 +15,9 @@ namespace tttGrd.Api.Persistence
 
     public async Task<string> CreateGamerAsync(string agniKaiTicket)
     {
-      //var key = await _keyGenerator.GenerateKey();
-      //await _vault.AddAgniKaiTicket(key);
       var agniKai = await _databaseRepository.GetAgniKaiByTicket(agniKaiTicket);
       if (!agniKai.CanAccommodateGamer()) throw new Exception($"AgniKai with ticket {agniKaiTicket} is full.");
-      var gamer = new Gamer { Name = $"Gamer_{agniKai.GetNextGamerId()}" };
+      var gamer = new AI { Name = $"Gamer_{agniKai.GetNextGamerId()}" };
       agniKai.AddGamer(gamer);
       return gamer.Name;
     }
@@ -28,7 +26,7 @@ namespace tttGrd.Api.Persistence
     {
       var agniKai = await _databaseRepository.GetAgniKaiByTicket(agniKaiTicket);
       if (!agniKai.CanAccommodateGamer()) throw new Exception($"AgniKai with ticket {agniKaiTicket} is full.");
-      var gamer = new Gamer { Name = name };
+      var gamer = new AI { Name = name };
       agniKai.AddGamer(gamer);
     }
   }
