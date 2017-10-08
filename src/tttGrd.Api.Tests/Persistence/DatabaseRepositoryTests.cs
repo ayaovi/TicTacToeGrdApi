@@ -127,6 +127,7 @@ namespace tttGrd.Api.Tests.Persistence
       var database = new DatabaseRepository(mockVault, mockKeyGen);
 
       //Act
+      await database.AddAgniKaiAsync(new AgniKai { Ticket = ticket });
       await database.AddPlayerAsync(name);
       await database.SubmitTicketAsync(token, ticket);
       var result = await database.GetPlayerByNameAsync(name);

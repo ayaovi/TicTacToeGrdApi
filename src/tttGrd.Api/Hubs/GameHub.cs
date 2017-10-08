@@ -24,7 +24,6 @@ namespace tttGrd.Api.Hubs
     public async Task JoinAgniKai(string agniKaiTicket)
     {
       await Groups.Add(Context.ConnectionId, agniKaiTicket);
-      //Clients.Group(agniKaiTicket).addChatMessage(Context.Player.Identity.Name + " joined.");
     }
 
     public Task LeaveAgniKai(string agniKaiTicket)
@@ -46,13 +45,11 @@ namespace tttGrd.Api.Hubs
             return Field.Empty;
         }
       }
-      //TODO perform some computation, then broadcast the state back to all clients in the group.
-      //Clients.All.broadcastMessage(agniKaiTicket, move);
       var indicator = IndicatorFromTile(tile);
       _database.RecordMoveAsync(agniKaiTicket, (grid, cell), indicator);
       var state = _database.GetStateAsync(agniKaiTicket);
-      //We might want to encrypt the state being published and save it with a time stamp.
-      Clients.Group(agniKaiTicket).broadcastState(state);
+      
+      Clients.Group(agniKaiTicket).broadcastState(state); /* we might want to encrypt the state being published and save it with a time stamp. */
     }
   }
 }

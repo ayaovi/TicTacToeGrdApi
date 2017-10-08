@@ -17,13 +17,15 @@ namespace tttGrd.Api.Persistence
     {
       var agniKai = await _databaseRepository.GetAgniKaiByTicket(agniKaiTicket);
       if (!agniKai.CanAccommodateGamer()) throw new Exception($"AgniKai with ticket {agniKaiTicket} is full.");
+      var indicator = new[] { Field.O, Field.X }[new Random().Next(2)];
       var gamer = new AI
       {
         Name = $"Gamer_{agniKai.GetNextGamerId()}",
-        AgniKaiTicket = agniKaiTicket
+        AgniKaiTicket = agniKaiTicket,
+        Indicator = indicator
       };
       agniKai.AddGamer(gamer);
-      return gamer.Name;
+      return indicator.ToString().ToLowerInvariant();
     }
 
     public async Task CreateGamerWithNameAsync(string agniKaiTicket, string name)

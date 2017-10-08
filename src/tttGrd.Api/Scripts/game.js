@@ -35,7 +35,7 @@
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       document.getElementById(cellId).disabled = true;
       //document.getElementById(cellId).style.background = "#778899";
-      gameHubProxy.server.sendMove($scope.agnikaiTicket, move[1], move[2], "x");
+      gameHubProxy.server.sendMove($scope.agnikaiTicket, move[1], move[2], $scope.indicator);
     };
 
     $scope.extractMove = function (cellId) {
@@ -58,16 +58,14 @@
     $scope.setupPvA = function () {
       $http.get(agniKaiUri + "/initiate").then(response => {
         $scope.agnikaiTicket = response.data;
-        $http.get(gamerUri + "/create/ai?agnikaiTicket=" + $scope.agnikaiTicket).then((_) => {
-          //TODO I don't know yet.
-          /* one possibility would be getting the game name. */
+        $http.get(gamerUri + "/create/ai?agnikaiTicket=" + $scope.agnikaiTicket).then((resp) => {
+          var aiIndicator = resp.data;
+          if (aiIndicator === $scope.indicators[1]) $scope.indicator = $scope.indicators[2];
+          else $scope.indicator = $scope.indicators[1];
         });
         var req = {
           method: "POST",
           url: usersUri + "/submit",
-          //headers: {
-          //  'Content-Type': undefined
-          //},
           data: {
             token: $scope.gameToken.Value,
             ticket: $scope.agnikaiTicket

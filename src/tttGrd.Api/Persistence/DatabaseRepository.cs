@@ -80,6 +80,8 @@ namespace tttGrd.Api.Persistence
     {
       var player = _players.Single(p => p.GameToken == token);
       player.AgniKaiTicket = ticket;
+      var agnikai = _agniKais.Single(a => a.Ticket == ticket);
+      agnikai.AddGamer(player);
       return Task.CompletedTask;
     }
   }
