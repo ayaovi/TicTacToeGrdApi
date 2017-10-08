@@ -60,7 +60,7 @@ namespace tttGrd.Api.Persistence
       return Task.FromResult(_players.Single(player => player.Name == playerName));
     }
 
-    public Task<List<Player>> GetUsersAsync()
+    public Task<List<Player>> GetPlayersAsync()
     {
       return Task.FromResult(_players);
     }
@@ -70,9 +70,16 @@ namespace tttGrd.Api.Persistence
       return Task.FromResult(_ongoingGameStates[agniKaiTicket]);
     }
 
-    public Task RecordMove(string agniKaiTicket, (int Grid, int Cell) move, Field indicator)
+    public Task RecordMoveAsync(string agniKaiTicket, (int Grid, int Cell) move, Field indicator)
     {
       _ongoingGameStates[agniKaiTicket].Fields[move.Grid][move.Cell] = indicator;
+      return Task.CompletedTask;
+    }
+
+    public Task SubmitTicketAsync(string token, string ticket)
+    {
+      var player = _players.Single(p => p.GameToken == token);
+      player.AgniKaiTicket = ticket;
       return Task.CompletedTask;
     }
   }

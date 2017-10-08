@@ -18,7 +18,7 @@ namespace tttGrd.Api.Controllers
     [Route("all")]
     public async Task<IHttpActionResult> All()
     {
-      var result = await _database.GetUsersAsync();
+      var result = await _database.GetPlayersAsync();
       return Ok(result);
     }
 
@@ -28,6 +28,15 @@ namespace tttGrd.Api.Controllers
     {
       var token = await _database.AddPlayerAsync(name);
       return Ok(token);
+    }
+
+    [HttpPost]
+    [Route("submit")]
+    public async Task<IHttpActionResult> SubmitAgniKaiTicket(string token, string ticket)
+    {
+      Validate(token);
+      await _database.SubmitTicketAsync(token, ticket);
+      return Ok();
     }
   }
 }

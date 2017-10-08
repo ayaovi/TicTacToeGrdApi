@@ -45,7 +45,7 @@ namespace tttGrd.Api.Tests.Persistence
 
       //Act
       await database.AddAgniKaiAsync(agniKai);
-      await database.RecordMove(agniKai.Ticket, move, indicator);
+      await database.RecordMoveAsync(agniKai.Ticket, move, indicator);
       var state = await database.GetStateAsync(agniKai.Ticket);
 
       //Assert
@@ -80,7 +80,7 @@ namespace tttGrd.Api.Tests.Persistence
       var database = new DatabaseRepository(mockVault, mockKeyGen);
 
       //Act
-      var result = await database.GetUsersAsync();
+      var result = await database.GetPlayersAsync();
 
       //Assert
       result.ShouldBeEquivalentTo(expected);
@@ -101,7 +101,35 @@ namespace tttGrd.Api.Tests.Persistence
 
       //Act
       await database.AddPlayerAsync("Player-1");
-      var result = await database.GetUsersAsync();
+      var result = await database.GetPlayersAsync();
+
+      //Assert
+      result.ShouldBeEquivalentTo(expected);
+    }
+
+    [Test]
+    public async Task SubmitTicketAsync_GivenTokenAndTicket_ExpectTicketBeAdded()
+    {
+      //Arrange
+      const string token = "token";
+      const string ticket = "ticket";
+      const string name = "Player-1";
+      var expected = new Player
+      {
+        Name = name,
+        GameToken = token,
+        AgniKaiTicket = ticket,
+        Status = PlayerStatus.Online
+      };
+      var mockVault = Substitute.For<IVault>();
+      var mockKeyGen = Substitute.For<IKeyGenerator>();
+      mockKeyGen.GenerateGameTokenAsync(name).Returns("token");
+      var database = new DatabaseRepository(mockVault, mockKeyGen);
+
+      //Act
+      await database.AddPlayerAsync(name);
+      await database.SubmitTicketAsync(token, ticket);
+      var result = await database.GetPlayerByNameAsync(name);
 
       //Assert
       result.ShouldBeEquivalentTo(expected);

@@ -10,8 +10,9 @@ namespace tttGrd.Api.Persistence
     Task<AgniKai> GetAgniKaiByTicket(string ticket);
     Task<Token> AddPlayerAsync(string username);
     Task<Player> GetPlayerByNameAsync(string playerName);
-    Task<List<Player>> GetUsersAsync();
+    Task<List<Player>> GetPlayersAsync();
     Task<State> GetStateAsync(string agniKaiTicket);
-    Task RecordMove(string agniKaiTicket, (int Grid, int Cell) move, Field indicator);
+    Task RecordMoveAsync(string agniKaiTicket, (int Grid, int Cell) move, Field indicator);
+    Task SubmitTicketAsync(string token, string ticket);
   }
 }

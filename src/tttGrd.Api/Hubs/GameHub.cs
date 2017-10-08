@@ -49,7 +49,7 @@ namespace tttGrd.Api.Hubs
       //TODO perform some computation, then broadcast the state back to all clients in the group.
       //Clients.All.broadcastMessage(agniKaiTicket, move);
       var indicator = IndicatorFromTile(tile);
-      _database.RecordMove(agniKaiTicket, (grid, cell), indicator);
+      _database.RecordMoveAsync(agniKaiTicket, (grid, cell), indicator);
       var state = _database.GetStateAsync(agniKaiTicket);
       //We might want to encrypt the state being published and save it with a time stamp.
       Clients.Group(agniKaiTicket).broadcastState(state);
