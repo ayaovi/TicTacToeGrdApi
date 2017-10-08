@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using NSubstitute;
 using NUnit.Framework;
 using tttGrd.Api.Models;
 using tttGrd.Api.Persistence;
@@ -15,7 +16,9 @@ namespace tttGrd.Api.Tests.Persistence
     {
       //Arrange
       var agniKai = new AgniKai { Ticket = "12345" };
-      var database = new DatabaseRepository();
+      var mockVault = Substitute.For<IVault>();
+      var mockKeyGen = Substitute.For<IKeyGenerator>();
+      var database = new DatabaseRepository(mockVault, mockKeyGen);
 
       //Act
       await database.AddAgniKaiAsync(agniKai);
@@ -32,7 +35,9 @@ namespace tttGrd.Api.Tests.Persistence
     {
       //Arrange
       var agniKai = new AgniKai { Ticket = "12345" };
-      var database = new DatabaseRepository();
+      var mockVault = Substitute.For<IVault>();
+      var mockKeyGen = Substitute.For<IKeyGenerator>();
+      var database = new DatabaseRepository(mockVault, mockKeyGen);
       var move = (2, 3);
       var expectedState = new State();
       const Field indicator = Field.X;
@@ -51,8 +56,11 @@ namespace tttGrd.Api.Tests.Persistence
     public async Task AddUserAsync_GivenUsername_ExpectUserBeAdded()
     {
       //Arrange
-      var expected = new Player { Name = "Player-1" };
-      var database = new DatabaseRepository();
+      var expected = new Player { Name = "Player-1", GameToken = "token" };
+      var mockVault = Substitute.For<IVault>();
+      var mockKeyGen = Substitute.For<IKeyGenerator>();
+      mockKeyGen.GenerateGameTokenAsync("Player-1").Returns("token");
+      var database = new DatabaseRepository(mockVault, mockKeyGen);
 
       //Act
       await database.AddPlayerAsync("Player-1");
@@ -67,7 +75,9 @@ namespace tttGrd.Api.Tests.Persistence
     {
       //Arrange
       var expected = new List<Player>();
-      var database = new DatabaseRepository();
+      var mockVault = Substitute.For<IVault>();
+      var mockKeyGen = Substitute.For<IKeyGenerator>();
+      var database = new DatabaseRepository(mockVault, mockKeyGen);
 
       //Act
       var result = await database.GetUsersAsync();
@@ -82,9 +92,12 @@ namespace tttGrd.Api.Tests.Persistence
       //Arrange
       var expected = new List<Player>
       {
-        new Player{Name = "Player-1"}
+        new Player{Name = "Player-1", GameToken = "token"}
       };
-      var database = new DatabaseRepository();
+      var mockVault = Substitute.For<IVault>();
+      var mockKeyGen = Substitute.For<IKeyGenerator>();
+      mockKeyGen.GenerateGameTokenAsync("Player-1").Returns("token");
+      var database = new DatabaseRepository(mockVault, mockKeyGen);
 
       //Act
       await database.AddPlayerAsync("Player-1");
