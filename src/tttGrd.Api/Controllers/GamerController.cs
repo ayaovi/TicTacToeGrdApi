@@ -15,7 +15,7 @@ namespace tttGrd.Api.Controllers
     }
 
     [HttpGet]
-    [Route("create")]
+    [Route("create/ai")]
     public async Task<IHttpActionResult> Create(string agniKaiTicket)
     {
       var result = await _gamerRepository.CreateGamerAsync(agniKaiTicket);

@@ -58,7 +58,7 @@
     $scope.setupPvA = function () {
       $http.get(agniKaiUri + "/initiate").then(response => {
         $scope.agnikaiTicket = response.data;
-        $http.get(gamerUri + "/create?agnikaiTicket=" + $scope.agnikaiTicket).then((_) => {
+        $http.get(gamerUri + "/create/ai?agnikaiTicket=" + $scope.agnikaiTicket).then((_) => {
           //TODO I don't know yet.
           /* one possibility would be getting the game name. */
         });
@@ -111,6 +111,9 @@
       $scope.cellContents.push(".");  /* all cells are empty when the game starts. */
     }
 
-    $.connection.hub.start().done(() => { gameHubProxy.server.announce($("#gamerName").val()); }); /* connect to signalr hub */
+    $.connection.hub.start().done(() => {
+      $http.get(usersUri + "login?name=" + $("#gamerName").val());  /* log player in. */
+      gameHubProxy.server.announce($("#gamerName").val());
+    }); /* connect to signalr hub */
   }]);
 })();

@@ -15,6 +15,7 @@ namespace tttGrd.Api.Persistence
       _keyGenerator = keyGenerator;
       _database = database;
     }
+
     public async Task<string> InitiateAgniKaiAsync()
     {
       var ticket = await _keyGenerator.GenerateKey();
