@@ -58,12 +58,17 @@
     $scope.setupPvA = function () {
       $http.get(agniKaiUri + "/initiate").then(response => {
         $scope.agnikaiTicket = response.data;
-        $http.get(gamerUri + "/create/ai?agnikaiTicket=" + $scope.agnikaiTicket).then((resp) => {
+        var req1 = {
+          method: "POST",
+          url: gamerUri + "/create/ai",
+          data: { ticket: $scope.agnikaiTicket }
+        };
+        $http(req1).then((resp) => {
           var aiIndicator = resp.data;
           if (aiIndicator === $scope.indicators[1]) $scope.indicator = $scope.indicators[2];
           else $scope.indicator = $scope.indicators[1];
         });
-        var req = {
+        var req2 = {
           method: "POST",
           url: usersUri + "/submit",
           data: {
@@ -71,7 +76,7 @@
             ticket: $scope.agnikaiTicket
           }
         }
-        $http(req).then();
+        $http(req2).then();
         gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
       });
     }
@@ -91,6 +96,7 @@
     $scope.reloadBoard = function() {
       for (var j = 0; j < $scope.cellContents.length; j++) {
         document.getElementById(j).innerHTML = $scope.cellContents[j];
+        if ($scope.cellContents[j] !== ".") document.getElementById(j).disabled = true;
       }
     }
 

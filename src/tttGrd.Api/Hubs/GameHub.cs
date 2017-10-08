@@ -54,6 +54,7 @@ namespace tttGrd.Api.Hubs
 
       var agnikai = await _database.GetAgniKaiByTicket(agniKaiTicket);
       var ai = agnikai.GetGamerByIndicator(aiIndicator) as AI;
+      // ReSharper disable once PossibleNullReferenceException
       ai.CellProbabilities = Program.UpdateCellsProbabilities(ai.CellProbabilities, state, playerMove, aiIndicator);
       var aiMove = ai.MakeProbabilityBasedMove(playerMove);
       await _database.RecordMoveAsync(agniKaiTicket, aiMove, aiIndicator);

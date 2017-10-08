@@ -14,11 +14,12 @@ namespace tttGrd.Api.Controllers
       _gamerRepository = gamerRepository;
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("create/ai")]
-    public async Task<IHttpActionResult> Create(string agniKaiTicket)
+    public async Task<IHttpActionResult> Create([FromBody] SubmissionRequest request)
     {
-      var result = await _gamerRepository.CreateGamerAsync(agniKaiTicket);
+      var ticket = request.Ticket;
+      var result = await _gamerRepository.CreateGamerAsync(ticket);
       return Ok(result);
     }
   }
