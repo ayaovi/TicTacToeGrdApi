@@ -31,7 +31,8 @@ namespace tttGrd.Api.Hubs
       return Groups.Remove(Context.ConnectionId, agniKaiTicket);
     }
 
-    public void SendMove(string agniKaiTicket, int grid, int cell, char tile)
+    // ReSharper disable once InconsistentNaming
+    public async Task SendMoveAI(string agniKaiTicket, int grid, int cell, char tile)
     {
       Field IndicatorFromTile(char t)
       {
@@ -45,10 +46,19 @@ namespace tttGrd.Api.Hubs
             return Field.Empty;
         }
       }
-      var indicator = IndicatorFromTile(tile);
-      _database.RecordMoveAsync(agniKaiTicket, (grid, cell), indicator);
-      var state = _database.GetStateAsync(agniKaiTicket);
-      
+      var playerIndicator = IndicatorFromTile(tile);
+      var aiIndicator = playerIndicator == Field.X ? Field.O : Field.X;
+      var playerMove = (grid, cell);
+      await _database.RecordMoveAsync(agniKaiTicket, playerMove, playerIndicator);
+      var state = await _database.GetStateAsync(agniKaiTicket);
+
+      var agnikai = await _database.GetAgniKaiByTicket(agniKaiTicket);
+      var ai = agnikai.GetGamerByIndicator(aiIndicator) as AI;
+      ai.CellProbabilities = Program.UpdateCellsProbabilities(ai.CellProbabilities, state, playerMove, aiIndicator);
+      var aiMove = ai.MakeProbabilityBasedMove(playerMove);
+      await _database.RecordMoveAsync(agniKaiTicket, aiMove, aiIndicator);
+      state = await _database.GetStateAsync(agniKaiTicket);
+
       Clients.Group(agniKaiTicket).broadcastState(state); /* we might want to encrypt the state being published and save it with a time stamp. */
     }
   }

@@ -35,7 +35,7 @@
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       document.getElementById(cellId).disabled = true;
       //document.getElementById(cellId).style.background = "#778899";
-      gameHubProxy.server.sendMove($scope.agnikaiTicket, move[1], move[2], $scope.indicator);
+      gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move[1], move[2], $scope.indicator);
     };
 
     $scope.extractMove = function (cellId) {
@@ -100,7 +100,7 @@
     }
 
     gameHubProxy.client.broadcastState = function (state) {
-      var fields = state.Result.Fields;
+      var fields = state.Fields;
       $scope.updateCellContents(fields);
       $scope.reloadBoard();
       console.log(fields);

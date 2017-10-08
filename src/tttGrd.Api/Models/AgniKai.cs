@@ -21,5 +21,11 @@ namespace tttGrd.Api.Models
     public bool CanAccommodateGamer() => _gamers.Count < 2;
 
     public int GetNextGamerId() =>_gamers.Count + 1;
+
+    // ReSharper disable once InconsistentNaming
+    public Gamer GetGamerByIndicator(Field indicator)
+    {
+      return _gamers.Single(gamer => gamer.Indicator == indicator);
+    }
   }
 }

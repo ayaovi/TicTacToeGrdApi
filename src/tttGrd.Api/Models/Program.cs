@@ -5,18 +5,6 @@ namespace tttGrd.Api.Models
 {
   public class Program
   {
-    //public static State Play(State currentState, (int Grid, int Cell) move, Field tile)
-    //{
-    //  if (move.Grid < 0 || move.Grid > 8 || move.Cell < 0 || move.Cell > 8) throw new ArgumentException("Invalid Move");
-
-    //  if (currentState.Fields[move.Grid][move.Cell] != Field.Empty) throw new ArgumentException("Move Already Made");
-
-    //  var nextState = new State(currentState);
-    //  nextState.Fields[move.Grid][move.Cell] = tile;
-
-    //  return nextState;
-    //}
-
     //public static bool IsWin(State state) => state.Fields.All(IsWin);
 
     public static bool IsWin(IEnumerable<Field> grid)
