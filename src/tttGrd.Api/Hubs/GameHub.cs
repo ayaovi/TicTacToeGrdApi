@@ -59,6 +59,7 @@ namespace tttGrd.Api.Hubs
       var aiMove = ai.MakeProbabilityBasedMove(playerMove);
       await _database.RecordMoveAsync(agniKaiTicket, aiMove, aiIndicator);
       state = await _database.GetStateAsync(agniKaiTicket);
+      ai.CellProbabilities = Program.UpdateCellsProbabilities(ai.CellProbabilities, state, aiMove, aiIndicator);
 
       Clients.Group(agniKaiTicket).broadcastState(state); /* we might want to encrypt the state being published and save it with a time stamp. */
     }
