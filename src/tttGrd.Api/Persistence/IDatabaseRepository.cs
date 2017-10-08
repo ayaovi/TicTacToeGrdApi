@@ -8,7 +8,7 @@ namespace tttGrd.Api.Persistence
   {
     Task AddAgniKaiAsync(AgniKai agniKai);
     Task<AgniKai> GetAgniKaiByTicket(string ticket);
-    Task AddPlayerAsync(string username);
+    Task<Token> AddPlayerAsync(string username);
     Task<Player> GetPlayerByNameAsync(string playerName);
     Task<List<Player>> GetUsersAsync();
     Task<State> GetStateAsync(string agniKaiTicket);

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using tttGrd.Api.Models;
 
 namespace tttGrd.Api.Persistence
@@ -18,6 +20,17 @@ namespace tttGrd.Api.Persistence
       return enumerable.Where(x => comparator(x, max));
     }
 
+    public static string GetMd5Hash(this string input)
+    {
+      string hash;
+      using (var md5Hash = MD5.Create())
+      {
+        var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+        hash = string.Concat(data.Select(x => x.ToString("x2")));
+      }
+      return hash;
+    }
+
     public static T Random<T>(this IEnumerable<T> input)
     {
       var enumerable = input as IList<T> ?? input.ToList();
@@ -25,6 +38,20 @@ namespace tttGrd.Api.Persistence
       if (enumerable.Count == 1) return enumerable.FirstOrDefault();
       var index = new Random().Next(enumerable.Count);
       return enumerable[index];
+    }
+
+    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> input)
+    {
+      var list = input.ToList();
+      var rand = new Random();
+      for (var i = 0; i < list.Count; i++)
+      {
+        var j = rand.Next(i);
+        var temp = list[i];
+        list[i] = list[j];
+        list[j] = temp;
+      }
+      return list;
     }
 
     public static float[][] GetDefaultCellsProbabilities()

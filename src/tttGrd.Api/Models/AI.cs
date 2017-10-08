@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using tttGrd.Api.Persistence;
 
 namespace tttGrd.Api.Models
@@ -14,6 +15,7 @@ namespace tttGrd.Api.Models
   public class Player : Gamer
   {
     public PlayerStatus Status { get; set; }
+    public string GameToken { get; set; }
   }
 
   public class AI : Gamer

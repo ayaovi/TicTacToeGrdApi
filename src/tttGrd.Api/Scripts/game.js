@@ -112,7 +112,9 @@
     }
 
     $.connection.hub.start().done(() => {
-      $http.get(usersUri + "login?name=" + $("#gamerName").val());  /* log player in. */
+      $http.get(usersUri + "/login?name=" + $("#gamerName").val()).then(response => {
+        $scope.gameToken = response.data;
+      });  /* log player in. */
       gameHubProxy.server.announce($("#gamerName").val());
     }); /* connect to signalr hub */
   }]);

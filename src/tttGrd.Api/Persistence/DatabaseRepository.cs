@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,9 +13,17 @@ namespace tttGrd.Api.Persistence
 
   public class DatabaseRepository : IDatabaseRepository
   {
+    private readonly IVault _vault;
+    private readonly IKeyGenerator _keyGenerator;
     private readonly List<AgniKai> _agniKais = new List<AgniKai>();
     private readonly List<Player> _players = new List<Player>();
     private readonly IDictionary<string, State> _ongoingGameStates = new Dictionary<string, State>();
+
+    public DatabaseRepository(IVault vault, IKeyGenerator keyGenerator)
+    {
+      _vault = vault;
+      _keyGenerator = keyGenerator;
+    }
 
     public Task AddAgniKaiAsync(AgniKai agniKai)
     {
@@ -28,10 +37,22 @@ namespace tttGrd.Api.Persistence
       return Task.FromResult(_agniKais.Single(agniKai => agniKai.Ticket == ticket));
     }
 
-    public Task AddPlayerAsync(string username)
+    public async Task<Token> AddPlayerAsync(string username)
     {
-      _players.Add(new Models.Player { Name = username, Status = PlayerStatus.Online });
-      return Task.CompletedTask;
+      var gameTokenValue = await _keyGenerator.GenerateGameTokenAsync(username);
+      var token = new Token
+      {
+        Value = gameTokenValue,
+        ExpirationDate = DateTime.UtcNow.Add(new TimeSpan(0, 0, 30, 0)) /* 30 min in the future. */
+      };
+      await _vault.AddGameTokenAsync(token);
+      _players.Add(new Player
+      {
+        Name = username,
+        Status = PlayerStatus.Online,
+        GameToken = gameTokenValue
+      });
+      return token;
     }
 
     public Task<Player> GetPlayerByNameAsync(string playerName)

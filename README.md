@@ -23,3 +23,7 @@ This can be used as training exercise for an AgniKai
 ### AvA
 
 Cannot really see a concrete need for this type just yet. But as far as I can tell, this can be used to learn some new moves or strategy.
+
+## TODO
+
+- Handle token clearing after expiration.
