@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace tttGrd.Api.Persistence
 {
@@ -6,5 +7,7 @@ namespace tttGrd.Api.Persistence
   {
     Task AddAgniKaiTicket(string key);
     Task AddGameTokenAsync(Token gameToken);
+    Task<Token> GetGameTokenAsync(string value);
+    Task<IList<string>> GetGamerKeysAsync();
   }
 }

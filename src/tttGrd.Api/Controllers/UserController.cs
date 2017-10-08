@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 using tttGrd.Api.Persistence;
 
@@ -8,10 +9,12 @@ namespace tttGrd.Api.Controllers
   public class UserController : ApiController
   {
     private readonly IDatabaseRepository _database;
+    private readonly IVault _vault;
 
-    public UserController(IDatabaseRepository database)
+    public UserController(IDatabaseRepository database, IVault vault)
     {
       _database = database;
+      _vault = vault;
     }
 
     [HttpGet]
@@ -32,11 +35,25 @@ namespace tttGrd.Api.Controllers
 
     [HttpPost]
     [Route("submit")]
-    public async Task<IHttpActionResult> SubmitAgniKaiTicket(string token, string ticket)
+    public async Task<IHttpActionResult> SubmitAgniKaiTicket([FromBody] SubmissionRequest request)
     {
-      Validate(token);
+      var token = request.Token;
+      var ticket = request.Ticket;
+      await ValidateToken(token);
       await _database.SubmitTicketAsync(token, ticket);
       return Ok();
     }
+
+    private async Task ValidateToken(string tokenValue)
+    {
+      var token = await _vault.GetGameTokenAsync(tokenValue);
+      if (token.ExpirationDate < DateTime.UtcNow) throw new Exception("Game Token Expired");
+    }
+  }
+
+  public class SubmissionRequest
+  {
+    public string Token { get; set; }
+    public string Ticket { get; set; }
   }
 }

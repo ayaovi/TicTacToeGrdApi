@@ -7,19 +7,29 @@ namespace tttGrd.Api.Persistence
 {
   public class Vault : IVault
   {
-    public IList<string> GamerKeys { get; } = Enumerable.Empty<string>().ToList();
-    public IList<Token> GameTokens { get; } = Enumerable.Empty<Token>().ToList();
+    private readonly IList<string> _gamerKeys = Enumerable.Empty<string>().ToList();
+    private readonly IList<Token> _gameTokens = Enumerable.Empty<Token>().ToList();
 
     public Task AddAgniKaiTicket(string key)
     {
-      GamerKeys.Add(key);
+      _gamerKeys.Add(key);
       return Task.CompletedTask;
     }
 
     public Task AddGameTokenAsync(Token gameToken)
     {
-      GameTokens.Add(gameToken);
+      _gameTokens.Add(gameToken);
       return Task.CompletedTask;
+    }
+
+    public Task<Token> GetGameTokenAsync(string value)
+    {
+      return Task.FromResult(_gameTokens.Single(token => token.Value == value));
+    }
+
+    public Task<IList<string>> GetGamerKeysAsync()
+    {
+      return Task.FromResult(_gamerKeys);
     }
   }
 

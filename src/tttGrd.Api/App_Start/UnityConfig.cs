@@ -93,10 +93,10 @@ namespace tttGrd.Api
       GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
       GlobalHost.DependencyResolver.Register(typeof(IHubActivator), () => new UnityHubActivator(container));
       container.RegisterType<IDatabaseRepository, DatabaseRepository>(new ContainerControlledLifetimeManager());
-      container.RegisterType<IKeyGenerator, KeyGenerator>();
-      container.RegisterType<IGamerRepository, GamerRepository>();
-      container.RegisterType<IVault, Vault>();
-      container.RegisterType<IAgniKaiRepository, AgniKaiRepository>();
+      container.RegisterType<IKeyGenerator, KeyGenerator>(new ContainerControlledLifetimeManager());
+      container.RegisterType<IGamerRepository, GamerRepository>(new ContainerControlledLifetimeManager());
+      container.RegisterType<IVault, Vault>(new ContainerControlledLifetimeManager());
+      container.RegisterType<IAgniKaiRepository, AgniKaiRepository>(new ContainerControlledLifetimeManager());
     }
   }
 }

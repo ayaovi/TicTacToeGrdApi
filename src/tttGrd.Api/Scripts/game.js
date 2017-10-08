@@ -62,6 +62,18 @@
           //TODO I don't know yet.
           /* one possibility would be getting the game name. */
         });
+        var req = {
+          method: "POST",
+          url: usersUri + "/submit",
+          //headers: {
+          //  'Content-Type': undefined
+          //},
+          data: {
+            token: $scope.gameToken.Value,
+            ticket: $scope.agnikaiTicket
+          }
+        }
+        $http(req).then();
         gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
       });
     }

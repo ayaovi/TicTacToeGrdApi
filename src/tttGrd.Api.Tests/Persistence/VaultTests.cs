@@ -20,9 +20,10 @@ namespace tttGrd.Api.Tests.Persistence
 
       //Act
       await vault.AddAgniKaiTicket(key);
+      var keys = await vault.GetGamerKeysAsync();
 
       //Assert
-      vault.GamerKeys.ShouldAllBeEquivalentTo(expected);
+      keys.ShouldAllBeEquivalentTo(expected);
     }
   }
 }
