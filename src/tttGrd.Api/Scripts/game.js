@@ -10,6 +10,8 @@
 
   app.controller("myCtrl", ["$http", "$scope", function ($http, $scope) {
     $scope.cellIds = [];
+    $scope.cellContents = [];
+    $scope.indicators = [".", "x", "o"];
     
     $scope.getActivePlayers = function () {
       $http.get(usersUri + "/all")
@@ -32,7 +34,7 @@
       var encodeMove = $("<div />").text(move[0] + ": (" + move[1] + "," + move[2] + ")").html();
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       document.getElementById(cellId).disabled = true;
-      document.getElementById(cellId).style.background = "#778899";
+      //document.getElementById(cellId).style.background = "#778899";
       gameHubProxy.server.sendMove($scope.agnikaiTicket, move[1], move[2], "x");
     };
 
@@ -53,7 +55,7 @@
       return [cellId, grid, cell];
     };
     
-    var setupPvA = function () {
+    $scope.setupPvA = function () {
       $http.get(agniKaiUri + "/initiate").then(response => {
         $scope.agnikaiTicket = response.data;
         $http.get(gamerUri + "/create?agnikaiTicket=" + $scope.agnikaiTicket).then((_) => {
@@ -64,13 +66,34 @@
       });
     }
 
+    $scope.updateCellContents = function (fields) {
+      var fieldToIndicator = function(field) {
+        if (field === 0) return ".";
+        if (field === 1) return "x";
+        return "o";
+      };
+      for (var k = 0; k < $scope.cellContents.length; k++) {
+        var m = $scope.extractMove(k);
+        $scope.cellContents[k] = fieldToIndicator(fields[m[1]][m[2]]);
+      }
+    }
+
+    $scope.reloadBoard = function() {
+      for (var j = 0; j < $scope.cellContents.length; j++) {
+        document.getElementById(j).innerHTML = $scope.cellContents[j];
+      }
+    }
+
     $scope.challengeAI = function () {
-      setupPvA();
+      $scope.setupPvA();
       document.getElementById("challenge-ai-btn").disabled = true;
     }
 
     gameHubProxy.client.broadcastState = function (state) {
-      console.log(state.Result.Fields.length);
+      var fields = state.Result.Fields;
+      $scope.updateCellContents(fields);
+      $scope.reloadBoard();
+      console.log(fields);
     }
     
     //$("#gamerName").val(prompt("Enter your name:", ""));
@@ -82,8 +105,10 @@
     h1Msg.appendChild(msg);
     divMsg.appendChild(h1Msg);
 
+    /* initialise cell ids and contents. */
     for (var i = 0; i < 81; i++) {
       $scope.cellIds.push(i);
+      $scope.cellContents.push(".");  /* all cells are empty when the game starts. */
     }
 
     $.connection.hub.start().done(() => { gameHubProxy.server.announce($("#gamerName").val()); }); /* connect to signalr hub */
