@@ -29,3 +29,7 @@ Cannot really see a concrete need for this type just yet. But as far as I can te
 - Lock every mini-grid except for the one a player must play in. This implies having a way to pick the difference between two states.
 - Re-look at cells' probability update (as it seems to not be working properly).
 - Handle token clearing after expiration.
+
+## IDEAS
+
+- Add audience/observer feature, whereby, other users can connect just to watch other people play.

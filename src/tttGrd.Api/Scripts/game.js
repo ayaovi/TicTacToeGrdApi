@@ -1,5 +1,6 @@
 ﻿(function () {
   var app = angular.module("myApp", []);
+  var util = new Util();
   var agniKaiUri = "agnikai";
   var gamerUri = "gamer";
   var usersUri = "users";
@@ -12,6 +13,8 @@
     $scope.cellIds = [];
     $scope.cellContents = [];
     $scope.indicators = [".", "x", "o"];
+    $scope.history = [];
+    $scope.previousState = [];
     
     $scope.getActivePlayers = function () {
       $http.get(usersUri + "/all")
@@ -30,7 +33,9 @@
     };
 
     $scope.recordMove = function (cellId) {
-      var move = $scope.extractMove(cellId);
+      var move = util.extractMove(cellId);
+      $scope.history.push(new Move(move[1], move[2], $scope.indicator));  /* add move to history. */
+      $scope.previousState[move[1]][move[2]] = util.indicatorTofield($scope.indicator);
       var encodeMove = $("<div />").text(move[0] + ": (" + move[1] + "," + move[2] + ")").html();
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       document.getElementById(cellId).disabled = true;
@@ -38,23 +43,6 @@
       gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move[1], move[2], $scope.indicator);
     };
 
-    $scope.extractMove = function (cellId) {
-      var classify = function (index) {
-        if (index < 3) return 1;
-        if (index < 6) return 2;
-        if (index < 9) return 3;
-        return 0;
-      };
-      var n = Math.floor(cellId / 27);
-      var r = cellId % 27;
-      var s = Math.floor(r / 9);
-      var t = r % 9;
-      var c = classify(t);
-      var grid = (n * 3) - 1 + c;
-      var cell = (s * 3) + (t % 3);
-      return [cellId, grid, cell];
-    };
-    
     $scope.setupPvA = function () {
       $http.get(agniKaiUri + "/initiate").then(response => {
         $scope.agnikaiTicket = response.data;
@@ -82,18 +70,13 @@
     }
 
     $scope.updateCellContents = function (fields) {
-      var fieldToIndicator = function(field) {
-        if (field === 0) return ".";
-        if (field === 1) return "x";
-        return "o";
-      };
       for (var k = 0; k < $scope.cellContents.length; k++) {
-        var m = $scope.extractMove(k);
-        $scope.cellContents[k] = fieldToIndicator(fields[m[1]][m[2]]);
+        var m = util.extractMove(k);
+        $scope.cellContents[k] = util.fieldToIndicator(fields[m[1]][m[2]]);
       }
     }
 
-    $scope.reloadBoard = function() {
+    $scope.reloadBoard = function () {
       for (var j = 0; j < $scope.cellContents.length; j++) {
         document.getElementById(j).innerHTML = $scope.cellContents[j];
         if ($scope.cellContents[j] !== ".") document.getElementById(j).disabled = true;
@@ -104,14 +87,15 @@
       $scope.setupPvA();
       document.getElementById("challenge-ai-btn").disabled = true;
     }
-
+    
     gameHubProxy.client.broadcastState = function (state) {
       var fields = state.Fields;
+      $scope.history.push(util.compareStates($scope.previousState, fields)); /* the state difference is the new move. */
+      $scope.previousState = state;
       $scope.updateCellContents(fields);
       $scope.reloadBoard();
-      console.log(fields);
     }
-    
+
     //$("#gamerName").val(prompt("Enter your name:", ""));
 
     /* print welcome message. */
@@ -125,6 +109,10 @@
     for (var i = 0; i < 81; i++) {
       $scope.cellIds.push(i);
       $scope.cellContents.push(".");  /* all cells are empty when the game starts. */
+    }
+
+    for (var i = 0; i < 9; i++) {
+      $scope.previousState.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
 
     $.connection.hub.start().done(() => {
