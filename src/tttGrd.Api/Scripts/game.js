@@ -15,7 +15,8 @@
     $scope.indicators = [".", "x", "o"];
     $scope.history = [];
     $scope.previousState = [];
-    
+    $scope.disable = [];
+
     $scope.getActivePlayers = function () {
       $http.get(usersUri + "/all")
         .success(function (data, _) {
@@ -32,13 +33,20 @@
         });
     };
 
+    $scope.disableAllCells = function () {
+      for (var j = 0; j < $scope.disable.length; j++) {
+        //$scope.disable[j] = "true";
+        document.getElementById(j).disabled = true;
+      }
+    }
+
     $scope.recordMove = function (cellId) {
       var move = util.extractMove(cellId);
       $scope.history.push(new Move(move[1], move[2], $scope.indicator));  /* add move to history. */
       $scope.previousState[move[1]][move[2]] = util.indicatorTofield($scope.indicator);
       var encodeMove = $("<div />").text(move[0] + ": (" + move[1] + "," + move[2] + ")").html();
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
-      document.getElementById(cellId).disabled = true;
+      $scope.disableAllCells();
       //document.getElementById(cellId).style.background = "#778899";
       gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move[1], move[2], $scope.indicator);
     };
@@ -79,7 +87,7 @@
     $scope.reloadBoard = function () {
       for (var j = 0; j < $scope.cellContents.length; j++) {
         document.getElementById(j).innerHTML = $scope.cellContents[j];
-        if ($scope.cellContents[j] !== ".") document.getElementById(j).disabled = true;
+        //if ($scope.cellContents[j] !== ".") document.getElementById(j).disabled = true;
       }
     }
 
@@ -87,7 +95,7 @@
       $scope.setupPvA();
       document.getElementById("challenge-ai-btn").disabled = true;
     }
-    
+
     gameHubProxy.client.broadcastState = function (state) {
       var fields = state.Fields;
       $scope.history.push(util.compareStates($scope.previousState, fields)); /* the state difference is the new move. */
@@ -109,6 +117,7 @@
     for (var i = 0; i < 81; i++) {
       $scope.cellIds.push(i);
       $scope.cellContents.push(".");  /* all cells are empty when the game starts. */
+      $scope.disable.push("false");
     }
 
     for (var i = 0; i < 9; i++) {
