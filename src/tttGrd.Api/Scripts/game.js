@@ -114,6 +114,15 @@
       $scope.enableCells(util.getEnabledCells(move));
     }
 
+    $scope.drawBorders = function () {
+      //var c = document.getElementById("grid");
+      //if (c.getContext) {
+      //  var ctx = c.getContext("2d");
+      //  ctx.fillRect(110, 0, 115, 320);
+      //}
+      $('#grid').append('<div style="position:absolute;left:105px;top:0px;height:100px;width:5px;background:#000000;z-index:1;"></div>');
+    }
+
     //$("#gamerName").val(prompt("Enter your name:", ""));
 
     /* print welcome message. */
@@ -133,6 +142,8 @@
     for (var i = 0; i < 9; i++) {
       $scope.previousState.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
+
+    $scope.drawBorders();
 
     $.connection.hub.start().done(() => {
       $http.get(usersUri + "/login?name=" + $("#gamerName").val()).then(response => {

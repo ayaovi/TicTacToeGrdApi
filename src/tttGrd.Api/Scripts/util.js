@@ -4,7 +4,25 @@
   this.Player = player;
 }
 
+var Border = function (left, top, width, height) {
+  this.Left = left;
+  this.Top = top;
+  this.Height = height;
+  this.Width = width;
+}
+
 var Util = function () {
+
+  this.getDefaultBorders = function () {
+    return [
+      new Border(0, 0, 110, 5), new Border(0, 0, 5, 110), new Border(105, 0, 5, 110), new Border(0, 105, 110, 5),
+      new Border(105, 0, 110, 5), new Border(210, 0, 5, 110), new Border(105, 105, 110, 5), 
+      new Border(210, 0, 110, 5), new Border(315, 0, 5, 110), new Border(210, 105, 110, 5), 
+      new Border(0, 105, 5, 110), new Border(105, 105, 5, 110), new Border(0, 210, 110, 5), 
+      new Border(210, 105, 5, 110), new Border(105, 105, 110, 5), 
+
+    ];
+  }
 
   this.haveSameContent = function (list1, list2) {
     if (list1.length !== list2.length) return false;
@@ -26,7 +44,7 @@ var Util = function () {
     return 2;
   }
 
-  this.getEnabledCells = function(move) {
+  this.getEnabledCells = function (move) {
     var ids = [];
     var enabled = [];
     for (var i = 0; i < 81; i++) {
