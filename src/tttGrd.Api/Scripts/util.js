@@ -6,6 +6,14 @@
 
 var Util = function () {
 
+  this.haveSameContent = function (list1, list2) {
+    if (list1.length !== list2.length) return false;
+    for (var i = 0; i < list1.length; i++) {
+      if (list1[i] !== list2[i]) return false;
+    }
+    return true;
+  }
+
   this.fieldToIndicator = function (field) {
     if (field === 0) return ".";
     if (field === 1) return "x";
@@ -16,6 +24,20 @@ var Util = function () {
     if (indicator === ".") return 0;
     if (indicator === "x") return 1;
     return 2;
+  }
+
+  this.getEnabledCells = function(move) {
+    var ids = [];
+    var enabled = [];
+    for (var i = 0; i < 81; i++) {
+      ids.push(i);
+    }
+    ids.forEach(id => {
+      if (this.extractMove(id).Grid === move.Cell) {
+        enabled.push(id);
+      }
+    });
+    return enabled;
   }
 
   this.compareStates = function (oldState, newState) {
@@ -68,6 +90,6 @@ var Util = function () {
     var c = classify(t);
     var grid = (n * 3) - 1 + c;
     var cell = (s * 3) + (t % 3);
-    return [cellId, grid, cell];
+    return new Move(grid, cell, ".");
   };
 }

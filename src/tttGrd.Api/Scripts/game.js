@@ -42,13 +42,14 @@
 
     $scope.recordMove = function (cellId) {
       var move = util.extractMove(cellId);
-      $scope.history.push(new Move(move[1], move[2], $scope.indicator));  /* add move to history. */
-      $scope.previousState[move[1]][move[2]] = util.indicatorTofield($scope.indicator);
-      var encodeMove = $("<div />").text(move[0] + ": (" + move[1] + "," + move[2] + ")").html();
+      move.Player = $scope.indicator;
+      $scope.history.push(move);  /* add move to history. */
+      $scope.previousState[move.Grid][move.Cell] = util.indicatorTofield(move.Player);
+      var encodeMove = $("<div />").text(cellId + ": (" + move.Grid + "," + move.Cell + ")").html();
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       $scope.disableAllCells();
       //document.getElementById(cellId).style.background = "#778899";
-      gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move[1], move[2], $scope.indicator);
+      gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
     };
 
     $scope.setupPvA = function () {
@@ -79,15 +80,14 @@
 
     $scope.updateCellContents = function (fields) {
       for (var k = 0; k < $scope.cellContents.length; k++) {
-        var m = util.extractMove(k);
-        $scope.cellContents[k] = util.fieldToIndicator(fields[m[1]][m[2]]);
+        var move = util.extractMove(k);
+        $scope.cellContents[k] = util.fieldToIndicator(fields[move.Grid][move.Cell]);
       }
     }
 
     $scope.reloadBoard = function () {
       for (var j = 0; j < $scope.cellContents.length; j++) {
         document.getElementById(j).innerHTML = $scope.cellContents[j];
-        //if ($scope.cellContents[j] !== ".") document.getElementById(j).disabled = true;
       }
     }
 
@@ -96,12 +96,22 @@
       document.getElementById("challenge-ai-btn").disabled = true;
     }
 
+    $scope.enableCells = function (ids) {
+      ids.forEach(id => {
+        if ($scope.cellContents[id] === ".") {
+          document.getElementById(id).disabled = false;
+        }
+      });
+    }
+
     gameHubProxy.client.broadcastState = function (state) {
       var fields = state.Fields;
-      $scope.history.push(util.compareStates($scope.previousState, fields)); /* the state difference is the new move. */
+      var move = util.compareStates($scope.previousState, fields);
+      $scope.history.push(move); /* the state difference is the new move. */
       $scope.previousState = state.Fields;
       $scope.updateCellContents(fields);
       $scope.reloadBoard();
+      $scope.enableCells(util.getEnabledCells(move));
     }
 
     //$("#gamerName").val(prompt("Enter your name:", ""));
