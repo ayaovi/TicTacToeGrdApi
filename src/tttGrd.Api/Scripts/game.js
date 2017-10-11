@@ -91,7 +91,7 @@
     gameHubProxy.client.broadcastState = function (state) {
       var fields = state.Fields;
       $scope.history.push(util.compareStates($scope.previousState, fields)); /* the state difference is the new move. */
-      $scope.previousState = state;
+      $scope.previousState = state.Fields;
       $scope.updateCellContents(fields);
       $scope.reloadBoard();
     }
