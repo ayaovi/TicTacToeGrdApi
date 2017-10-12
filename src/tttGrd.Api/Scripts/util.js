@@ -19,8 +19,11 @@ var Util = function () {
       new Border(105, 0, 110, 5), new Border(210, 0, 5, 110), new Border(105, 105, 110, 5), 
       new Border(210, 0, 110, 5), new Border(315, 0, 5, 110), new Border(210, 105, 110, 5), 
       new Border(0, 105, 5, 110), new Border(105, 105, 5, 110), new Border(0, 210, 110, 5), 
-      new Border(210, 105, 5, 110), new Border(105, 105, 110, 5), 
-
+      new Border(210, 105, 5, 110), new Border(105, 210, 110, 5), 
+      new Border(315, 105, 5, 110), new Border(210, 210, 110, 5), 
+      new Border(0, 210, 5, 110), new Border(105, 210, 5, 110), new Border(0, 315, 110, 5), 
+      new Border(210, 210, 5, 110), new Border(105, 315, 110, 5),
+      new Border(315, 210, 5, 110), new Border(210, 315, 110, 5)
     ];
   }
 

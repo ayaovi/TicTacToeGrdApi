@@ -16,6 +16,7 @@
     $scope.history = [];
     $scope.previousState = [];
     $scope.disable = [];
+    $scope.defaultBorders = util.getDefaultBorders();
 
     $scope.getActivePlayers = function () {
       $http.get(usersUri + "/all")
@@ -115,12 +116,10 @@
     }
 
     $scope.drawBorders = function () {
-      //var c = document.getElementById("grid");
-      //if (c.getContext) {
-      //  var ctx = c.getContext("2d");
-      //  ctx.fillRect(110, 0, 115, 320);
-      //}
-      $('#grid').append('<div style="position:absolute;left:105px;top:0px;height:100px;width:5px;background:#000000;z-index:1;"></div>');
+      $scope.defaultBorders.forEach(border => {
+        $('#grid').append('<div style="position:absolute;left:' + border.Left + 'px;top:'
+          + border.Top + 'px;height:' + border.Height + 'px;width:' + border.Width +'px;background:#000000;z-index:1;"></div>');
+      });
     }
 
     //$("#gamerName").val(prompt("Enter your name:", ""));
