@@ -26,9 +26,10 @@ Cannot really see a concrete need for this type just yet. But as far as I can te
 
 ## TODO
 
-- Lock every mini-grid except for the one a player must play in. This implies having a way to pick the difference between two states.
 - Re-look at cells' probability update (as it seems to not be working properly).
-- Handle token clearing after expiration.
+- Tighten up the grip on player winning (i.e. do not make it too easy).
+- When a grid is won, do not play there any more if you can help it. 
+- Handle token clearing after expiration (or should we have tokens in the first place).
 
 ## IDEAS
 
