@@ -111,19 +111,19 @@ let Util = function () {
   }
 
   this.extractMove = function (cellId) {
-    let classify = function (index) {
+    const classify = function (index) {
       if (index < 3) return 1;
       if (index < 6) return 2;
       if (index < 9) return 3;
       return 0;
     };
-    let n = Math.floor(cellId / 27);
-    let r = cellId % 27;
-    let s = Math.floor(r / 9);
-    let t = r % 9;
-    let c = classify(t);
-    let grid = (n * 3) - 1 + c;
-    let cell = (s * 3) + (t % 3);
+    const n = Math.floor(cellId / 27);
+    const r = cellId % 27;
+    const s = Math.floor(r / 9);
+    const t = r % 9;
+    const c = classify(t);
+    const grid = (n * 3) - 1 + c;
+    const cell = (s * 3) + (t % 3);
     return new Move(grid, cell, ".");
   };
 }

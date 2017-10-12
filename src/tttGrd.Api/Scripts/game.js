@@ -50,6 +50,12 @@
       const encodeMove = $("<div />").text(cellId + ": (" + move.Grid + "," + move.Cell + ")").html();
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       $scope.disableAllCells();
+      /* un-highlight the highlighted mini-grid if any. */
+      if ($scope.history.length > 2) {
+        const moveBeforeLast = $scope.history[$scope.history.length - 2];
+        const border = $scope.gridBorders[moveBeforeLast.Cell].map(id => $scope.defaultBorders[id]);
+        util.editBorders(border, "#000000");
+      }
       //document.getElementById(cellId).style.background = "#778899";
       gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
     };
