@@ -17,6 +17,7 @@
     $scope.previousState = [];
     $scope.disable = [];
     $scope.defaultBorders = util.getDefaultBorders();
+    $scope.gridBorders = util.getGridBorders();
 
     $scope.getActivePlayers = function () {
       $http.get(usersUri + "/all")
@@ -113,12 +114,24 @@
       $scope.updateCellContents(fields);
       $scope.reloadBoard();
       $scope.enableCells(util.getEnabledCells(move));
+      var border = [];
+      $scope.gridBorders[move.Cell].forEach(id => {
+        border.push($scope.defaultBorders[id]);
+      });
+      $scope.editBorders(border, "#FF0000");
     }
 
     $scope.drawBorders = function () {
       $scope.defaultBorders.forEach(border => {
         $('#grid').append('<div style="position:absolute;left:' + border.Left + 'px;top:'
-          + border.Top + 'px;height:' + border.Height + 'px;width:' + border.Width +'px;background:#000000;z-index:1;"></div>');
+          + border.Top + 'px;height:' + border.Height + 'px;width:' + border.Width
+          + 'px;background:#000000;z-index:1;" id="' + border.Id + '"></div>');
+      });
+    }
+
+    $scope.editBorders = function (borders, colour) {
+      borders.forEach(border => {
+        document.getElementById(border.Id).style.backgroundColor = colour;
       });
     }
 
