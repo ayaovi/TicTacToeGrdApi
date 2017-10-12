@@ -118,7 +118,7 @@
       $scope.gridBorders[move.Cell].forEach(id => {
         border.push($scope.defaultBorders[id]);
       });
-      $scope.editBorders(border, "#FF0000");
+      util.editBorders(border, "#FF0000");  /* highlight the grid to play in as red. */
     }
 
     $scope.drawBorders = function () {
@@ -128,13 +128,7 @@
           + 'px;background:#000000;z-index:1;" id="' + border.Id + '"></div>');
       });
     }
-
-    $scope.editBorders = function (borders, colour) {
-      borders.forEach(border => {
-        document.getElementById(border.Id).style.backgroundColor = colour;
-      });
-    }
-
+    
     //$("#gamerName").val(prompt("Enter your name:", ""));
 
     /* print welcome message. */

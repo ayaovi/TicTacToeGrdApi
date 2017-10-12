@@ -34,6 +34,12 @@ var Util = function () {
             [17, 12, 18, 19], [18, 14, 20, 21], [20, 16, 22, 23]];
   }
 
+  this.editBorders = function (borders, colour) {
+    borders.forEach(border => {
+      document.getElementById(border.Id).style.backgroundColor = colour;
+    });
+  }
+
   this.haveSameContent = function (list1, list2) {
     if (list1.length !== list2.length) return false;
     for (var i = 0; i < list1.length; i++) {
