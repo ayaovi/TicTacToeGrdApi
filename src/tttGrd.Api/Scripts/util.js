@@ -1,10 +1,10 @@
-﻿var Move = function (grid, cell, player) {
+﻿let Move = function (grid, cell, player) {
   this.Grid = grid;
   this.Cell = cell;
   this.Player = player;
 }
 
-var Border = function (left, top, width, height, id) {
+let Border = function (left, top, width, height, id) {
   this.Left = left;
   this.Top = top;
   this.Height = height;
@@ -12,7 +12,7 @@ var Border = function (left, top, width, height, id) {
   this.Id = id;
 }
 
-var Util = function () {
+let Util = function () {
 
   this.getDefaultBorders = function () {
     return [
@@ -42,7 +42,7 @@ var Util = function () {
 
   this.haveSameContent = function (list1, list2) {
     if (list1.length !== list2.length) return false;
-    for (var i = 0; i < list1.length; i++) {
+    for (let i = 0; i < list1.length; i++) {
       if (list1[i] !== list2[i]) return false;
     }
     return true;
@@ -61,9 +61,9 @@ var Util = function () {
   }
 
   this.getEnabledCells = function (move) {
-    var ids = [];
-    var enabled = [];
-    for (var i = 0; i < 81; i++) {
+    let ids = [];
+    let enabled = [];
+    for (let i = 0; i < 81; i++) {
       ids.push(i);
     }
     ids.forEach(id => {
@@ -75,12 +75,12 @@ var Util = function () {
   }
 
   this.compareStates = function (oldState, newState) {
-    var grid = undefined;
-    var cell = undefined;
+    let grid = undefined;
+    let cell = undefined;
     if (oldState === undefined) {
       /* iterate through the new state. the first field that is not empty is the new move. */
-      for (var j = 0; j < newState.length; j++) {
-        for (var k = 0; k < newState[j].length; k++) {
+      for (let j = 0; j < newState.length; j++) {
+        for (let k = 0; k < newState[j].length; k++) {
           if (newState[j][k] !== 0) {
             cell = k;
             break;
@@ -94,8 +94,8 @@ var Util = function () {
     }
     else {
       /* iterate through both old and new state. the first field where they do not have the same value is the new move. */
-      for (var j = 0; j < newState.length; j++) {
-        for (var k = 0; k < newState[j].length; k++) {
+      for (let j = 0; j < newState.length; j++) {
+        for (let k = 0; k < newState[j].length; k++) {
           if (newState[j][k] !== oldState[j][k]) {
             cell = k;
             break;
@@ -111,19 +111,19 @@ var Util = function () {
   }
 
   this.extractMove = function (cellId) {
-    var classify = function (index) {
+    let classify = function (index) {
       if (index < 3) return 1;
       if (index < 6) return 2;
       if (index < 9) return 3;
       return 0;
     };
-    var n = Math.floor(cellId / 27);
-    var r = cellId % 27;
-    var s = Math.floor(r / 9);
-    var t = r % 9;
-    var c = classify(t);
-    var grid = (n * 3) - 1 + c;
-    var cell = (s * 3) + (t % 3);
+    let n = Math.floor(cellId / 27);
+    let r = cellId % 27;
+    let s = Math.floor(r / 9);
+    let t = r % 9;
+    let c = classify(t);
+    let grid = (n * 3) - 1 + c;
+    let cell = (s * 3) + (t % 3);
     return new Move(grid, cell, ".");
   };
 }

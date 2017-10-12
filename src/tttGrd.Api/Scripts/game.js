@@ -1,13 +1,13 @@
 ﻿(function () {
-  var app = angular.module("myApp", []);
-  var util = new Util();
-  var agniKaiUri = "agnikai";
-  var gamerUri = "gamer";
-  var usersUri = "users";
-  var errorMessage = function (data, status) {
+  const app = angular.module("myApp", []);
+  const util = new Util();
+  const agniKaiUri = "agnikai";
+  const gamerUri = "gamer";
+  const usersUri = "users";
+  const errorMessage = function (data, status) {
     return "Error: " + status + (data.Message !== undefined ? (" " + data.Message) : "");
   };
-  var gameHubProxy = $.connection.gameHub; // create a proxy to signalr hub on web server
+  const gameHubProxy = $.connection.gameHub; // create a proxy to signalr hub on web server
 
   app.controller("myCtrl", ["$http", "$scope", function ($http, $scope) {
     $scope.cellIds = [];
@@ -25,7 +25,7 @@
           $scope.playersOnline = data;
           if (data.length > 0) {
             data.forEach(user => {
-              var encodedUser = $("<div />").text(user.Name).html();
+              let encodedUser = $("<div />").text(user.Name).html();
               $("#activeplayers").append("<li><strong>" + encodedUser + "</strong></li>");
             });
           }
@@ -36,18 +36,18 @@
     };
 
     $scope.disableAllCells = function () {
-      for (var j = 0; j < $scope.disable.length; j++) {
+      for (let j = 0; j < $scope.disable.length; j++) {
         //$scope.disable[j] = "true";
         document.getElementById(j).disabled = true;
       }
     }
 
     $scope.recordMove = function (cellId) {
-      var move = util.extractMove(cellId);
+      const move = util.extractMove(cellId);
       move.Player = $scope.indicator;
       $scope.history.push(move);  /* add move to history. */
       $scope.previousState[move.Grid][move.Cell] = util.indicatorTofield(move.Player);
-      var encodeMove = $("<div />").text(cellId + ": (" + move.Grid + "," + move.Cell + ")").html();
+      const encodeMove = $("<div />").text(cellId + ": (" + move.Grid + "," + move.Cell + ")").html();
       $("#playerOnline").append("<li>" + encodeMove + "</li>");
       $scope.disableAllCells();
       //document.getElementById(cellId).style.background = "#778899";
@@ -57,17 +57,17 @@
     $scope.setupPvA = function () {
       $http.get(agniKaiUri + "/initiate").then(response => {
         $scope.agnikaiTicket = response.data;
-        var req1 = {
+        const req1 = {
           method: "POST",
           url: gamerUri + "/create/ai",
           data: { ticket: $scope.agnikaiTicket }
         };
         $http(req1).then((resp) => {
-          var aiIndicator = resp.data;
+          const aiIndicator = resp.data;
           if (aiIndicator === $scope.indicators[1]) $scope.indicator = $scope.indicators[2];
           else $scope.indicator = $scope.indicators[1];
         });
-        var req2 = {
+        const req2 = {
           method: "POST",
           url: usersUri + "/submit",
           data: {
@@ -81,14 +81,14 @@
     }
 
     $scope.updateCellContents = function (fields) {
-      for (var k = 0; k < $scope.cellContents.length; k++) {
-        var move = util.extractMove(k);
+      for (let k = 0; k < $scope.cellContents.length; k++) {
+        const move = util.extractMove(k);
         $scope.cellContents[k] = util.fieldToIndicator(fields[move.Grid][move.Cell]);
       }
     }
 
     $scope.reloadBoard = function () {
-      for (var j = 0; j < $scope.cellContents.length; j++) {
+      for (let j = 0; j < $scope.cellContents.length; j++) {
         document.getElementById(j).innerHTML = $scope.cellContents[j];
       }
     }
@@ -107,17 +107,14 @@
     }
 
     gameHubProxy.client.broadcastState = function (state) {
-      var fields = state.Fields;
-      var move = util.compareStates($scope.previousState, fields);
+      const fields = state.Fields;
+      const move = util.compareStates($scope.previousState, fields);
       $scope.history.push(move); /* the state difference is the new move. */
       $scope.previousState = state.Fields;
       $scope.updateCellContents(fields);
       $scope.reloadBoard();
       $scope.enableCells(util.getEnabledCells(move));
-      var border = [];
-      $scope.gridBorders[move.Cell].forEach(id => {
-        border.push($scope.defaultBorders[id]);
-      });
+      const border = $scope.gridBorders[move.Cell].map(id => $scope.defaultBorders[id]);
       util.editBorders(border, "#FF0000");  /* highlight the grid to play in as red. */
     }
 
@@ -132,20 +129,20 @@
     //$("#gamerName").val(prompt("Enter your name:", ""));
 
     /* print welcome message. */
-    var divMsg = document.getElementById("welcomeMsg");
-    var h1Msg = document.createElement("H1");
-    var msg = document.createTextNode("Welcome to the game " + $("#gamerName").val());
+    const divMsg = document.getElementById("welcomeMsg");
+    const h1Msg = document.createElement("H1");
+    const msg = document.createTextNode("Welcome to the game " + $("#gamerName").val());
     h1Msg.appendChild(msg);
     divMsg.appendChild(h1Msg);
 
     /* initialise cell ids and contents. */
-    for (var i = 0; i < 81; i++) {
+    for (let i = 0; i < 81; i++) {
       $scope.cellIds.push(i);
       $scope.cellContents.push(".");  /* all cells are empty when the game starts. */
       $scope.disable.push("false");
     }
 
-    for (var i = 0; i < 9; i++) {
+    for (let i = 0; i < 9; i++) {
       $scope.previousState.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
 
