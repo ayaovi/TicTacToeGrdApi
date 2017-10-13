@@ -26,6 +26,7 @@ Cannot really see a concrete need for this type just yet. But as far as I can te
 
 ## TODO
 
+- The AI still send the opponent to already won grid. Fix this.
 - Re-look at cells' probability update (as it seems to be working poorly).
 - Tighten up the grip on player winning (i.e. do not make it too easy).
 - Handle token clearing after expiration (or should we have tokens in the first place).

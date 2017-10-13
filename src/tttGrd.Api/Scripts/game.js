@@ -5,7 +5,7 @@
   const gamerUri = "gamer";
   const usersUri = "users";
   const errorMessage = function (data, status) {
-    return "Error: " + status + (data.Message !== undefined ? (" " + data.Message) : "");
+    return `Error: ${status}${data.Message !== undefined ? (` ${data.Message}`) : ""}`;
   };
   const gameHubProxy = $.connection.gameHub; // create a proxy to signalr hub on web server
 
@@ -15,12 +15,11 @@
     $scope.indicators = [".", "x", "o"];
     $scope.history = [];
     $scope.previousState = [];
-    $scope.disable = [];
     $scope.defaultBorders = util.getDefaultBorders();
     $scope.gridBorders = util.getGridBorders();
 
     $scope.getActivePlayers = function () {
-      $http.get(usersUri + "/all")
+      $http.get(`${usersUri}/all`)
         .success(function (data, _) {
           $scope.playersOnline = data;
         })
@@ -30,10 +29,9 @@
     };
 
     $scope.disableAllCells = function () {
-      for (let j = 0; j < $scope.disable.length; j++) {
-        //$scope.disable[j] = "true";
-        document.getElementById(j).disabled = true;
-      }
+      $scope.cellIds.forEach(id => {
+        document.getElementById(id).disabled = true;
+      });
     }
 
     $scope.recordMove = function (cellId) {
@@ -41,8 +39,8 @@
       move.Player = $scope.indicator;
       $scope.history.push(move);  /* add move to history. */
       $scope.previousState[move.Grid][move.Cell] = util.indicatorTofield(move.Player);
-      const encodeMove = $("<div />").text(cellId + ": (" + move.Grid + "," + move.Cell + ")").html();
-      $("#playerOnline").append("<li>" + encodeMove + "</li>");
+      const encodeMove = $("<div />").text(`${cellId}: (${move.Grid},${move.Cell})`).html();
+      $("#playerOnline").append(`<li>${encodeMove}</li>`);
       $scope.disableAllCells();
       /* un-highlight the highlighted mini-grid if any. */
       if ($scope.history.length > 2) {
@@ -55,11 +53,11 @@
     };
 
     $scope.setupPvA = function () {
-      $http.get(agniKaiUri + "/initiate").then(response => {
+      $http.get(`${agniKaiUri}/initiate`).then(response => {
         $scope.agnikaiTicket = response.data;
         const req1 = {
           method: "POST",
-          url: gamerUri + "/create/ai",
+          url: `${gamerUri}/create/ai`,
           data: { ticket: $scope.agnikaiTicket }
         };
         $http(req1).then((resp) => {
@@ -69,7 +67,7 @@
         });
         const req2 = {
           method: "POST",
-          url: usersUri + "/submit",
+          url: `${usersUri}/submit`,
           data: {
             token: $scope.gameToken.Value,
             ticket: $scope.agnikaiTicket
@@ -122,9 +120,7 @@
 
     $scope.drawBorders = function () {
       $scope.defaultBorders.forEach(border => {
-        $("#grid").append('<div style="position:absolute;left:' + border.Left + 'px;top:'
-          + border.Top + 'px;height:' + border.Height + 'px;width:' + border.Width
-          + 'px;background:#000000;z-index:1;" id="' + border.Id + '"></div>');
+        $("#grid").append(`<div style="position:absolute;left:${border.Left}px;top:${border.Top}px;height:${border.Height}px;width:${border.Width}px;background:#000000;z-index:1;" id="${border.Id}"></div>`);
       });
     }
     
@@ -133,7 +129,7 @@
     /* print welcome message. */
     const divMsg = document.getElementById("welcomeMsg");
     const h1Msg = document.createElement("H1");
-    const msg = document.createTextNode("Welcome to the game " + $("#gamerName").val());
+    const msg = document.createTextNode(`Welcome to the game ${$("#gamerName").val()}`);
     h1Msg.appendChild(msg);
     divMsg.appendChild(h1Msg);
 
@@ -141,7 +137,6 @@
     for (let i = 0; i < 81; i++) {
       $scope.cellIds.push(i);
       $scope.cellContents.push(".");  /* all cells are empty when the game starts. */
-      $scope.disable.push("false");
     }
 
     for (let i = 0; i < 9; i++) {
@@ -151,7 +146,7 @@
     $scope.drawBorders();
 
     $.connection.hub.start().done(() => {
-      $http.get(usersUri + "/login?name=" + $("#gamerName").val()).then(response => {
+      $http.get(`${usersUri}/login?name=${$("#gamerName").val()}`).then(response => {
         $scope.gameToken = response.data;
       });  /* log player in. */
     }); /* connect to signalr hub */
