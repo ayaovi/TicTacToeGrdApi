@@ -21,15 +21,23 @@ namespace tttGrd.Api.Models
   public class AI : Gamer
   {
     public State GameState { get; set; } = new State();
-    public Field Oponent { get; set; }
+    public Field Opponent { get; set; }
     public float[][] CellProbabilities { get; set; } = Utilities.GetDefaultCellsProbabilities();
 
     public (int Grid, int Cell) MakeProbabilityBasedMove((int Grid, int Cell) oponentMove) => SelectProbabilityBasedOptimalMove(oponentMove);
 
     private (int Grid, int Cell) SelectProbabilityBasedOptimalMove((int Grid, int Cell) oponentMove)
     {
-      var highestProbCell = GetHighestProbabilityCellIndex(oponentMove.Cell);
-      return (oponentMove.Cell, highestProbCell);
+      var gridIndex = oponentMove.Cell;
+      if (Program.IsWin(GameState.Fields[gridIndex]))
+      {
+        gridIndex = GameState.Fields.Select((field, i) => new { Field = field, Index = i })
+                                    .Where(x => !Program.IsWin(x.Field))
+                                    .Select(x => x.Index)
+                                    .Random();
+      }
+      var highestProbCell = GetHighestProbabilityCellIndex(gridIndex);
+      return (gridIndex, highestProbCell);
     }
 
     private int GetHighestProbabilityCellIndex(int gridIndex) => CellProbabilities[gridIndex].Select((x, i) => new Cell { Index = i, Probability = x })

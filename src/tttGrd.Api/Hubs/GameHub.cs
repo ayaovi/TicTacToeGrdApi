@@ -54,11 +54,13 @@ namespace tttGrd.Api.Hubs
 
       var agnikai = await _database.GetAgniKaiByTicket(agniKaiTicket);
       var ai = agnikai.GetGamerByIndicator(aiIndicator) as AI;
+      ai.GameState = state;
       // ReSharper disable once PossibleNullReferenceException
       ai.CellProbabilities = Program.UpdateCellsProbabilities(ai.CellProbabilities, state, playerMove, aiIndicator);
       var aiMove = ai.MakeProbabilityBasedMove(playerMove);
       await _database.RecordMoveAsync(agniKaiTicket, aiMove, aiIndicator);
       state = await _database.GetStateAsync(agniKaiTicket);
+      ai.GameState = state;
       ai.CellProbabilities = Program.UpdateCellsProbabilities(ai.CellProbabilities, state, aiMove, aiIndicator);
 
       Clients.Group(agniKaiTicket).broadcastState(state); /* we might want to encrypt the state being published and save it with a time stamp. */

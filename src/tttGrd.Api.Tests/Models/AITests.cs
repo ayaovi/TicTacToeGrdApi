@@ -7,7 +7,7 @@ using tttGrd.Api.Persistence;
 namespace tttGrd.Api.Tests.Models
 {
   [TestFixture]
-  public class GamerTests
+  public class AITests
   {
     [Test]
     public void MakeMove_GivenPreviousMoveToGridZeroCellZero_ExpectMoveInGridZeroAnywhereButCellZero_Prob()
@@ -24,7 +24,7 @@ namespace tttGrd.Api.Tests.Models
         Name = "Gamer_2",
         GameState = gameState,
         CellProbabilities = prob,
-        Oponent = Field.X
+        Opponent = Field.X
       };
 
       //Act
@@ -60,7 +60,7 @@ namespace tttGrd.Api.Tests.Models
         Name = "Gamer_2",
         GameState = gameState,
         CellProbabilities = prob,
-        Oponent = Field.O
+        Opponent = Field.O
       };
 
       //Act
@@ -95,7 +95,7 @@ namespace tttGrd.Api.Tests.Models
         Name = "Gamer_2",
         GameState = gameState,
         CellProbabilities = prob,
-        Oponent = Field.X
+        Opponent = Field.X
       };
 
       //Act
@@ -130,7 +130,7 @@ namespace tttGrd.Api.Tests.Models
         Name = "Gamer_2",
         GameState = gameState,
         CellProbabilities = prob,
-        Oponent = Field.O
+        Opponent = Field.O
       };
 
       //Act
@@ -162,7 +162,7 @@ namespace tttGrd.Api.Tests.Models
         Name = "Gamer_2",
         GameState = gameState,
         CellProbabilities = prob,
-        Oponent = Field.O
+        Opponent = Field.O
       };
 
       //Act
@@ -194,7 +194,7 @@ namespace tttGrd.Api.Tests.Models
         Name = "Gamer_2",
         GameState = gameState,
         CellProbabilities = prob,
-        Oponent = Field.O
+        Opponent = Field.O
       };
 
       //Act
@@ -223,7 +223,7 @@ namespace tttGrd.Api.Tests.Models
         Name = "Gamer_2",
         GameState = gameState,
         CellProbabilities = prob,
-        Oponent = Field.O
+        Opponent = Field.O
       };
 
       //Act
@@ -252,7 +252,7 @@ namespace tttGrd.Api.Tests.Models
         Name = "Gamer_2",
         CellProbabilities = prob,
         GameState = gameState,
-        Oponent = Field.X
+        Opponent = Field.X
       };
 
       //Act
@@ -281,7 +281,7 @@ namespace tttGrd.Api.Tests.Models
         Name = "Gamer_2",
         GameState = gameState,
         CellProbabilities = prob,
-        Oponent = Field.O
+        Opponent = Field.O
       };
 
       //Act
@@ -302,7 +302,7 @@ namespace tttGrd.Api.Tests.Models
         Indicator = Field.X,
         Name = "Gamer_2",
         GameState = new State(),
-        Oponent = Field.O
+        Opponent = Field.O
       };
 
       //Act
@@ -313,6 +313,35 @@ namespace tttGrd.Api.Tests.Models
       Assert.IsTrue(possibleGridIndices.Contains(move.Grid));
       if (move.Grid != 4) Assert.AreEqual(4, move.Cell);
       else Assert.IsTrue(possibleGridIndices.Contains(move.Cell));
+    }
+
+    [Test]
+    public void MakeMove_GivenOpponetJustWonGrid_ShouldPreferablyGoElsewhere()
+    {
+      //Arrange
+      var gameState = new State();
+      var prob = Utilities.GetCellsProbabilities(new[]
+      {
+        new Move { Value = (4, 0), Indicator = Field.X },
+        new Move { Value = (0, 4), Indicator = Field.O },
+        new Move { Value = (4, 8), Indicator = Field.X },
+        new Move { Value = (8, 4), Indicator = Field.O },
+        new Move { Value = (4, 4), Indicator = Field.X }
+      }, gameState);
+      var gamer = new AI
+      {
+        Indicator = Field.O,
+        Name = "Gamer_2",
+        CellProbabilities = prob,
+        GameState = gameState,
+        Opponent = Field.X
+      };
+
+      //Act
+      var move = gamer.MakeProbabilityBasedMove((4, 4));
+
+      //Assert
+      Assert.IsTrue(move.Grid != 4);
     }
   }
 }
