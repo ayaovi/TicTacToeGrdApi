@@ -10,7 +10,7 @@
 
   <div class="active-player-container">
     <input type="button" value="See Active Players" ng-click="getActivePlayers()" />
-    <ul id="activeplayers">
+    <ul class="players" id="activeplayers">
       <li ng-repeat="player in playersOnline" >
         {{player.Name}}
       </li>
