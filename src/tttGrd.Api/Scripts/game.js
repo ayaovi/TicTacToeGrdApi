@@ -49,8 +49,8 @@
         const moveBeforeLast = $scope.history[$scope.history.length - 2];
         const border = $scope.gridBorders[moveBeforeLast.Cell].map(id => $scope.defaultBorders[id]);
         util.editBorders(border, "#000000");
+        util.colourCell(moveBeforeLast, "#D3D3D3"); /* change cell border back to normal (i.e. lightgray). */
       }
-      //document.getElementById(cellId).style.background = "#778899";
       gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
     };
 
@@ -117,11 +117,12 @@
       $scope.enableCells(util.getEnabledCells(move));
       const border = $scope.gridBorders[move.Cell].map(id => $scope.defaultBorders[id]);
       util.editBorders(border, "#FF0000");  /* highlight the grid to play in as red. */
+      util.colourCell(move, "#FFD700"); /* highlight oponent cell in gold. */
     }
 
     $scope.drawBorders = function () {
       $scope.defaultBorders.forEach(border => {
-        $('#grid').append('<div style="position:absolute;left:' + border.Left + 'px;top:'
+        $("#grid").append('<div style="position:absolute;left:' + border.Left + 'px;top:'
           + border.Top + 'px;height:' + border.Height + 'px;width:' + border.Width
           + 'px;background:#000000;z-index:1;" id="' + border.Id + '"></div>');
       });

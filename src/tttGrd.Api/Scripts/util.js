@@ -41,8 +41,8 @@ let Util = function () {
   }
 
   this.colourCell = function (move, colour) {
-    const id = 
-    document.getElementById(border.Id).style.backgroundColor = colour;
+    const id = this.moveToCellId(move);
+    document.getElementById(id).style.borderColor = colour;
   }
 
   this.haveSameContent = function (list1, list2) {
@@ -66,13 +66,13 @@ let Util = function () {
   }
 
   this.getEnabledCells = function (move) {
-    let ids = [];
-    let enabled = [];
+    const ids = [];
+    const enabled = [];
     for (let i = 0; i < 81; i++) {
       ids.push(i);
     }
     ids.forEach(id => {
-      if (this.extractMove(id).Grid === move.Cell) {
+      if (this.cellIdToMove(id).Grid === move.Cell) {
         enabled.push(id);
       }
     });
@@ -133,6 +133,10 @@ let Util = function () {
   };
 
   this.moveToCellId = function (move) {
-
+    const n = Math.floor(move.Grid / 3);
+    const m = move.Grid % 3;
+    const x = Math.floor(move.Cell / 3);
+    const y = move.Cell % 3;
+    return n * 27 + x * 9 + m * 3 + y;
   }
 }
