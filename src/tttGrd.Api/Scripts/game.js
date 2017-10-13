@@ -37,7 +37,7 @@
     }
 
     $scope.recordMove = function (cellId) {
-      const move = util.extractMove(cellId);
+      const move = util.cellIdToMove(cellId);
       move.Player = $scope.indicator;
       $scope.history.push(move);  /* add move to history. */
       $scope.previousState[move.Grid][move.Cell] = util.indicatorTofield(move.Player);
@@ -82,7 +82,7 @@
 
     $scope.updateCellContents = function (fields) {
       for (let k = 0; k < $scope.cellContents.length; k++) {
-        const move = util.extractMove(k);
+        const move = util.cellIdToMove(k);
         $scope.cellContents[k] = util.fieldToIndicator(fields[move.Grid][move.Cell]);
       }
     }

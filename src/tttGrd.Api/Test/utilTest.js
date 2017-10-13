@@ -54,14 +54,14 @@ QUnit.test("State Compare Given \"non-undefined\" Old State", function (assert) 
 
 QUnit.test("Extract Move Given 0", function (assert) {
   var util = new Util();
-  var move = util.extractMove(0);
+  var move = util.cellIdToMove(0);
   assert.equal(move.Grid, 0, "should result in Grid 0");
   assert.equal(move.Cell, 0, "should result in Cell 0");
 });
 
 QUnit.test("Extract Move Given 20", function (assert) {
   var util = new Util();
-  var move = util.extractMove(20);
+  var move = util.cellIdToMove(20);
   assert.equal(move.Grid, 0, "should result in Grid 0");
   assert.equal(move.Cell, 8, "should result in Cell 8");
 });

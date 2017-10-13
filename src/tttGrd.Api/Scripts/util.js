@@ -40,6 +40,11 @@ let Util = function () {
     });
   }
 
+  this.colourCell = function (move, colour) {
+    const id = 
+    document.getElementById(border.Id).style.backgroundColor = colour;
+  }
+
   this.haveSameContent = function (list1, list2) {
     if (list1.length !== list2.length) return false;
     for (let i = 0; i < list1.length; i++) {
@@ -110,7 +115,7 @@ let Util = function () {
     return new Move(grid, cell, this.fieldToIndicator(newState[grid][cell]));
   }
 
-  this.extractMove = function (cellId) {
+  this.cellIdToMove = function (cellId) {
     const classify = function (index) {
       if (index < 3) return 1;
       if (index < 6) return 2;
@@ -126,4 +131,8 @@ let Util = function () {
     const cell = (s * 3) + (t % 3);
     return new Move(grid, cell, ".");
   };
+
+  this.moveToCellId = function (move) {
+
+  }
 }
