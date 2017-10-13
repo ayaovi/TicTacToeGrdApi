@@ -26,9 +26,8 @@ Cannot really see a concrete need for this type just yet. But as far as I can te
 
 ## TODO
 
-- Re-look at cells' probability update (as it seems to not be working properly).
+- Re-look at cells' probability update (as it seems to be working poorly).
 - Tighten up the grip on player winning (i.e. do not make it too easy).
-- When a grid is won, do not play there any more if you can help it. 
 - Handle token clearing after expiration (or should we have tokens in the first place).
 
 ## IDEAS
