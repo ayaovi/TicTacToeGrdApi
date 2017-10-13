@@ -28,8 +28,11 @@ Cannot really see a concrete need for this type just yet. But as far as I can te
 
 - The AI still send the opponent to already won grid. Fix this.
 - Re-look at cells' probability update (as it seems to be working poorly).
-- Tighten up the grip on player winning (i.e. do not make it too easy).
+- Tighten up the grip on player winning (i.e. do not make it too easy for the player).
 - Handle token clearing after expiration (or should we have tokens in the first place).
+- A player in the "Active Players" list should be clickable. Upon click, one could see the player details or challenge him/her.
+- Implement PvP logic, on both server and front end side.
+- Move back-end web api to .Net Core.
 
 ## IDEAS
 
