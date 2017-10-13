@@ -23,12 +23,6 @@
       $http.get(usersUri + "/all")
         .success(function (data, _) {
           $scope.playersOnline = data;
-          if (data.length > 0) {
-            data.forEach(user => {
-              let encodedUser = $("<div />").text(user.Name).html();
-              $("#activeplayers").append("<li><strong>" + encodedUser + "</strong></li>");
-            });
-          }
         })
         .error(function (data, status) {
           $scope.errorToSearch = errorMessage(data, status);
@@ -102,6 +96,7 @@
     $scope.challengeAI = function () {
       $scope.setupPvA();
       document.getElementById("challenge-ai-btn").disabled = true;
+      document.getElementById("agnikai-btn").disabled = true;
     }
 
     $scope.enableCells = function (ids) {
