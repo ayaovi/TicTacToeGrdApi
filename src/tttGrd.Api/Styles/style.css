@@ -46,3 +46,13 @@
     padding: 0;
     width: 15em;
   }
+
+.player-info {
+  background-color: #99CCFF;
+  border: thick solid #808080;
+  padding: 20px;
+  margin: 20px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}

@@ -17,6 +17,7 @@
     $scope.previousState = [];
     $scope.defaultBorders = util.getDefaultBorders();
     $scope.gridBorders = util.getGridBorders();
+    $scope.selectedPlayer = undefined;
 
     $scope.getActivePlayers = function () {
       $http.get(`${usersUri}/all`)
@@ -95,6 +96,11 @@
       $scope.setupPvA();
       document.getElementById("challenge-ai-btn").disabled = true;
       document.getElementById("agnikai-btn").disabled = true;
+    }
+
+    $scope.viewPlayerInfo = function (player) {
+      $scope.selectedPlayer = player;
+      console.log(`view ${player.Name} information`);
     }
 
     $scope.enableCells = function (ids) {
