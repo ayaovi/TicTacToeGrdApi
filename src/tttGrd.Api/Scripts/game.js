@@ -79,6 +79,13 @@
       });
     }
 
+    $scope.setupPvP = function (player) {
+      $http.get(`${agniKaiUri}/initiate`).then(response => {
+        $scope.agnikaiTicket = response.data;
+        gameHubProxy.server.callAgniKai($scope.agnikaiTicket);
+      });
+    }
+
     $scope.updateCellContents = function (fields) {
       for (let k = 0; k < $scope.cellContents.length; k++) {
         const move = util.cellIdToMove(k);
@@ -104,6 +111,7 @@
     }
 
     $scope.challengeSelectedPlayer = function () {
+      // should have a game routine that both challengeAI and challengeSelectedPlayer could use.
       console.log(`view ${player.Name} information`);
     }
 
