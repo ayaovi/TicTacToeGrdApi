@@ -103,6 +103,10 @@
       console.log(`view ${player.Name} information`);
     }
 
+    $scope.challengeSelectedPlayer = function () {
+      console.log(`view ${player.Name} information`);
+    }
+
     $scope.enableCells = function (ids) {
       ids.forEach(id => {
         if ($scope.cellContents[id] === ".") {
