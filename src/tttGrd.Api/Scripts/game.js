@@ -1,6 +1,7 @@
 ﻿(function () {
   const app = angular.module("myApp", []);
   const util = new Util();
+  const canvasController = new CanvasController();
   const agniKaiUri = "agnikai";
   const gamerUri = "gamer";
   const usersUri = "users";
@@ -33,6 +34,10 @@
       $scope.cellIds.forEach(id => {
         document.getElementById(id).disabled = true;
       });
+    }
+
+    $scope.recordAction = function (e) {
+      canvasController.handledMouseClicked(e);
     }
 
     $scope.recordMove = function (cellId) {
@@ -141,7 +146,7 @@
         $("#grid").append(`<div style="position:absolute;left:${border.Left}px;top:${border.Top}px;height:${border.Height}px;width:${border.Width}px;background:#000000;z-index:1;" id="${border.Id}"></div>`);
       });
     }
-    
+
     //$("#gamerName").val(prompt("Enter your name:", ""));
 
     /* print welcome message. */
@@ -166,6 +171,7 @@
     $.connection.hub.start().done(() => {
       $http.get(`${usersUri}/login?name=${$("#gamerName").val()}`).then(response => {
         $scope.gameToken = response.data;
+        canvasController.initCanvas();
       });  /* log player in. */
     }); /* connect to signalr hub */
   }]);
