@@ -117,17 +117,6 @@
         const move = util.cellIdToMove(cell.Id);
         cell.Content = util.fieldToIndicator(fields[move.Grid][move.Cell]);
       });
-      //for (let k = 0; k < $scope.cellContents.length; k++) {
-      //  const move = util.cellIdToMove(k);
-      //  $scope.cellContents[k] = util.fieldToIndicator(fields[move.Grid][move.Cell]);
-      //}
-    }
-
-    $scope.reloadBoard = function () {
-      canvasController.reloadBoard($scope.cells);
-      //for (let j = 0; j < $scope.cellContents.length; j++) {
-      //  document.getElementById(j).innerHTML = $scope.cellContents[j];
-      //}
     }
 
     $scope.challengeAI = function () {
@@ -149,7 +138,7 @@
     $scope.enableCells = function (ids) {
       ids.forEach(id => {
         if ($scope.cellContents[id] === ".") {
-          document.getElementById(id).disabled = false;
+          $scope.cells[id].Disabled = false;
         }
       });
     }
@@ -160,11 +149,9 @@
       $scope.history.push(move); /* the state difference is the new move. */
       $scope.previousState = state.Fields;
       $scope.updateCellContents(fields);
-      $scope.reloadBoard();
+      canvasController.reloadBoard($scope.cells, move.Cell);
       $scope.enableCells(util.getEnabledCells(move));
       const border = $scope.gridBorders[move.Cell].map(id => $scope.defaultBorders[id]);
-      util.editBorders(border, "#FF0000");  /* highlight the grid to play in as red. */
-      util.colourCell(move, "#FFD700"); /* highlight oponent cell in gold. */
     }
 
     $scope.drawBorders = function () {
