@@ -4,6 +4,17 @@
   this.Player = player;
 }
 
+let Cell = function (id) {
+  this.Id = id;
+  this.Disabled = false;
+  this.Content = ".";
+}
+
+let Vector = function (x, y) {
+  this.X = x;
+  this.Y = y;
+}
+
 let Border = function (left, top, width, height, id) {
   this.Left = left;
   this.Top = top;

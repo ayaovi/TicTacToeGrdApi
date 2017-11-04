@@ -12,6 +12,7 @@
 
   app.controller("myCtrl", ["$http", "$scope", function ($http, $scope) {
     $scope.cellIds = [];
+    $scope.cells = [];
     $scope.cellContents = [];
     $scope.indicators = [".", "x", "o"];
     $scope.history = [];
@@ -31,13 +32,32 @@
     };
 
     $scope.disableAllCells = function () {
-      $scope.cellIds.forEach(id => {
-        document.getElementById(id).disabled = true;
+      $scope.cells.forEach(cell => {
+        cell.Disabled = true;
       });
+      //$scope.cellIds.forEach(id => {
+      //  document.getElementById(id).disabled = true;
+      //});
     }
 
-    $scope.recordAction = function (e) {
-      canvasController.handledMouseClicked(e);
+    $scope.recordAction = function (event) {
+      const cellId = canvasController.handledMouseClicked(event);
+      if ($scope.cells[cellId].Disabled) return;
+      const move = util.cellIdToMove(cellId);
+      move.Player = $scope.indicator;
+      $scope.history.push(move);  /* add move to history. */
+      $scope.previousState[move.Grid][move.Cell] = util.indicatorTofield(move.Player);
+      const encodeMove = $("<div />").text(`${cellId}: (${move.Grid},${move.Cell})`).html();
+      $("#playerOnline").append(`<li>${encodeMove}</li>`);
+      $scope.disableAllCells();
+      /* un-highlight the highlighted mini-grid if any. */
+      if ($scope.history.length > 2) {
+        const moveBeforeLast = $scope.history[$scope.history.length - 2];
+        const border = $scope.gridBorders[moveBeforeLast.Cell].map(id => $scope.defaultBorders[id]);
+        //util.editBorders(border, "#000000");
+        //util.colourCell(moveBeforeLast, "#D3D3D3"); /* change cell border back to normal (i.e. lightgray). */
+      }
+      gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
     }
 
     $scope.recordMove = function (cellId) {
@@ -50,10 +70,11 @@
       $scope.disableAllCells();
       /* un-highlight the highlighted mini-grid if any. */
       if ($scope.history.length > 2) {
-        const moveBeforeLast = $scope.history[$scope.history.length - 2];
-        const border = $scope.gridBorders[moveBeforeLast.Cell].map(id => $scope.defaultBorders[id]);
-        util.editBorders(border, "#000000");
-        util.colourCell(moveBeforeLast, "#D3D3D3"); /* change cell border back to normal (i.e. lightgray). */
+        //const moveBeforeLast = $scope.history[$scope.history.length - 2];
+        //const border = $scope.gridBorders[moveBeforeLast.Cell].map(id => $scope.defaultBorders[id]);
+        //util.editBorders(border, "#000000");
+        canvasController.highlightCell(cellId);
+        //util.colourCell(moveBeforeLast, "#D3D3D3"); /* change cell border back to normal (i.e. lightgray). */
       }
       gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
     };
@@ -92,16 +113,21 @@
     }
 
     $scope.updateCellContents = function (fields) {
-      for (let k = 0; k < $scope.cellContents.length; k++) {
-        const move = util.cellIdToMove(k);
-        $scope.cellContents[k] = util.fieldToIndicator(fields[move.Grid][move.Cell]);
-      }
+      $scope.cells.forEach(cell => {
+        const move = util.cellIdToMove(cell.Id);
+        cell.Content = util.fieldToIndicator(fields[move.Grid][move.Cell]);
+      });
+      //for (let k = 0; k < $scope.cellContents.length; k++) {
+      //  const move = util.cellIdToMove(k);
+      //  $scope.cellContents[k] = util.fieldToIndicator(fields[move.Grid][move.Cell]);
+      //}
     }
 
     $scope.reloadBoard = function () {
-      for (let j = 0; j < $scope.cellContents.length; j++) {
-        document.getElementById(j).innerHTML = $scope.cellContents[j];
-      }
+      canvasController.reloadBoard($scope.cells);
+      //for (let j = 0; j < $scope.cellContents.length; j++) {
+      //  document.getElementById(j).innerHTML = $scope.cellContents[j];
+      //}
     }
 
     $scope.challengeAI = function () {
@@ -159,6 +185,7 @@
     /* initialise cell ids and contents. */
     for (let i = 0; i < 81; i++) {
       $scope.cellIds.push(i);
+      $scope.cells.push(new Cell(i));
       $scope.cellContents.push(".");  /* all cells are empty when the game starts. */
     }
 
@@ -166,7 +193,7 @@
       $scope.previousState.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
 
-    $scope.drawBorders();
+    //$scope.drawBorders();
 
     $.connection.hub.start().done(() => {
       $http.get(`${usersUri}/login?name=${$("#gamerName").val()}`).then(response => {

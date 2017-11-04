@@ -14,12 +14,33 @@ let CanvasController = function () {
     const cellTopLeftX = Math.floor(x / 60) * 60;
     const cellTopLeftY = Math.floor(y / 60) * 60;
 
-    console.log(`xx: ${x} yy: ${y}`)
+    //console.log(`xx: ${x} yy: ${y}`);
     //drawX(cellTopLeftX * 60 + 5, cellTopLeftY * 60 + 5);
-    drawCircle(cellTopLeftX + 30, cellTopLeftY + 30, 20, 18);
-    console.log(`x: ${Math.floor(x / 60)} and y: ${Math.floor(y / 60)}`)
-    const pos = Math.floor(x / 60) + Math.floor(y / 60) * 9;
-    console.log(pos);
+    //drawCircle(cellTopLeftX + 30, cellTopLeftY + 30, 20, 18);
+    //console.log(`x: ${Math.floor(x / 60)} and y: ${Math.floor(y / 60)}`);
+    return Math.floor(x / 60) + Math.floor(y / 60) * 9;
+    //console.log(pos);
+  }
+
+  this.reloadBoard = function (cells) {
+    cells.foreach(cell => {
+      if (cell.Content == "x") {
+        //drawX.
+        const cellTopLeft = getCellTopLeftPosition(cell.Id);
+        drawX(cellTopLeft.X * 60 + 5, cellTopLeft.Y * 60 + 5);
+      }
+      else if (cell.Content == "o") {
+        //draw circle.
+      }
+    });
+  }
+
+  function getCellTopLeftPosition(id) {
+    const boxXId = id % 3;
+    const boxYId = Math.floor(id / 3);
+    const boxXpos = boxXId * 3 * cellSize;
+    const boxYpos = boxYId * 3 * cellSize;
+    return new Vector();
   }
 
   function drawX(x, y) {
@@ -50,7 +71,11 @@ let CanvasController = function () {
 
   }
 
-  function drawCell(x, y, size) {
+  function drawCell(id, size) {
+    const cellXId = id % 9;
+    const cellYId = Math.floor(id / 9);
+    const x = cellXId * size;
+    const y = cellYId * size;
     context.strokeRect(x, y, size, size);
   }
 
@@ -65,7 +90,8 @@ let CanvasController = function () {
     context.lineWidth = currentWidth;
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
-        drawCell(boxXpos + i * cellSize, boxYpos + j * cellSize, cellSize);
+        console.log(`Drawing cell ${boxYId * 27 + i * 9 + j + boxXId * 3}`);
+        drawCell(boxYId * 27 + i * 9 + j + boxXId * 3, cellSize);
       }
     }
   }
@@ -75,5 +101,5 @@ let CanvasController = function () {
   canvas.width = 540;
   canvas.height = 540;
   context.globalAlpha = 1.0;
-  draw();
+  //draw();
 }
