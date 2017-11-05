@@ -1,5 +1,4 @@
-﻿var counter = 0;
-let CanvasController = function () {
+﻿let CanvasController = function () {
   var canvas = document.getElementById('canvas');
   var context = canvas.getContext('2d');
 
@@ -10,24 +9,33 @@ let CanvasController = function () {
   this.handledMouseClicked = function (e) {
     const x = e.x - canvas.offsetLeft;
     const y = e.y - canvas.offsetTop;
-    
     return Math.floor(x / 60) + Math.floor(y / 60) * 9;
   }
 
-  this.reloadBoard = function (cells, gridToHighlight) {
+  this.reloadBoard = function (cells, gridToHighlight, cellToHighlight) {
     draw(gridToHighlight);
+    highlightCell(cellToHighlight, "#FFD700");  /* higlight cell in gold. */
     cells.forEach(cell => {
       if (cell.Content == "x") {
         //drawX.
         const pos = getCellPosition(cell.Id, 60);
-        drawX(pos.X + 5, pos.Y + 5);
+        drawX(pos.X + 7, pos.Y + 7);
       }
       else if (cell.Content == "o") {
-        //draw circle.
+        //drawO.
         const pos = getCellPosition(cell.Id, 60);
-        drawCircle(pos.X + 30, pos.Y + 30, 20, 18);
+        drawO(pos.X + 30, pos.Y + 30, 20, 18);
       }
     });
+  }
+
+  function highlightCell (cellId, border) {
+    const pos = getCellPosition(cellId, 60);
+    context.clearRect(pos.X, pos.Y, 60, 60);
+    const currentStyle = context.strokeStyle;
+    context.strokeStyle = border;
+    drawCell(cellId, 60);
+    context.strokeStyle = currentStyle;
   }
 
   function drawX(x, y) {
@@ -35,35 +43,23 @@ let CanvasController = function () {
     drawLine(x + 45, y, x, y + 45);
   }
 
-  function drawCircle(x, y, r1, r2) {
-    const currentWidth = context.lineWidth;
-    context.beginPath();
+  function drawO(x, y, r1, r2) {
+    const currentWidth = context.lineWidth; /* save initial line width setting. */
+    context.beginPath();  /* always beginPath() */
     context.ellipse(x, y, r1, r2, 90 * Math.PI / 180, 0, 2 * Math.PI);
     context.lineWidth = 3;
-    context.stroke();
-    context.lineWidth = currentWidth;
+    context.stroke();   /* stroke() ends the path. */
+    context.lineWidth = currentWidth; /* restore initial line width setting. */
   }
 
   function drawLine(x1, y1, x2, y2) {
     const currentWidth = context.lineWidth;
-    context.beginPath();    // Staring point (10,45).
-    context.moveTo(x1, y1); // End point (180,47).
-    context.lineTo(x2, y2); // Make the line visible.
+    context.beginPath();
+    context.moveTo(x1, y1);
+    context.lineTo(x2, y2);
     context.lineWidth = 3;
     context.stroke();
     context.lineWidth = currentWidth;
-  }
-
-  function draw(gridToHighlight) {
-    context.clearRect(canvas.offsetLeft, canvas.offsetTop, 540, 540);
-    console.log("Called");
-    for (let i = 0; i < 9; i++) {
-      if (i === gridToHighlight) continue;
-      draw3x3Box(i, 60);
-    }
-    if (gridToHighlight != undefined) {
-      draw3x3Box(gridToHighlight, 60, "#F00");
-    }
   }
 
   function getCellPosition(id, size) {
@@ -74,6 +70,16 @@ let CanvasController = function () {
     return new Vector(x, y);
   }
 
+  function draw(gridToHighlight) {
+    context.clearRect(canvas.offsetLeft, canvas.offsetTop, 540, 540); /* clear the board. */
+    for (let i = 0; i < 9; i++) {
+      if (i === gridToHighlight) continue;
+      draw3x3Box(i, 60);
+    }
+    if (gridToHighlight != undefined) {
+      draw3x3Box(gridToHighlight, 60, "#F00");
+    }
+  }
 
   function drawCell(id, size) {
     const cellPosition = getCellPosition(id, size);
@@ -104,5 +110,4 @@ let CanvasController = function () {
   canvas.width = 540;
   canvas.height = 540;
   context.globalAlpha = 1.0;
-  //draw();
 }
