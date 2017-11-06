@@ -29,8 +29,14 @@ namespace tttGrd.Api.Controllers
     [Route("login")]
     public async Task<IHttpActionResult> Login(string name)
     {
-      var token = await _database.AddPlayerAsync(name);
-      return Ok(token);
+      var player = await _database.GetPlayerByNameAsync(name);
+      if (player == null)
+      {
+        var token = await _database.AddPlayerAsync(name);
+        return Ok(token);
+      }
+      var oldToken = await _vault.GetGameTokenAsync(player.GameToken);
+      return Ok(oldToken);
     }
 
     [HttpPost]
