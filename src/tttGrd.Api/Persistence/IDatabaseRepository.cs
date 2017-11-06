@@ -14,5 +14,6 @@ namespace tttGrd.Api.Persistence
     Task<State> GetStateAsync(string agniKaiTicket);
     Task RecordMoveAsync(string agniKaiTicket, (int Grid, int Cell) move, Field indicator);
     Task SubmitTicketAsync(string token, string ticket);
+    Task<int> GetPlayerCountAsync();
   }
 }

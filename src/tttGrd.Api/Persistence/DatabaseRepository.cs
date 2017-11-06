@@ -84,5 +84,10 @@ namespace tttGrd.Api.Persistence
       agnikai.AddGamer(player);
       return Task.CompletedTask;
     }
+
+    public Task<int> GetPlayerCountAsync()
+    {
+      return Task.FromResult(_players.Count);
+    }
   }
 }
