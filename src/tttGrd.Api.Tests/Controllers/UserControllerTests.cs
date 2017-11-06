@@ -7,6 +7,7 @@ using NUnit.Framework;
 using tttGrd.Api.Controllers;
 using tttGrd.Api.Models;
 using tttGrd.Api.Persistence;
+using System;
 
 namespace tttGrd.Api.Tests.Controllers
 {
@@ -113,30 +114,41 @@ namespace tttGrd.Api.Tests.Controllers
       allResponse.Content.ShouldBeEquivalentTo(expected);
     }
 
-    //[Test]
-    //public async Task Submit_GivenValidTicketAndToken_Expect200Ok()
-    //{
-    //  //Arrange
-    //  var vault = Substitute.For<IVault>();
-    //  vault.GetGameTokenAsync("Token").Returns(Task.FromResult(new Token { Value = "Token" }));
-    //  vault.AddGameTokenAsync(Arg.Any<Token>()).Returns(Task.CompletedTask);
-    //  var keyGenerator = Substitute.For<IKeyGenerator>();
-    //  keyGenerator.GenerateKey().Returns("Ticket");
-    //  keyGenerator.GenerateGameTokenAsync(Arg.Any<string>()).Returns(Task.FromResult("Token"));
-    //  var database = new DatabaseRepository(vault, keyGenerator);
-    //  var agniKaiRepo = new AgniKaiRepository(vault, keyGenerator, database);
-    //  var controller = new UserController(database, vault);
-    //  var request = new SubmissionRequest
-    //  {
-    //    Ticket = "Ticket",
-    //    Token = "Token"
-    //  };
+    [Test]
+    public async Task Submit_GivenValidTicketAndToken_Expect200Ok()
+    {
+      //Arrange
+      var vault = Substitute.For<IVault>();
+      vault.GetGameTokenAsync("Token").Returns(Task.FromResult(new Token
+      {
+        Value = "Token",
+        ExpirationDate = DateTime.UtcNow.Add(new TimeSpan(0, 0, 0, 10)) /* 10s in the future. */
+      }));
+      vault.AddGameTokenAsync(Arg.Any<Token>()).Returns(Task.CompletedTask);
+      var keyGenerator = Substitute.For<IKeyGenerator>();
+      keyGenerator.GenerateKey().Returns("Ticket");
+      keyGenerator.GenerateGameTokenAsync(Arg.Any<string>()).Returns(Task.FromResult("Token"));
+      var database = new DatabaseRepository(vault, keyGenerator);
+      var agniKaiRepo = new AgniKaiRepository(vault, keyGenerator, database);
+      var controller = new UserController(database, vault);
 
-    //  //Act
-    //  var action = await controller.SubmitAgniKaiTicket(request);
-    //  var allResponse = action as OkResult;
+      //Act
+      var ticket = await agniKaiRepo.InitiateAgniKaiAsync();
+      var token = await database.AddPlayerAsync("Player-1");
+      var request = new SubmissionRequest
+      {
+        Ticket = ticket,
+        Token = token.Value
+      };
+      var action = await controller.SubmitAgniKaiTicket(request);
+      var submitResponse = action as OkResult;
 
-    //  //Assert
-    //}
+      //Assert
+      Assert.NotNull(submitResponse);
+      Assert.AreEqual(await database.GetPlayerCountAsync(), 1);
+      await keyGenerator.Received(1).GenerateKey();
+      await vault.Received(1).AddAgniKaiTicket("Ticket");
+      await vault.Received(1).GetGameTokenAsync("Token");
+    }
   }
 }
