@@ -27,6 +27,11 @@ namespace tttGrd.Api.Persistence
       return Task.FromResult(_gameTokens.Single(token => token.Value == value));
     }
 
+    public Task<IList<Token>> GetGameTokensAsync()
+    {
+      return Task.FromResult(_gameTokens);
+    }
+
     public Task<IList<string>> GetGamerKeysAsync()
     {
       return Task.FromResult(_gamerKeys);

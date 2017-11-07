@@ -8,6 +8,7 @@ namespace tttGrd.Api.Persistence
     Task AddAgniKaiTicket(string key);
     Task AddGameTokenAsync(Token gameToken);
     Task<Token> GetGameTokenAsync(string value);
+    Task<IList<Token>> GetGameTokensAsync();
     Task<IList<string>> GetGamerKeysAsync();
   }
 }

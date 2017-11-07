@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -24,6 +26,28 @@ namespace tttGrd.Api.Tests.Persistence
 
       //Assert
       keys.ShouldAllBeEquivalentTo(expected);
+    }
+
+    [Test]
+    public async Task AddGameTokenAsync_GivenToken_ExpectTokenBeAdded()
+    {
+      //Arrange
+      var token = new Token
+      {
+        Value = "Token",
+        ExpirationDate = DateTime.UtcNow
+      };
+      var vault = new Vault();
+      var expected = new List<Token> { token };
+
+      //Act
+      await vault.AddGameTokenAsync(token);
+      var token1 = await vault.GetGameTokenAsync("Token");
+      var tokens = await vault.GetGameTokensAsync();
+
+      //Assert
+      tokens.ShouldBeEquivalentTo(expected);
+      token1.ShouldBeEquivalentTo(token);
     }
   }
 }
