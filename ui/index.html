@@ -29,6 +29,10 @@
     <button ng-click="challengeSelectedPlayer()">Challenge {{selectedPlayer.Name}}</button>
   </div>
 
+  <div class="challenge-info" ng-if="challenger">
+    <button ng-click="acceptChallenge()">Accept {{challenger}}'s Challenge</button>
+  </div>
+
   <div>
     <canvas id="canvas" width="540" height="540" style="border: 1px gray solid; float: left" ng-click="recordAction($event)">Your browser does not support the HTML canvas</canvas>
   </div>

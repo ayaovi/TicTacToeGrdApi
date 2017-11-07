@@ -1,6 +1,5 @@
 ﻿using NSubstitute;
 using NUnit.Framework;
-using System;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
 using tttGrd.Api.Controllers;

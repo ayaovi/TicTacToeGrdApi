@@ -18,6 +18,7 @@
     $scope.history = [];
     $scope.previousState = [];
     $scope.selectedPlayer = undefined;
+    $scope.challenger = undefined;
 
     $scope.getActivePlayers = function () {
       $http.get(`${apiBaseUrl}/${usersUri}/all`)
@@ -102,6 +103,7 @@
     $scope.challengeSelectedPlayer = function () {
       // should have a game routine that both challengeAI and challengeSelectedPlayer could use.
       console.log(`view ${$scope.selectedPlayer.Name} information`);
+      gameHubProxy.server.notifyPlayerAsync($scope.selectedPlayer.Name, $("#gamerName").val());
     }
 
     $scope.enableCells = function (ids) {
@@ -120,6 +122,10 @@
       $scope.updateCellContents(fields);
       canvasController.reloadBoard($scope.cells, move.Cell, util.moveToCellId(move));
       $scope.enableCells(util.getEnabledCells(move));
+    }
+
+    gameHubProxy.client.notifyOfChallenge = function (challengerId) {
+      $scope.challenger = challengerId;
     }
 
     $("#gamerName").val(prompt("Enter your name:", ""));
@@ -143,6 +149,7 @@
     $.connection.hub.start().done(() => {
       $http.get(`${apiBaseUrl}/${usersUri}/login?name=${$("#gamerName").val()}`).then(response => {
         $scope.gameToken = response.data;
+        gameHubProxy.server.announceAsync($("#gamerName").val());
         canvasController.initCanvas();
       });  /* log player in. */
     }); /* connect to signalr hub */

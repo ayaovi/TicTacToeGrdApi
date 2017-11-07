@@ -135,5 +135,21 @@ namespace tttGrd.Api.Tests.Persistence
       //Assert
       result.ShouldBeEquivalentTo(expected);
     }
+
+    [Test]
+    public async Task AddConnectionAsync_GivenPlayerNameAndConnectionId_ExpectConnectionBeAdded()
+    {
+      //Arrange
+      var mockVault = Substitute.For<IVault>();
+      var mockKeyGen = Substitute.For<IKeyGenerator>();
+      var database = new DatabaseRepository(mockVault, mockKeyGen);
+      var expectedConnId = "12345";
+
+      //Act
+      await database.AddConnectionAsync("Player-1", "12345");
+
+      //Assert
+      Assert.AreEqual(await database.GetConnectionAsync("Player-1"), expectedConnId);
+    }
   }
 }

@@ -16,9 +16,16 @@ namespace tttGrd.Api.Hubs
       _database = database;
     }
 
-    public void Announce(string username)
+    public async Task AnnounceAsync(string username)
     {
-      _database.AddPlayerAsync(username);
+      //await _database.AddPlayerAsync(username);
+      await _database.AddConnectionAsync(username, Context.ConnectionId);
+    }
+
+    public async Task NotifyPlayerAsync(string playerId, string challengerId)
+    {
+      var connId = await _database.GetConnectionAsync(playerId);
+      await Clients.Client(connId).notifyOfChallenge(challengerId);
     }
 
     public async Task JoinAgniKai(string agniKaiTicket)

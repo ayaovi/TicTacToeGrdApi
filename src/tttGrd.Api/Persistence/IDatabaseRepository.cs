@@ -12,6 +12,8 @@ namespace tttGrd.Api.Persistence
     Task<Player> GetPlayerByNameAsync(string playerName);
     Task<List<Player>> GetPlayersAsync();
     Task<State> GetStateAsync(string agniKaiTicket);
+    Task AddConnectionAsync(string username, string connectionId);
+    Task<string> GetConnectionAsync(string username);
     Task RecordMoveAsync(string agniKaiTicket, (int Grid, int Cell) move, Field indicator);
     Task SubmitTicketAsync(string token, string ticket);
     Task<int> GetPlayerCountAsync();

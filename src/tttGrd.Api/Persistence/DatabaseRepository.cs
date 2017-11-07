@@ -18,6 +18,7 @@ namespace tttGrd.Api.Persistence
     private readonly List<AgniKai> _agniKais = new List<AgniKai>();
     private readonly List<Player> _players = new List<Player>();
     private readonly IDictionary<string, State> _ongoingGameStates = new Dictionary<string, State>();
+    private readonly IDictionary<string, string> _connections = new Dictionary<string, string>();
 
     public DatabaseRepository(IVault vault, IKeyGenerator keyGenerator)
     {
@@ -88,6 +89,18 @@ namespace tttGrd.Api.Persistence
     public Task<int> GetPlayerCountAsync()
     {
       return Task.FromResult(_players.Count);
+    }
+
+    public Task AddConnectionAsync(string username, string connectionId)
+    {
+      _connections.Add(username, connectionId);
+      return Task.CompletedTask;
+    }
+
+    public Task<string> GetConnectionAsync(string username)
+    {
+      _connections.TryGetValue(username, out var connectionId);
+      return Task.FromResult(connectionId);
     }
   }
 }

@@ -12,18 +12,15 @@ namespace tttGrd.Api.Tests.Hubs
   internal class GameHubTests
   {
     [Test]
-    public async Task Announce_GivenUsername_ExpectPlayerBeAdded()
+    public void Announce_GivenUsername_ExpectPlayerBeAdded()
     {
       //Arrange
       var mockDatabase = Substitute.For<IDatabaseRepository>();
-      mockDatabase.AddPlayerAsync(Arg.Any<string>()).Returns(Task.FromResult(default(Token)));
+      mockDatabase.AddConnectionAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
       var hub = new GameHub(mockDatabase);
 
-      //Act
-      hub.Announce("Player-1");
-
-      //Assert
-      await mockDatabase.Received(1).AddPlayerAsync("Player-1");
+      //Act && Assert
+      Assert.ThrowsAsync<NullReferenceException>(() => hub.AnnounceAsync("Player-1"));
     }
 
     [Test]
