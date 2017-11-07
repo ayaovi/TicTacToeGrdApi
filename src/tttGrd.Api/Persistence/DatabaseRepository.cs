@@ -57,7 +57,7 @@ namespace tttGrd.Api.Persistence
 
     public Task<Player> GetPlayerByNameAsync(string playerName)
     {
-      return Task.FromResult(_players.Single(player => player.Name == playerName));
+      return Task.FromResult(_players.SingleOrDefault(player => player.Name == playerName));
     }
 
     public Task<List<Player>> GetPlayersAsync()
