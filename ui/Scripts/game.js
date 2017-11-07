@@ -101,7 +101,7 @@
 
     $scope.challengeSelectedPlayer = function () {
       // should have a game routine that both challengeAI and challengeSelectedPlayer could use.
-      console.log(`view ${player.Name} information`);
+      console.log(`view ${$scope.selectedPlayer.Name} information`);
     }
 
     $scope.enableCells = function (ids) {
@@ -122,7 +122,7 @@
       $scope.enableCells(util.getEnabledCells(move));
     }
 
-    //$("#gamerName").val(prompt("Enter your name:", ""));
+    $("#gamerName").val(prompt("Enter your name:", ""));
 
     /* print welcome message. */
     const divMsg = document.getElementById("welcomeMsg");
