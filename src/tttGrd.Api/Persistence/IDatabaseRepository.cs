@@ -7,7 +7,7 @@ namespace tttGrd.Api.Persistence
   public interface IDatabaseRepository
   {
     Task AddAgniKaiAsync(AgniKai agniKai);
-    Task<AgniKai> GetAgniKaiByTicket(string ticket);
+    Task<AgniKai> GetAgniKaiByTicketAsync(string ticket);
     Task<Token> AddPlayerAsync(string username);
     Task<Player> GetPlayerByNameAsync(string playerName);
     Task<List<Player>> GetPlayersAsync();

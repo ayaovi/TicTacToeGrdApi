@@ -16,14 +16,32 @@ namespace tttGrd.Api.Tests.Persistence
       var mockKeyGenerator = Substitute.For<IKeyGenerator>();
       mockKeyGenerator.GenerateKey().Returns(string.Empty);
       var mockDatabase = Substitute.For<IDatabaseRepository>();
-      mockDatabase.GetAgniKaiByTicket(Arg.Any<string>()).Returns(new AgniKai {Ticket = string.Empty});
+      mockDatabase.GetAgniKaiByTicketAsync(Arg.Any<string>()).Returns(new AgniKai { Ticket = string.Empty });
       var gamerRepo = new GamerRepository(mockDatabase);
 
       //Act
       await gamerRepo.CreateGamerAsync(string.Empty);
 
       //Assert
-      await mockDatabase.Received(1).GetAgniKaiByTicket(string.Empty);
+      await mockDatabase.Received(1).GetAgniKaiByTicketAsync(string.Empty);
+    }
+
+    [Test]
+    public async Task CreateGamerWithNameAsync_GivenTicketAndName_ExpectGamerCreated()
+    {
+      //Arrange
+      var agnikai = new AgniKai { Ticket = "Ticket" };
+      var mockDatabase = Substitute.For<IDatabaseRepository>();
+      mockDatabase.GetAgniKaiByTicketAsync(Arg.Any<string>()).Returns(Task.FromResult(agnikai));
+      var gamerRepo = new GamerRepository(mockDatabase);
+
+      //Act
+      await gamerRepo.CreateGamerWithNameAsync("Ticket", "Gamer-1");
+      var gamer = agnikai.GetGamerByName("Gamer-1");
+
+      //Assert
+      await mockDatabase.Received(1).GetAgniKaiByTicketAsync("Ticket");
+      Assert.IsInstanceOf<AI>(gamer);
     }
   }
 }

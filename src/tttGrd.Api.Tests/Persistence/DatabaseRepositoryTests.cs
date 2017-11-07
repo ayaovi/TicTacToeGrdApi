@@ -22,7 +22,7 @@ namespace tttGrd.Api.Tests.Persistence
 
       //Act
       await database.AddAgniKaiAsync(agniKai);
-      var result = await database.GetAgniKaiByTicket("12345");
+      var result = await database.GetAgniKaiByTicketAsync("12345");
       var state = await database.GetStateAsync(agniKai.Ticket);
 
       //Assert

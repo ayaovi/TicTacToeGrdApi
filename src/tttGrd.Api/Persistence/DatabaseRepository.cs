@@ -32,7 +32,7 @@ namespace tttGrd.Api.Persistence
       return Task.CompletedTask;
     }
 
-    public Task<AgniKai> GetAgniKaiByTicket(string ticket)
+    public Task<AgniKai> GetAgniKaiByTicketAsync(string ticket)
     {
       return Task.FromResult(_agniKais.Single(agniKai => agniKai.Ticket == ticket));
     }

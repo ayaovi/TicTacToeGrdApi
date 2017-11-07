@@ -52,7 +52,7 @@ namespace tttGrd.Api.Hubs
       await _database.RecordMoveAsync(agniKaiTicket, playerMove, playerIndicator);
       var state = await _database.GetStateAsync(agniKaiTicket);
 
-      var agnikai = await _database.GetAgniKaiByTicket(agniKaiTicket);
+      var agnikai = await _database.GetAgniKaiByTicketAsync(agniKaiTicket);
       var ai = agnikai.GetGamerByIndicator(aiIndicator) as AI;
       ai.GameState = state;
       // ReSharper disable once PossibleNullReferenceException
