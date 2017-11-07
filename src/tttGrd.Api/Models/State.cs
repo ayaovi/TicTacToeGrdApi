@@ -63,8 +63,6 @@ namespace tttGrd.Api.Models
     {
       switch (field)
       {
-        case Field.Empty:
-          return ".";
         case Field.X:
           return "x";
         case Field.O:

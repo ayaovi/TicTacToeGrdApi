@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using NUnit.Framework;
 using tttGrd.Api.Models;
 
@@ -53,6 +54,30 @@ namespace tttGrd.Api.Tests.Models
 
       //Assert
       Assert.AreEqual(2, agniKai.GetNextGamerId());
+    }
+
+    [Test]
+    public void GetGamerByIndicator_GivenNoGamer_ExpectException()
+    {
+      //Arrange
+      var agniKai = new AgniKai { Ticket = "Ticket" };
+      
+      //Act && Assert
+      Assert.Throws<InvalidOperationException>(() => agniKai.GetGamerByIndicator(Field.O));
+    }
+
+    [Test]
+    public void GetGamerByIndicator_GivenGamerExists_ExpectGamer()
+    {
+      //Arrange
+      var gamer = new AI {Indicator = Field.O};
+      var agniKai = new AgniKai { Ticket = "Ticket" };
+
+      //Act
+      agniKai.AddGamer(gamer);
+
+      //Assert
+      agniKai.GetGamerByIndicator(Field.O).ShouldBeEquivalentTo(gamer);
     }
   }
 }
