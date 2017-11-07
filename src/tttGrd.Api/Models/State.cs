@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#pragma warning disable 659
 
 namespace tttGrd.Api.Models
 {
@@ -63,6 +64,8 @@ namespace tttGrd.Api.Models
     {
       switch (field)
       {
+        case Field.Empty:
+          return ".";
         case Field.X:
           return "x";
         case Field.O:
