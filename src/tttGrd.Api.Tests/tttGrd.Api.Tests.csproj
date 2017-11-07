@@ -95,6 +95,7 @@
     <Compile Include="Persistence\AgniKaiRepositoryTests.cs" />
     <Compile Include="Persistence\DatabaseRepositoryTests.cs" />
     <Compile Include="Persistence\GamerRepositoryTests.cs" />
+    <Compile Include="Persistence\KeyGeneratorTests.cs" />
     <Compile Include="Persistence\VaultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
