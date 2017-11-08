@@ -22,10 +22,16 @@ namespace tttGrd.Api.Hubs
       await _database.AddConnectionAsync(username, Context.ConnectionId);
     }
 
-    public async Task NotifyPlayerAsync(string playerId, string challengerId)
+    public async Task NotifyPlayerAsync(string challengeeId, string challengerId)
     {
-      var connId = await _database.GetConnectionAsync(playerId);
+      var connId = await _database.GetConnectionAsync(challengeeId);
       await Clients.Client(connId).notifyOfChallenge(challengerId);
+    }
+
+    public async Task NotifyOfChallengeAcceptedAsync(string challengeeId, string challengerId)
+    {
+      var connId = await _database.GetConnectionAsync(challengerId);
+      await Clients.Client(connId).notifyOfChallengeAccpeted(challengeeId);
     }
 
     public async Task JoinAgniKai(string agniKaiTicket)

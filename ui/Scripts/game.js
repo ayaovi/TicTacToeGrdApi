@@ -124,10 +124,28 @@
       $scope.enableCells(util.getEnabledCells(move));
     }
 
+    $scope.commenceAgniKai = function () {
+      console.log("commence agnikai.");
+    }
+
+    $scope.acceptChallenge = function () {
+      gameHubProxy.server.notifyOfChallengeAcceptedAsync($("#gamer-name").val(), $scope.challenger);
+    }
+
+    gameHubProxy.client.notifyOfChallengeAccpeted = function (challengeeId) {
+      if ($scope.selectedPlayer !== challengeeId) console.log("challengee mismatch.");
+      document.getElementById("challenge-notification-box").style.display = "block";
+      $("#challenge-msg").append(`${$scope.selectedPlayer.Name} accepted your challenge`);
+      document.getElementById("accept-challenge-btn").style.display = "none";
+      document.getElementById("commence-agnikai-btn").style.display = "block";
+      document.getElementById("commence-agnikai-btn").innerHTML = "Commence AgniKai";
+    }
+
     gameHubProxy.client.notifyOfChallenge = function (challengerId) {
       $scope.challenger = challengerId;
       document.getElementById("challenge-notification-box").style.display = "block";
-      document.getElementById("accept-challenge-btn").innerHTML = `Accept ${challengerId}'s challenge`;
+      $("#challenge-msg").append(`${challengerId} would like to challenge you`);
+      document.getElementById("accept-challenge-btn").innerHTML = "Accept challenge";
     }
 
     $("#gamer-name").val(prompt("Enter Your Identifier:", ""));
