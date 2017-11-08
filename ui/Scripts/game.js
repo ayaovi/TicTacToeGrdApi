@@ -127,6 +127,7 @@
     gameHubProxy.client.notifyOfChallenge = function (challengerId) {
       $scope.challenger = challengerId;
       document.getElementById("challenge-notification-box").style.display = "block";
+      document.getElementById("accept-challenge-btn").innerHTML = `Accept ${challengerId}'s challenge`;
     }
 
     $("#gamer-name").val(prompt("Enter Your Identifier:", ""));
