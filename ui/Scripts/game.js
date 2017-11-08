@@ -44,7 +44,7 @@
       $scope.history.push(move);  /* add move to history. */
       $scope.previousState[move.Grid][move.Cell] = util.indicatorTofield(move.Player);
       const encodeMove = $("<div />").text(`${cellId}: (${move.Grid},${move.Cell})`).html();
-      $("#playerOnline").append(`<li>${encodeMove}</li>`);
+      $("#player-move").append(`<li>${encodeMove}</li>`);
       $scope.disableAllCells();
       gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
     }
@@ -103,7 +103,7 @@
     $scope.challengeSelectedPlayer = function () {
       // should have a game routine that both challengeAI and challengeSelectedPlayer could use.
       console.log(`view ${$scope.selectedPlayer.Name} information`);
-      gameHubProxy.server.notifyPlayerAsync($scope.selectedPlayer.Name, $("#gamerName").val());
+      gameHubProxy.server.notifyPlayerAsync($scope.selectedPlayer.Name, $("#gamer-name").val());
     }
 
     $scope.enableCells = function (ids) {
@@ -126,14 +126,15 @@
 
     gameHubProxy.client.notifyOfChallenge = function (challengerId) {
       $scope.challenger = challengerId;
+      document.getElementById("challenge-notification-box").style.display = "block";
     }
 
-    $("#gamerName").val(prompt("Enter your name:", ""));
+    $("#gamer-name").val(prompt("Enter Your Identifier:", ""));
 
     /* print welcome message. */
-    const divMsg = document.getElementById("welcomeMsg");
+    const divMsg = document.getElementById("welcome-msg");
     const h1Msg = document.createElement("H1");
-    const msg = document.createTextNode(`Welcome to the game ${$("#gamerName").val()}`);
+    const msg = document.createTextNode(`Welcome to the game ${$("#gamer-name").val()}`);
     h1Msg.appendChild(msg);
     divMsg.appendChild(h1Msg);
 
@@ -147,9 +148,9 @@
     }
 
     $.connection.hub.start().done(() => {
-      $http.get(`${apiBaseUrl}/${usersUri}/login?name=${$("#gamerName").val()}`).then(response => {
+      $http.get(`${apiBaseUrl}/${usersUri}/login?name=${$("#gamer-name").val()}`).then(response => {
         $scope.gameToken = response.data;
-        gameHubProxy.server.announceAsync($("#gamerName").val());
+        gameHubProxy.server.announceAsync($("#gamer-name").val());
         canvasController.initCanvas();
       });  /* log player in. */
     }); /* connect to signalr hub */
