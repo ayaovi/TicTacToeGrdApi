@@ -18,7 +18,6 @@ namespace tttGrd.Api.Hubs
 
     public async Task AnnounceAsync(string username)
     {
-      //await _database.AddPlayerAsync(username);
       await _database.AddConnectionAsync(username, Context.ConnectionId);
     }
 
@@ -37,7 +36,7 @@ namespace tttGrd.Api.Hubs
     public async Task AgniKaiStartNotification(string challengeeId, string challengerId)
     {
       var connId = await _database.GetConnectionAsync(challengerId);
-      await Clients.Client(connId).notifyOfChallengeAccpeted(challengeeId);
+      Clients.Client(connId).notifyOfChallengeAccpeted(challengeeId);
     }
 
     public async Task JoinAgniKai(string agniKaiTicket)

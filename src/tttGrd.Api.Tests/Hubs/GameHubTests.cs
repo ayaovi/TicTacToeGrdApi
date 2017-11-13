@@ -93,7 +93,7 @@ namespace tttGrd.Api.Tests.Hubs
       };
 
       //Act
-      await hub.NotifyOfChallengeAcceptedAsync("challenger", "challengee");
+      await hub.AgniKaiStartNotification("challenger", "challengee");
 
       //Assert
       await mockDatabase.Received(1).GetConnectionAsync("challengee");
