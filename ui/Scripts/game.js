@@ -79,7 +79,31 @@
       $http.get(`${apiBaseUrl}/${agniKaiUri}/initiate`).then(response => {
         $scope.agnikaiTicket = response.data;
         gameHubProxy.server.agniKaiStartNotification($scope.agnikaiTicket, $scope.selectedPlayer);
+        const req = {
+          method: "POST",
+          url: `${apiBaseUrl}/${usersUri}/submit`,
+          data: {
+            token: $scope.gameToken.Value,
+            ticket: $scope.agnikaiTicket
+          }
+        }
+        $http(req).then();
+        gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
       });
+    }
+
+    $scope.notifyOfAgniKaiStart = function (agnikaiTicket) {
+      $scope.agnikaiTicket = agnikaiTicket;
+      const req = {
+        method: "POST",
+        url: `${apiBaseUrl}/${usersUri}/submit`,
+        data: {
+          token: $scope.gameToken.Value,
+          ticket: $scope.agnikaiTicket
+        }
+      }
+      $http(req).then();
+      gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
     }
 
     $scope.updateCellContents = function (fields) {

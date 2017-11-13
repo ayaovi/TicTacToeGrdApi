@@ -33,10 +33,10 @@ namespace tttGrd.Api.Hubs
       Clients.Client(connId).notifyOfChallengeAccpeted(challengeeId);
     }
 
-    public async Task AgniKaiStartNotification(string challengeeId, string challengerId)
+    public async Task AgniKaiStartNotification(string agnikaiTicket, string challengeeId)
     {
-      var connId = await _database.GetConnectionAsync(challengerId);
-      Clients.Client(connId).notifyOfChallengeAccpeted(challengeeId);
+      var connId = await _database.GetConnectionAsync(challengeeId);
+      Clients.Client(connId).notifyOfAgniKaiStart(agnikaiTicket);
     }
 
     public async Task JoinAgniKai(string agniKaiTicket)
