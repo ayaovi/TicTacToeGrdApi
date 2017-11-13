@@ -75,10 +75,10 @@
       });
     }
 
-    $scope.setupPvP = function (player) {
+    $scope.setupPvP = function () {
       $http.get(`${apiBaseUrl}/${agniKaiUri}/initiate`).then(response => {
         $scope.agnikaiTicket = response.data;
-        gameHubProxy.server.callAgniKai($scope.agnikaiTicket);
+        gameHubProxy.server.agniKaiStartNotification($scope.agnikaiTicket, $scope.selectedPlayer);
       });
     }
 
@@ -126,6 +126,8 @@
 
     $scope.commenceAgniKai = function () {
       console.log("commence agnikai.");
+      $scope.setupPvP();
+      // get agnikai token and send it to opponent.
     }
 
     $scope.acceptChallenge = function () {

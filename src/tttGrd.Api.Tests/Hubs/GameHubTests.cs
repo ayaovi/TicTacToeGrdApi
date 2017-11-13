@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Hubs;
 using NSubstitute;
 using NUnit.Framework;
@@ -38,10 +37,17 @@ namespace tttGrd.Api.Tests.Hubs
       //Arrange
       var mockDatabase = Substitute.For<IDatabaseRepository>();
       mockDatabase.GetConnectionAsync(Arg.Any<string>()).Returns(Task.FromResult("1234"));
-      var hub = new GameHub(mockDatabase);
+      var clients = Substitute.For<IHubCallerConnectionContext<object>>();
+      var uiMock = Substitute.For<IMockClient>();
+      uiMock.When(x => x.notifyOfChallenge(Arg.Any<string>())).Do(x => { });
+      clients.Client(Arg.Any<string>()).Returns(uiMock);
+      var hub = new GameHub(mockDatabase)
+      {
+        Clients = clients
+      };
 
       //Act
-      Assert.ThrowsAsync<NullReferenceException>(() => hub.NotifyPlayerAsync("Player-1", "Player-2"));
+      await hub.NotifyPlayerAsync("Player-1", "Player-2");
 
       //Assert
       await mockDatabase.Received(1).GetConnectionAsync("Player-1");
@@ -53,13 +59,20 @@ namespace tttGrd.Api.Tests.Hubs
       //Arrange
       var mockDatabase = Substitute.For<IDatabaseRepository>();
       mockDatabase.GetConnectionAsync(Arg.Any<string>()).Returns(Task.FromResult("1234"));
-      var hub = new GameHub(mockDatabase);
+      var clients = Substitute.For<IHubCallerConnectionContext<object>>();
+      var uiMock = Substitute.For<IMockClient>();
+      uiMock.When(x => x.notifyOfChallengeAccpeted(Arg.Any<string>())).Do(x => { });
+      clients.Client(Arg.Any<string>()).Returns(uiMock);
+      var hub = new GameHub(mockDatabase)
+      {
+        Clients = clients
+      };
 
       //Act
-      Assert.ThrowsAsync<NullReferenceException>(() => hub.NotifyPlayerAsync("Player-1", "Player-2"));
+      await hub.NotifyOfChallengeAcceptedAsync("Player-1", "Player-2");
 
       //Assert
-      await mockDatabase.Received(1).GetConnectionAsync("Player-1");
+      await mockDatabase.Received(1).GetConnectionAsync("Player-2");
     }
 
     [Test]
@@ -91,17 +104,17 @@ namespace tttGrd.Api.Tests.Hubs
       mockDatabase.RecordMoveAsync(Arg.Any<string>(), Arg.Any<(int, int)>(), Arg.Any<Field>()).Returns(Task.CompletedTask);
       mockDatabase.GetStateAsync(Arg.Any<string>()).Returns(Task.FromResult(state));
       mockDatabase.GetAgniKaiByTicketAsync(Arg.Any<string>()).Returns(Task.FromResult(agniKai));
-      //var clients = Substitute.For<IHubCallerConnectionContext<object>>();
-      //clients.Group(Arg.Any<string>()).broadcastState(Arg.Any<State>()).Returns();
-      var hub = new GameHub(mockDatabase);
-      //var hub = new GameHub(mockDatabase)
-      //{
-      //  Clients = clients,
-      //};
+      var clients = Substitute.For<IHubCallerConnectionContext<object>>();
+      var uiMock = Substitute.For<IMockClient>();
+      uiMock.When(x => x.broadcastState(Arg.Any<State>())).Do(x => { });
+      clients.Group(Arg.Any<string>()).Returns(uiMock);
+      var hub = new GameHub(mockDatabase)
+      {
+        Clients = clients 
+      };
 
       //Act
-      Assert.ThrowsAsync<NullReferenceException>(() => hub.SendMoveAI("Ticket", 0, 4, 'x'));
-      //await hub.SendMoveAI("Ticket", 0, 4, 'x');
+      await hub.SendMoveAI("Ticket", 0, 4, 'x');
 
       //Assert
       await mockDatabase.Received(1).RecordMoveAsync("Ticket", (0, 4), Field.X);
@@ -109,5 +122,12 @@ namespace tttGrd.Api.Tests.Hubs
       await mockDatabase.Received(2).GetStateAsync("Ticket");
       await mockDatabase.Received(1).GetAgniKaiByTicketAsync("Ticket");
     }
+  }
+
+  public interface IMockClient
+  {
+    void broadcastState(State state);
+    void notifyOfChallenge(string challengerId);
+    void notifyOfChallengeAccpeted(string challengerId);
   }
 }
