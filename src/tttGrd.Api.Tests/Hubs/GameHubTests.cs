@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using NSubstitute;
 using NUnit.Framework;
 using tttGrd.Api.Hubs;
 using tttGrd.Api.Models;
 using tttGrd.Api.Persistence;
+// ReSharper disable InconsistentNaming
 
 namespace tttGrd.Api.Tests.Hubs
 {
@@ -73,6 +75,74 @@ namespace tttGrd.Api.Tests.Hubs
 
       //Assert
       await mockDatabase.Received(1).GetConnectionAsync("Player-2");
+    }
+
+    [Test]
+    public async Task AgniKaiStartNotification_GivenParameters_ExpectPlayerBeNotified()
+    {
+      //Arrange
+      var mockDatabase = Substitute.For<IDatabaseRepository>();
+      mockDatabase.GetConnectionAsync(Arg.Any<string>()).Returns(Task.FromResult("1234"));
+      var clients = Substitute.For<IHubCallerConnectionContext<object>>();
+      var uiMock = Substitute.For<IMockClient>();
+      uiMock.When(x => x.notifyOfChallengeAccpeted(Arg.Any<string>())).Do(x => { });
+      clients.Client(Arg.Any<string>()).Returns(uiMock);
+      var hub = new GameHub(mockDatabase)
+      {
+        Clients = clients
+      };
+
+      //Act
+      await hub.NotifyOfChallengeAcceptedAsync("challenger", "challengee");
+
+      //Assert
+      await mockDatabase.Received(1).GetConnectionAsync("challengee");
+    }
+
+    [Test]
+    public async Task JoinAgniKai_GivenTicket_ExpectPlayerAddedToAgnikai()
+    {
+      //Arrange
+      var mockDatabase = Substitute.For<IDatabaseRepository>();
+      var context = Substitute.For<HubCallerContext>();
+      context.ConnectionId.Returns("1234");
+      var groups = Substitute.For<IGroupManager>();
+      groups.When(x => x.Add(Arg.Any<string>(), Arg.Any<string>())).Do(x => { });
+      var hub = new GameHub(mockDatabase)
+      {
+        Context = context,
+        Groups = groups
+      };
+
+      //Act
+      await hub.JoinAgniKai("Ticket");
+
+      //Assert
+      await mockDatabase.Received(0).GetConnectionAsync(Arg.Any<string>());
+      await groups.Received(1).Add("1234", "Ticket");
+    }
+
+    [Test]
+    public async Task LeaveAgniKai_GivenTicket_ExpectPlayerBeRemovedFromAgnikai()
+    {
+      //Arrange
+      var mockDatabase = Substitute.For<IDatabaseRepository>();
+      var context = Substitute.For<HubCallerContext>();
+      context.ConnectionId.Returns("1234");
+      var groups = Substitute.For<IGroupManager>();
+      groups.When(x => x.Remove(Arg.Any<string>(), Arg.Any<string>())).Do(x => { });
+      var hub = new GameHub(mockDatabase)
+      {
+        Context = context,
+        Groups = groups
+      };
+
+      //Act
+      await hub.LeaveAgniKai("Ticket");
+
+      //Assert
+      await mockDatabase.Received(0).GetConnectionAsync(Arg.Any<string>());
+      await groups.Received(1).Remove("1234", "Ticket");
     }
 
     [Test]
