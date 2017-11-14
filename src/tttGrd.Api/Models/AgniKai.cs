@@ -25,7 +25,7 @@ namespace tttGrd.Api.Models
     {
       if (_gamers.Count == 0)
       {
-        gamer.Indicator = new[] {Field.O, Field.X}.Random();
+        gamer.Indicator = new[] { Field.O, Field.X }.Random();
       }
       else
       {
@@ -33,11 +33,11 @@ namespace tttGrd.Api.Models
       }
     }
 
-    public Gamer GetGamerByName(string name) =>_gamers.FirstOrDefault(gamer => string.Equals(gamer.Name, name, StringComparison.InvariantCultureIgnoreCase));
+    public Gamer GetGamerByName(string name) => _gamers.FirstOrDefault(gamer => string.Equals(gamer.Name, name, StringComparison.InvariantCultureIgnoreCase));
 
     public bool CanAccommodateGamer() => _gamers.Count < 2;
 
-    public int GetNextGamerId() =>_gamers.Count + 1;
+    public int GetNextGamerId() => _gamers.Count + 1;
 
     // ReSharper disable once InconsistentNaming
     public Gamer GetGamerByIndicator(Field indicator)

@@ -17,7 +17,7 @@ namespace tttGrd.Api.Persistence
     {
       var agniKai = await _databaseRepository.GetAgniKaiByTicketAsync(agniKaiTicket);
       if (!agniKai.CanAccommodateGamer()) throw new Exception($"AgniKai with ticket {agniKaiTicket} is full.");
-      var indicator = new[] { Field.O, Field.X }[new Random().Next(2)];
+      var indicator = new[] { Field.O, Field.X }.Random();
       var gamer = new AI
       {
         Name = $"Gamer_{agniKai.GetNextGamerId()}",
