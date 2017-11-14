@@ -23,7 +23,7 @@
     $scope.getActivePlayers = function () {
       $http.get(`${apiBaseUrl}/${usersUri}/all`)
         .success(function (data, _) {
-          $scope.playersOnline = data;
+          $scope.playersOnline = data.filter(player => player.Name !== $("#gamer-name").val());
         })
         .error(function (data, status) {
           $scope.errorToSearch = errorMessage(data, status);
