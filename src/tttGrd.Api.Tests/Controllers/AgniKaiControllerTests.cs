@@ -9,7 +9,7 @@ using tttGrd.Api.Persistence;
 namespace tttGrd.Api.Tests.Controllers
 {
   [TestFixture]
-  class AgniKaiControllerTests
+  internal class AgniKaiControllerTests
   {
     [Test]
     public async Task Initiate_GivenTicket_ExpectAICreated()

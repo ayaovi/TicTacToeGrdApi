@@ -131,6 +131,7 @@ namespace tttGrd.Api.Tests.Persistence
       await database.AddPlayerAsync(name);
       await database.SubmitTicketAsync(token, ticket);
       var result = await database.GetPlayerByNameAsync(name);
+      expected.Indicator = result.Indicator;
 
       //Assert
       result.ShouldBeEquivalentTo(expected);

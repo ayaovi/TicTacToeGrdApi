@@ -8,7 +8,7 @@ using tttGrd.Api.Persistence;
 namespace tttGrd.Api.Tests.Controllers
 {
   [TestFixture]
-  class GamerControllerTests
+  internal class GamerControllerTests
   {
     [Test]
     public async Task Create_GivenTicket_ExpectAICreated()
