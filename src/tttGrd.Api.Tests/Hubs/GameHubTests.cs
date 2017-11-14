@@ -49,10 +49,11 @@ namespace tttGrd.Api.Tests.Hubs
       };
 
       //Act
-      await hub.NotifyPlayerAsync("Player-1", "Player-2");
+      await hub.NotifyPlayerAsync("Challengee", "Challenger");
 
       //Assert
-      await mockDatabase.Received(1).GetConnectionAsync("Player-1");
+      await mockDatabase.Received(1).GetConnectionAsync("Challengee");
+      uiMock.Received(1).notifyOfChallenge("Challenger");
     }
 
     [Test]
@@ -71,10 +72,11 @@ namespace tttGrd.Api.Tests.Hubs
       };
 
       //Act
-      await hub.NotifyOfChallengeAcceptedAsync("Player-1", "Player-2");
+      await hub.NotifyOfChallengeAcceptedAsync("Challengee", "Challenger");
 
       //Assert
-      await mockDatabase.Received(1).GetConnectionAsync("Player-2");
+      await mockDatabase.Received(1).GetConnectionAsync("Challenger");
+      uiMock.Received(1).notifyOfChallengeAccpeted("Challengee");
     }
 
     [Test]
@@ -85,7 +87,7 @@ namespace tttGrd.Api.Tests.Hubs
       mockDatabase.GetConnectionAsync(Arg.Any<string>()).Returns(Task.FromResult("1234"));
       var clients = Substitute.For<IHubCallerConnectionContext<object>>();
       var uiMock = Substitute.For<IMockClient>();
-      uiMock.When(x => x.notifyOfChallengeAccpeted(Arg.Any<string>())).Do(x => { });
+      uiMock.When(x => x.notifyOfAgniKaiStart(Arg.Any<string>())).Do(x => { });
       clients.Client(Arg.Any<string>()).Returns(uiMock);
       var hub = new GameHub(mockDatabase)
       {
@@ -93,10 +95,11 @@ namespace tttGrd.Api.Tests.Hubs
       };
 
       //Act
-      await hub.AgniKaiStartNotification("challenger", "challengee");
+      await hub.AgniKaiStartNotification("Ticket", "challengee");
 
       //Assert
       await mockDatabase.Received(1).GetConnectionAsync("challengee");
+      uiMock.Received(1).notifyOfAgniKaiStart("Ticket");
     }
 
     [Test]
@@ -199,5 +202,6 @@ namespace tttGrd.Api.Tests.Hubs
     void broadcastState(State state);
     void notifyOfChallenge(string challengerId);
     void notifyOfChallengeAccpeted(string challengerId);
+    void notifyOfAgniKaiStart(string agnikaiTicket);
   }
 }
