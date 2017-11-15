@@ -19,8 +19,8 @@ namespace tttGrd.Api.Controllers
     public async Task<IHttpActionResult> Create([FromBody] SubmissionRequest request)
     {
       var ticket = request.Ticket;
-      var result = await _gamerRepository.CreateGamerAsync(ticket);
-      return Ok(result);
+      await _gamerRepository.CreateGamerAsync(ticket);
+      return Ok();
     }
   }
 }

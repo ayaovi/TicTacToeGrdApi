@@ -63,11 +63,7 @@
           url: `${apiBaseUrl}/${gamerUri}/create/ai`,
           data: { ticket: $scope.agnikaiTicket }
         };
-        $http(req1).then((resp) => {
-          const aiIndicator = resp.data;
-          if (aiIndicator === $scope.indicators[1]) $scope.indicator = $scope.indicators[2];
-          else $scope.indicator = $scope.indicators[1];
-        });
+        $http(req1).then();
         const req2 = {
           method: "POST",
           url: `${apiBaseUrl}/${usersUri}/submit`,
@@ -76,7 +72,9 @@
             ticket: $scope.agnikaiTicket
           }
         }
-        $http(req2).then();
+        $http(req2).then(response => {
+          $scope.indicator = util.fieldToIndicator(response.data);
+        });
         gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
       });
     }

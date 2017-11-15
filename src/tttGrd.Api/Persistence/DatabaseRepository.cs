@@ -77,13 +77,13 @@ namespace tttGrd.Api.Persistence
       return Task.CompletedTask;
     }
 
-    public Task SubmitTicketAsync(string token, string ticket)
+    public Task<Field> SubmitTicketAsync(string token, string ticket)
     {
       var player = _players.Single(p => p.GameToken == token);
       player.AgniKaiTicket = ticket;
       var agnikai = _agniKais.Single(a => a.Ticket == ticket);
       agnikai.AddGamer(player);
-      return Task.CompletedTask;
+      return Task.FromResult(player.Indicator);
     }
 
     public Task<int> GetPlayerCountAsync()

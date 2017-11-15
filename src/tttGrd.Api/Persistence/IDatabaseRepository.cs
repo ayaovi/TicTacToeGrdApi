@@ -15,7 +15,7 @@ namespace tttGrd.Api.Persistence
     Task AddConnectionAsync(string username, string connectionId);
     Task<string> GetConnectionAsync(string username);
     Task RecordMoveAsync(string agniKaiTicket, (int Grid, int Cell) move, Field indicator);
-    Task SubmitTicketAsync(string token, string ticket);
+    Task<Field> SubmitTicketAsync(string token, string ticket);
     Task<int> GetPlayerCountAsync();
   }
 }

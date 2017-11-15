@@ -14,10 +14,10 @@ namespace tttGrd.Api.Tests.Controllers
     public async Task Create_GivenTicket_ExpectAICreated()
     {
       //Arrange
-      var gamerRepo = Substitute.For<IGamerRepository>();
-      gamerRepo.CreateGamerAsync(Arg.Any<string>()).Returns(Task.FromResult("x"));
+      var mockGamerRepo = Substitute.For<IGamerRepository>();
+      mockGamerRepo.CreateGamerAsync(Arg.Any<string>()).Returns(Task.CompletedTask);
       var vault = Substitute.For<IVault>();
-      var controller = new GamerController(gamerRepo);
+      var controller = new GamerController(mockGamerRepo);
       var request = new SubmissionRequest
       {
         Ticket = "Ticket",
@@ -26,12 +26,11 @@ namespace tttGrd.Api.Tests.Controllers
 
       //Act
       var action = await controller.Create(request);
-      var createResponse = action as OkNegotiatedContentResult<string>;
+      var createResponse = action as OkResult;
 
       //Assert
       Assert.IsNotNull(createResponse);
-      Assert.AreEqual(createResponse.Content, "x");
-      await gamerRepo.Received(1).CreateGamerAsync("Ticket");
+      await mockGamerRepo.Received(1).CreateGamerAsync("Ticket");
     }
   }
 }

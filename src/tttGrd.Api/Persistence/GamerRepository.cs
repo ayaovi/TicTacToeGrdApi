@@ -13,19 +13,16 @@ namespace tttGrd.Api.Persistence
       _databaseRepository = databaseRepository;
     }
 
-    public async Task<string> CreateGamerAsync(string agniKaiTicket)
+    public async Task CreateGamerAsync(string agniKaiTicket)
     {
       var agniKai = await _databaseRepository.GetAgniKaiByTicketAsync(agniKaiTicket);
       if (!agniKai.CanAccommodateGamer()) throw new Exception($"AgniKai with ticket {agniKaiTicket} is full.");
-      var indicator = new[] { Field.O, Field.X }.Random();
       var gamer = new AI
       {
         Name = $"Gamer_{agniKai.GetNextGamerId()}",
-        AgniKaiTicket = agniKaiTicket,
-        Indicator = indicator
+        AgniKaiTicket = agniKaiTicket
       };
       agniKai.AddGamer(gamer);
-      return indicator.ToString().ToLowerInvariant();
     }
 
     public async Task CreateGamerWithNameAsync(string agniKaiTicket, string name)

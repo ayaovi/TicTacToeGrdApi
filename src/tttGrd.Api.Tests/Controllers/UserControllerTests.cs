@@ -118,19 +118,19 @@ namespace tttGrd.Api.Tests.Controllers
     public async Task Submit_GivenValidTicketAndToken_Expect200Ok()
     {
       //Arrange
-      var vault = Substitute.For<IVault>();
-      vault.GetGameTokenAsync("Token").Returns(Task.FromResult(new Token
+      var mockVault = Substitute.For<IVault>();
+      mockVault.GetGameTokenAsync("Token").Returns(Task.FromResult(new Token
       {
         Value = "Token",
         ExpirationDate = DateTime.UtcNow.Add(new TimeSpan(0, 0, 0, 10)) /* 10s in the future. */
       }));
-      vault.AddGameTokenAsync(Arg.Any<Token>()).Returns(Task.CompletedTask);
-      var keyGenerator = Substitute.For<IKeyGenerator>();
-      keyGenerator.GenerateKey().Returns("Ticket");
-      keyGenerator.GenerateGameTokenAsync(Arg.Any<string>()).Returns(Task.FromResult("Token"));
-      var database = new DatabaseRepository(vault, keyGenerator);
-      var agniKaiRepo = new AgniKaiRepository(vault, keyGenerator, database);
-      var controller = new UserController(database, vault);
+      mockVault.AddGameTokenAsync(Arg.Any<Token>()).Returns(Task.CompletedTask);
+      var mockKeyGenerator = Substitute.For<IKeyGenerator>();
+      mockKeyGenerator.GenerateKey().Returns("Ticket");
+      mockKeyGenerator.GenerateGameTokenAsync(Arg.Any<string>()).Returns(Task.FromResult("Token"));
+      var database = new DatabaseRepository(mockVault, mockKeyGenerator);
+      var agniKaiRepo = new AgniKaiRepository(mockVault, mockKeyGenerator, database);
+      var controller = new UserController(database, mockVault);
 
       //Act
       var ticket = await agniKaiRepo.InitiateAgniKaiAsync();
@@ -141,14 +141,15 @@ namespace tttGrd.Api.Tests.Controllers
         Token = token.Value
       };
       var action = await controller.SubmitAgniKaiTicket(request);
-      var submitResponse = action as OkResult;
+      var submitResponse = action as OkNegotiatedContentResult<Field>;
 
       //Assert
       Assert.NotNull(submitResponse);
+      Assert.AreNotEqual(submitResponse.Content, Field.Empty);
       Assert.AreEqual(await database.GetPlayerCountAsync(), 1);
-      await keyGenerator.Received(1).GenerateKey();
-      await vault.Received(1).AddAgniKaiTicket("Ticket");
-      await vault.Received(1).GetGameTokenAsync("Token");
+      await mockKeyGenerator.Received(1).GenerateKey();
+      await mockVault.Received(1).AddAgniKaiTicket("Ticket");
+      await mockVault.Received(1).GetGameTokenAsync("Token");
     }
   }
 }
