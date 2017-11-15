@@ -3,6 +3,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using tttGrd.Api.Models;
 using tttGrd.Api.Persistence;
+// ReSharper disable PossibleNullReferenceException
 
 namespace tttGrd.Api.Hubs
 {
@@ -71,7 +72,6 @@ namespace tttGrd.Api.Hubs
       var agnikai = await _database.GetAgniKaiByTicketAsync(agniKaiTicket);
       var ai = agnikai.GetGamerByIndicator(aiIndicator) as AI;
       ai.GameState = state;
-      // ReSharper disable once PossibleNullReferenceException
       ai.CellProbabilities = Program.UpdateCellsProbabilities(ai.CellProbabilities, state, playerMove, aiIndicator);
       var aiMove = ai.MakeProbabilityBasedMove(playerMove);
       await _database.RecordMoveAsync(agniKaiTicket, aiMove, aiIndicator);
