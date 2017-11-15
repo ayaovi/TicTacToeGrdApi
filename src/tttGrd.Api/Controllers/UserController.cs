@@ -46,7 +46,8 @@ namespace tttGrd.Api.Controllers
       var token = request.Token;
       var ticket = request.Ticket;
       await ValidateToken(token);
-      return Ok(await _database.SubmitTicketAsync(token, ticket));
+      var result = await _database.SubmitTicketAsync(token, ticket);
+      return Ok(result);
     }
 
     private async Task ValidateToken(string tokenValue)

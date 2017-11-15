@@ -29,7 +29,8 @@
     });
   }
 
-  function highlightCell (cellId, border) {
+  function highlightCell(cellId, border) {
+    if (cellId === undefined) return;
     const pos = getCellPosition(cellId, 60);
     context.clearRect(pos.X, pos.Y, 60, 60);
     const currentStyle = context.strokeStyle;

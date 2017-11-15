@@ -91,7 +91,7 @@ let Util = function () {
         }
       }
     }
-    return new Move(grid, cell, this.fieldToIndicator(newState[grid][cell]));
+    return grid === undefined ? undefined : new Move(grid, cell, this.fieldToIndicator(newState[grid][cell]));
   }
 
   this.cellIdToMove = function (cellId) {

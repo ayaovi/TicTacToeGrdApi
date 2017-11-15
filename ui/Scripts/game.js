@@ -47,10 +47,10 @@
       const encodeMove = $("<div />").text(`${cellId}: (${move.Grid},${move.Cell})`).html();
       $("#player-move").append(`<li>${encodeMove}</li>`);
       $scope.disableAllCells();
-      if ($scope.game = "PvA") {
+      if ($scope.game === "PvA") {
         gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
       }
-      else if ($scope.game = "PvP") {
+      else if ($scope.game === "PvP") {
         gameHubProxy.server.sendMovePlayer($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
       }
     }
@@ -82,7 +82,7 @@
     $scope.setupPvP = function () {
       $http.get(`${apiBaseUrl}/${agniKaiUri}/initiate`).then(response => {
         $scope.agnikaiTicket = response.data;
-        gameHubProxy.server.agniKaiStartNotification($scope.agnikaiTicket, $scope.selectedPlayer);
+        gameHubProxy.server.agniKaiStartNotification($scope.agnikaiTicket, $scope.selectedPlayer.Name);
         const req = {
           method: "POST",
           url: `${apiBaseUrl}/${usersUri}/submit`,
@@ -91,12 +91,14 @@
             ticket: $scope.agnikaiTicket
           }
         }
-        $http(req).then();
+        $http(req).then(response => {
+          $scope.indicator = util.fieldToIndicator(response.data);
+        });
         gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
       });
     }
 
-    $scope.notifyOfAgniKaiStart = function (agnikaiTicket) {
+    gameHubProxy.client.notifyOfAgniKaiStart = function (agnikaiTicket) {
       $scope.agnikaiTicket = agnikaiTicket;
       const req = {
         method: "POST",
@@ -106,7 +108,9 @@
           ticket: $scope.agnikaiTicket
         }
       }
-      $http(req).then();
+      $http(req).then(response => {
+        $scope.indicator = util.fieldToIndicator(response.data);
+      });
       gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
     }
 
@@ -147,15 +151,13 @@
     gameHubProxy.client.broadcastState = function (state) {
       const fields = state.Fields;
       const move = util.compareStates($scope.previousState, fields);
-      $scope.history.push(move); /* the state difference is the new move. */
+      if (move !== undefined) $scope.history.push(move); /* the state difference is the new move. */
       $scope.previousState = state.Fields;
       $scope.updateCellContents(fields);
-      canvasController.reloadBoard($scope.cells, move.Cell, util.moveToCellId(move));
-      $scope.enableCells(util.getEnabledCells(move));
-      if ($scope.game === "PvA") {
-      }
-      else if ($scope.game === "PvP") {
-
+      if (move !== undefined) canvasController.reloadBoard($scope.cells, move.Cell, util.moveToCellId(move));
+      else canvasController.reloadBoard($scope.cells);
+      if (move !== undefined && fields[move.Grid][move.Cell] !== $scope.indicator) {
+        $scope.enableCells(util.getEnabledCells(move));
       }
     }
 
