@@ -19,6 +19,7 @@
     $scope.previousState = [];
     $scope.selectedPlayer = undefined;
     $scope.challenger = undefined;
+    $scope.game = undefined;
 
     $scope.getActivePlayers = function () {
       $http.get(`${apiBaseUrl}/${usersUri}/all`)
@@ -46,7 +47,12 @@
       const encodeMove = $("<div />").text(`${cellId}: (${move.Grid},${move.Cell})`).html();
       $("#player-move").append(`<li>${encodeMove}</li>`);
       $scope.disableAllCells();
-      gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
+      if ($scope.game = "PvA") {
+        gameHubProxy.server.sendMoveAI($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
+      }
+      else if ($scope.game = "PvP") {
+        gameHubProxy.server.sendMovePlayer($scope.agnikaiTicket, move.Grid, move.Cell, move.Player);
+      }
     }
 
     $scope.setupPvA = function () {
@@ -114,6 +120,7 @@
     }
 
     $scope.challengeAI = function () {
+      $scope.game = "PvA";
       $scope.setupPvA();
       document.getElementById("challenge-ai-btn").disabled = true;
       document.getElementById("agnikai-btn").disabled = true;
@@ -126,6 +133,7 @@
 
     $scope.challengeSelectedPlayer = function () {
       // should have a game routine that both challengeAI and challengeSelectedPlayer could use.
+      $scope.game = "PvP";
       console.log(`view ${$scope.selectedPlayer.Name} information`);
       gameHubProxy.server.notifyPlayerAsync($scope.selectedPlayer.Name, $("#gamer-name").val());
     }
@@ -146,6 +154,11 @@
       $scope.updateCellContents(fields);
       canvasController.reloadBoard($scope.cells, move.Cell, util.moveToCellId(move));
       $scope.enableCells(util.getEnabledCells(move));
+      if ($scope.game === "PvA") {
+      }
+      else if ($scope.game === "PvP") {
+
+      }
     }
 
     $scope.commenceAgniKai = function () {
@@ -155,6 +168,7 @@
     }
 
     $scope.acceptChallenge = function () {
+      $scope.game = "PvP";
       gameHubProxy.server.notifyOfChallengeAcceptedAsync($("#gamer-name").val(), $scope.challenger);
     }
 

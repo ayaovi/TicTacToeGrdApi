@@ -49,22 +49,20 @@ namespace tttGrd.Api.Hubs
       return Groups.Remove(Context.ConnectionId, agniKaiTicket);
     }
 
+    public async Task SendMovePlayer(string agniKaiTicket, int grid, int cell, char tile)
+    {
+      var playerIndicator = Utilities.IndicatorFromTile(tile);
+      var playerMove = (grid, cell);
+      await _database.RecordMoveAsync(agniKaiTicket, playerMove, playerIndicator);
+      var state = await _database.GetStateAsync(agniKaiTicket);
+      Clients.Group(agniKaiTicket).broadcastState(state);
+    }
+
     // ReSharper disable once InconsistentNaming
     public async Task SendMoveAI(string agniKaiTicket, int grid, int cell, char tile)
     {
-      Field IndicatorFromTile(char t)
-      {
-        switch (t)
-        {
-          case 'x':
-            return Field.X;
-          case 'o':
-            return Field.O;
-          default:
-            return Field.Empty;
-        }
-      }
-      var playerIndicator = IndicatorFromTile(tile);
+      
+      var playerIndicator = Utilities.IndicatorFromTile(tile);
       var aiIndicator = playerIndicator == Field.X ? Field.O : Field.X;
       var playerMove = (grid, cell);
       await _database.RecordMoveAsync(agniKaiTicket, playerMove, playerIndicator);

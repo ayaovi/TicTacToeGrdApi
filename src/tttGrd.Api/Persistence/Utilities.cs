@@ -31,6 +31,19 @@ namespace tttGrd.Api.Persistence
       return hash;
     }
 
+    public static Field IndicatorFromTile(char t)
+    {
+      switch (t)
+      {
+        case 'x':
+          return Field.X;
+        case 'o':
+          return Field.O;
+        default:
+          return Field.Empty;
+      }
+    }
+
     public static T Random<T>(this IEnumerable<T> input)
     {
       var enumerable = input as IList<T> ?? input.ToList();
