@@ -62,7 +62,6 @@ namespace tttGrd.Api.Hubs
     // ReSharper disable once InconsistentNaming
     public async Task SendMoveAI(string agniKaiTicket, int grid, int cell, char tile)
     {
-      
       var playerIndicator = Utilities.IndicatorFromTile(tile);
       var aiIndicator = playerIndicator == Field.X ? Field.O : Field.X;
       var playerMove = (grid, cell);

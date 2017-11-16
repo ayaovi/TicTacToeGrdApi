@@ -194,6 +194,37 @@ namespace tttGrd.Api.Tests.Hubs
       await mockDatabase.Received(1).RecordMoveAsync("Ticket", Arg.Any<(int, int)>(), Field.O);
       await mockDatabase.Received(2).GetStateAsync("Ticket");
       await mockDatabase.Received(1).GetAgniKaiByTicketAsync("Ticket");
+      uiMock.Received(1).broadcastState(state);
+    }
+
+    [Test]
+    public async Task SendMovePlayer_GivenParameters_ExpectSomething()
+    {
+      //Arrange
+      var state = new State(new[]{
+        "...|.x.|...", "...|...|...", "...|...|...",
+        "...|...|...", "...|...|...", "...|...|...",
+        "...|...|...", "...|...|...", "...|...|..."
+      });
+      var mockDatabase = Substitute.For<IDatabaseRepository>();
+      mockDatabase.RecordMoveAsync(Arg.Any<string>(), Arg.Any<(int, int)>(), Arg.Any<Field>()).Returns(Task.CompletedTask);
+      mockDatabase.GetStateAsync(Arg.Any<string>()).Returns(Task.FromResult(state));
+      var clients = Substitute.For<IHubCallerConnectionContext<object>>();
+      var uiMock = Substitute.For<IMockClient>();
+      uiMock.When(x => x.broadcastState(Arg.Any<State>())).Do(x => { });
+      clients.Group(Arg.Any<string>()).Returns(uiMock);
+      var hub = new GameHub(mockDatabase)
+      {
+        Clients = clients
+      };
+
+      //Act
+      await hub.SendMovePlayer("Ticket", 0, 4, 'x');
+
+      //Assert
+      await mockDatabase.Received(1).RecordMoveAsync("Ticket", (0, 4), Field.X);
+      await mockDatabase.Received(1).GetStateAsync("Ticket");
+      uiMock.Received(1).broadcastState(state);
     }
   }
 
