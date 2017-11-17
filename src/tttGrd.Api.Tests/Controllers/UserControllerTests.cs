@@ -151,5 +151,59 @@ namespace tttGrd.Api.Tests.Controllers
       await mockVault.Received(1).AddAgniKaiTicket("Ticket");
       await mockVault.Received(1).GetGameTokenAsync("Token");
     }
+
+    [Test]
+    public async Task Submit_GivenTwoGamersInAgniKai_Expect200OkAndDifferentGamerIndicators()
+    {
+      //Arrange
+      var mockVault = Substitute.For<IVault>();
+      mockVault.GetGameTokenAsync("Token-1").Returns(Task.FromResult(new Token
+      {
+        Value = "Token-1",
+        ExpirationDate = DateTime.UtcNow.Add(new TimeSpan(0, 0, 0, 10)) /* 10s in the future. */
+      }));
+      mockVault.GetGameTokenAsync("Token-2").Returns(Task.FromResult(new Token
+      {
+        Value = "Token-2",
+        ExpirationDate = DateTime.UtcNow.Add(new TimeSpan(0, 0, 0, 10)) /* 10s in the future. */
+      }));
+      mockVault.AddGameTokenAsync(Arg.Any<Token>()).Returns(Task.CompletedTask);
+      var mockKeyGenerator = Substitute.For<IKeyGenerator>();
+      mockKeyGenerator.GenerateKey().Returns("Ticket");
+      mockKeyGenerator.GenerateGameTokenAsync("Player-1").Returns(Task.FromResult("Token-1"));
+      mockKeyGenerator.GenerateGameTokenAsync("Player-2").Returns(Task.FromResult("Token-2"));
+      var database = new DatabaseRepository(mockVault, mockKeyGenerator);
+      var agniKaiRepo = new AgniKaiRepository(mockVault, mockKeyGenerator, database);
+      var controller = new UserController(database, mockVault);
+
+      //Act
+      var ticket = await agniKaiRepo.InitiateAgniKaiAsync();
+      var token1 = await database.AddPlayerAsync("Player-1");
+      var token2 = await database.AddPlayerAsync("Player-2");
+      var request1 = new SubmissionRequest
+      {
+        Ticket = ticket,
+        Token = token1.Value
+      };
+      var request2 = new SubmissionRequest
+      {
+        Ticket = ticket,
+        Token = token2.Value
+      };
+      var action1 = await controller.SubmitAgniKaiTicket(request1);
+      var submitResponse1 = action1 as OkNegotiatedContentResult<Field>;
+      var action2 = await controller.SubmitAgniKaiTicket(request2);
+      var submitResponse2 = action2 as OkNegotiatedContentResult<Field>;
+
+      //Assert
+      Assert.NotNull(submitResponse1);
+      Assert.NotNull(submitResponse2);
+      Assert.AreNotEqual(submitResponse1.Content, submitResponse2.Content);
+      Assert.AreEqual(await database.GetPlayerCountAsync(), 2);
+      await mockKeyGenerator.Received(1).GenerateKey();
+      await mockVault.Received(1).AddAgniKaiTicket("Ticket");
+      await mockVault.Received(1).GetGameTokenAsync("Token-1");
+      await mockVault.Received(1).GetGameTokenAsync("Token-2");
+    }
   }
 }

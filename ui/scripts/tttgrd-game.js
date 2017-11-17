@@ -74,6 +74,7 @@
         }
         $http(req2).then(response => {
           $scope.indicator = util.fieldToIndicator(response.data);
+		  console.log(`${$("#gamer-name").val()}'s indicator is ${$scope.indicator}`);
         });
         gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
       });
@@ -93,6 +94,7 @@
         }
         $http(req).then(response => {
           $scope.indicator = util.fieldToIndicator(response.data);
+		  console.log(`${$("#gamer-name").val()}'s indicator is ${$scope.indicator}`);
         });
         gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
       });
@@ -111,6 +113,7 @@
       $http(req).then(response => {
         $scope.indicator = util.fieldToIndicator(response.data);
       });
+	  $scope.disableAllCells();
       gameHubProxy.server.joinAgniKai($scope.agnikaiTicket);
     }
 
@@ -130,13 +133,13 @@
 
     $scope.viewPlayerInfo = function (player) {
       $scope.selectedPlayer = player;
-      console.log(`view ${player.Name} information`);
+      // console.log(`view ${player.Name} information`);
     }
 
     $scope.challengeSelectedPlayer = function () {
       // should have a game routine that both challengeAI and challengeSelectedPlayer could use.
       $scope.game = "PvP";
-      console.log(`view ${$scope.selectedPlayer.Name} information`);
+      // console.log(`view ${$scope.selectedPlayer.Name} information`);
       gameHubProxy.server.notifyPlayerAsync($scope.selectedPlayer.Name, $("#gamer-name").val());
     }
 

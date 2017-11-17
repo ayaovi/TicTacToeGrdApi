@@ -24,6 +24,36 @@ namespace tttGrd.Api.Tests.Models
     }
 
     [Test]
+    public void AddGamer_GivenPreviousGamerWithIndicatorO_ShouldAddGamerWithIndicatorX()
+    {
+      //Arrange
+      var agniKai = new AgniKai { Ticket = string.Empty };
+      var gamer = new Player { AgniKaiTicket = string.Empty, Name = "gamer_2" };
+
+      //Act
+      agniKai.AddGamer(new Player { AgniKaiTicket = string.Empty, Name = "gamer_1", Indicator = Field.O });
+      agniKai.AddGamer(gamer);
+
+      //Assert
+      Assert.AreEqual(gamer.Indicator, Field.X);
+    }
+
+    [Test]
+    public void AddGamer_GivenPreviousGamerWithIndicatorX_ShouldAddGamerWithIndicatorO()
+    {
+      //Arrange
+      var agniKai = new AgniKai { Ticket = string.Empty };
+      var gamer = new Player { AgniKaiTicket = string.Empty, Name = "gamer_2" };
+
+      //Act
+      agniKai.AddGamer(new Player { AgniKaiTicket = string.Empty, Name = "gamer_1", Indicator = Field.X });
+      agniKai.AddGamer(gamer);
+
+      //Assert
+      Assert.AreEqual(gamer.Indicator, Field.O);
+    }
+
+    [Test]
     public void CanAccommodate_Test()
     {
       //Arrange
@@ -61,7 +91,7 @@ namespace tttGrd.Api.Tests.Models
     {
       //Arrange
       var agniKai = new AgniKai { Ticket = "Ticket" };
-      
+
       //Act && Assert
       Assert.Throws<InvalidOperationException>(() => agniKai.GetGamerByIndicator(Field.O));
     }
@@ -70,7 +100,7 @@ namespace tttGrd.Api.Tests.Models
     public void GetGamerByIndicator_GivenGamerExists_ExpectGamer()
     {
       //Arrange
-      var gamer = new AI {Indicator = Field.O};
+      var gamer = new AI { Indicator = Field.O };
       var agniKai = new AgniKai { Ticket = "Ticket" };
 
       //Act
